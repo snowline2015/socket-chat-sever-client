@@ -1,106 +1,202 @@
-#define _WINSOCK_DEPRECATED_NO_WARNINGS
-#include <iostream>
+
 #include <winsock2.h>
 #include <ws2tcpip.h>
+#include <iostream>
 #include <string>
 #include <thread>
 #include <stdexcept>
 #include <sstream>
 #include <iomanip>
 #include <cstdint>
-#pragma comment( lib, "wsock32.lib" )
-#define PORT "5000"
 
-std::string string_to_hex(const std::string& in) {
-    std::stringstream ss;
+using namespace std;
 
-    ss << std::hex << std::setfill('0');
+#pragma comment (lib, "Ws2_32.lib")
+
+#define DEFAULT_BUFLEN 512
+#define IP_ADDRESS "192.168.102.1"
+#define DEFAULT_PORT "3504"
+
+struct client_type
+{
+    SOCKET socket;
+    int id;
+    char received_message[DEFAULT_BUFLEN];
+};
+
+int process_client(client_type& new_client);
+string string_to_hex(const string& in);
+string hex_to_string(const string& in);
+int main();
+
+int process_client(client_type& new_client)
+{
+    while (1)
+    {
+        memset(new_client.received_message, 0, DEFAULT_BUFLEN);
+
+        if (new_client.socket != 0)
+        {
+            int iResult = recv(new_client.socket, new_client.received_message, DEFAULT_BUFLEN, 0);
+
+            if (iResult != SOCKET_ERROR)
+                cout << new_client.received_message << endl;
+            else
+            {
+                cout << "recv() failed: " << WSAGetLastError() << endl;
+                break;
+            }
+        }
+    }
+
+    if (WSAGetLastError() == WSAECONNRESET)
+        cout << "The server has disconnected" << endl;
+
+    return 0;
+}
+
+string string_to_hex(const string& in) {
+    stringstream ss;
+
+    ss << hex << setfill('0');
     for (size_t i = 0; in.length() > i; ++i) {
-        ss << std::setw(2) << static_cast<unsigned int>(static_cast<unsigned char>(in[i]));
+        ss << setw(2) << static_cast<unsigned int>(static_cast<unsigned char>(in[i]));
     }
 
     return ss.str();
 }
 
-int main() {
-    struct sockaddr_in addrport;
-    struct sockaddr_in* server = NULL, * ptr = NULL, * result = NULL;
-    SOCKET sockid = INVALID_SOCKET, NewSockid;
-    std::string msg = "";
-    int iResult = 0;
+string hex_to_string(const string& in) {
+    string output;
 
-    std::string str;
-    std::cout << "Input client ip address: ";
-    getline(std::cin, str);
-    const char* c = str.c_str();
-
-    std::cout << "Intializing Winsock..." << std::endl;
-
-    WSADATA wsaData;
-    int wsOK = WSAStartup(MAKEWORD(2, 2), &wsaData);
-    if (wsOK != 0) {
-        std::cout << "Can't initialize winsock. Application is now exiting..." << std::endl;
-        return 0;
+    if ((in.length() % 2) != 0) {
+        throw runtime_error("String is not valid length ...");
     }
 
-    ZeroMemory(&addrport, sizeof(addrport));
-    addrport.sin_family = AF_INET;
-    addrport.sin_port = htons(5000);
-    addrport.sin_addr.s_addr = inet_addr(c);
+    size_t cnt = in.length() / 2;
 
-    /*std::cout << "Setting up server..." << std::endl;
-    getaddrinfo(IP_ADDRESS, PORT, &hints, &server);*/
+    for (size_t i = 0; cnt > i; ++i) {
+        uint32_t s = 0;
+        stringstream ss;
+        ss << hex << in.substr(i * 2, 2);
+        ss >> s;
 
-    sockid = socket(PF_INET, SOCK_STREAM, 0);
+        output.push_back(static_cast<unsigned char>(s));
+    }
+
+    return output;
+}
+
+int main()
+{
+    WSAData wsa_data;
+    struct addrinfo* result = NULL, * ptr = NULL, hints;
+    string sent_message = "";
+    client_type client = { INVALID_SOCKET, -1, "" };
+    int iResult = 0;
+    string message;
+
+    cout << "Starting Client...\n";
+
+    // Initialize Winsock
+    iResult = WSAStartup(MAKEWORD(2, 2), &wsa_data);
+    if (iResult != 0) {
+        cout << "WSAStartup() failed with error: " << iResult << endl;
+        return 1;
+    }
+
+    ZeroMemory(&hints, sizeof(hints));
+    hints.ai_family = AF_UNSPEC;
+    hints.ai_socktype = SOCK_STREAM;
+    hints.ai_protocol = IPPROTO_TCP;
+
+    cout << "Connecting...\n";
+
+    // Resolve the server address and port
+    iResult = getaddrinfo(IP_ADDRESS, DEFAULT_PORT, &hints, &result);
+    if (iResult != 0) {
+        cout << "getaddrinfo() failed with error: " << iResult << endl;
+        WSACleanup();
+        system("pause");
+        return 1;
+    }
 
     // Attempt to connect to an address until one succeeds
-    while (true) {
+    for (ptr = result; ptr != NULL; ptr = ptr->ai_next) {
+
+        // Create a SOCKET for connecting to server
+        client.socket = socket(ptr->ai_family, ptr->ai_socktype,
+            ptr->ai_protocol);
+        if (client.socket == INVALID_SOCKET) {
+            cout << "socket() failed with error: " << WSAGetLastError() << endl;
+            WSACleanup();
+            system("pause");
+            return 1;
+        }
+
         // Connect to server.
-        iResult = connect(sockid, (struct sockaddr*)&addrport, sizeof(addrport));
-        NewSockid = connect(sockid, (struct sockaddr*)&addrport, sizeof(addrport));
+        iResult = connect(client.socket, ptr->ai_addr, (int)ptr->ai_addrlen);
         if (iResult == SOCKET_ERROR) {
-            closesocket(NewSockid);
-            NewSockid = INVALID_SOCKET;
+            closesocket(client.socket);
+            client.socket = INVALID_SOCKET;
             continue;
         }
         break;
     }
 
-    if (NewSockid == INVALID_SOCKET) {
-        std::cout << "Unable to connect to server!" << std::endl;
+    freeaddrinfo(result);
+
+    if (client.socket == INVALID_SOCKET) {
+        cout << "Unable to connect to server!" << endl;
         WSACleanup();
         system("pause");
         return 1;
     }
 
-    std::cout << "Successfully Connected" << std::endl;
+    cout << "Successfully Connected" << endl;
 
-    char* temp = new char[200];
-    recv(NewSockid, temp, sizeof(temp), 0);
+    //Obtain id from server for this client;
+    recv(client.socket, client.received_message, DEFAULT_BUFLEN, 0);
+    message = client.received_message;
 
-    while (1)
+    if (message != "Server is full")
     {
-        getline(std::cin, str);
-        str = string_to_hex(str);
-        iResult = send(NewSockid, str.c_str(), strlen(str.c_str()), 0);
+        client.id = atoi(client.received_message);
 
-        if (iResult <= 0)
+        thread my_thread(process_client, ref(client));
+
+        while (1)
         {
-            std::cout << "send() failed: " << WSAGetLastError() << std::endl;
-            break;
+            getline(cin, sent_message);
+
+            //Encryt message before send
+            sent_message = string_to_hex(sent_message);
+            iResult = send(client.socket, sent_message.c_str(), strlen(sent_message.c_str()), 0);
+
+            if (iResult <= 0)
+            {
+                cout << "send() failed: " << WSAGetLastError() << endl;
+                break;
+            }
         }
+
+        //Shutdown the connection since no more data will be sent
+        my_thread.detach();
     }
-    std::cout << "Shutting down socket..." << std::endl;
-    iResult = shutdown(NewSockid, SD_SEND);
+    else
+        cout << client.received_message << endl;
+
+    cout << "Shutting down socket..." << endl;
+    iResult = shutdown(client.socket, SD_SEND);
     if (iResult == SOCKET_ERROR) {
-        std::cout << "shutdown() failed with error: " << WSAGetLastError() << std::endl;
-        closesocket(NewSockid);
+        cout << "shutdown() failed with error: " << WSAGetLastError() << endl;
+        closesocket(client.socket);
         WSACleanup();
         system("pause");
         return 1;
     }
 
-    closesocket(NewSockid);
+    closesocket(client.socket);
     WSACleanup();
     system("pause");
     return 0;

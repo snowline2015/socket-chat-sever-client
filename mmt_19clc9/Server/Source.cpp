@@ -2,11 +2,9 @@
 #include <iostream>
 #include <string>
 #include <winsock2.h>
+#include <ws2tcpip.h>
 #pragma comment( lib, "wsock32.lib" )
-#include <winsock.h>
-#pragma comment( lib, "wsock32.lib" )
-#define PORT 1806 
-
+#define PORT 5000
 
 int main() {
 	std::string str;
@@ -14,8 +12,15 @@ int main() {
 	getline(std::cin, str);
 	const char* c = str.c_str();
 
+	WSADATA wsaData;
+	int wsOK = WSAStartup(MAKEWORD(2, 2), &wsaData);
+	if (wsOK != 0) {
+		std::cout << "Can't initialize winsock. Application is now exiting..." << std::endl;
+		return 0;
+	}
+
 	SOCKET sockid = socket(PF_INET, SOCK_STREAM, 0), NewSockid;
-	struct sockaddr_in addrport; 
+	struct sockaddr_in addrport;
 	int AddrSize = sizeof(addrport);
 	addrport.sin_family = AF_INET;
 	addrport.sin_port = htons(PORT);
@@ -38,7 +43,6 @@ int main() {
 			send(NewSockid, c, sizeof(c), 0);
 		//}
 		closesocket(sockid);
-		delete[] temp;
 	}
 
 		
@@ -46,6 +50,7 @@ int main() {
 			std::cout << "fail to connect to client !" << std::endl;
 			closesocket(sockid);
 		}*/
+	WSACleanup();
 	system("PAUSE");
 	return 0;
 }

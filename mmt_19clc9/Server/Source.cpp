@@ -30,6 +30,7 @@ int main() {
 	listen(sockid, SOMAXCONN);
 	while (true) {
 		NewSockid = accept(sockid, (struct sockaddr*)&addrport, &AddrSize);
+		if (NewSockid == INVALID_SOCKET) continue;
 		char* temp = new char[200];
 		/*if (recv(NewSockid, temp, sizeof(temp), 0) == 0) {
 			temp[strlen(temp) - 1] = '\0';

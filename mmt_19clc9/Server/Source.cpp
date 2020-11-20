@@ -1,4 +1,4 @@
-
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
 #include <iostream>
 #include <winsock2.h>
 #include <ws2tcpip.h>
@@ -9,13 +9,12 @@
 #include <sstream>
 #include <iomanip>
 #include <cstdint>
+#pragma comment( lib, "wsock32.lib" )
 
-using namespace std;
-#pragma comment (lib, "Ws2_32.lib")
+#define PORT "5000"
 
-#define IP_ADDRESS "192.168.102.1"
-#define DEFAULT_PORT "3504"
-#define DEFAULT_BUFLEN 512
+const char OPTION_VALUE = 1;
+const int MAX_CLIENTS = 5;
 
 struct client_type
 {
@@ -23,145 +22,48 @@ struct client_type
     SOCKET socket;
 };
 
-const char OPTION_VALUE = 1;
-const int MAX_CLIENTS = 5;
-
-//Function Prototypes
-int process_client(client_type& new_client, std::vector<client_type>& client_array, std::thread& thread);
-string string_to_hex(const string& in);
-string hex_to_string(const string& in);
-int main();
-
-string string_to_hex(const string& in) {
-    stringstream ss;
-
-    ss << hex << setfill('0');
-    for (size_t i = 0; in.length() > i; ++i) {
-        ss << setw(2) << static_cast<unsigned int>(static_cast<unsigned char>(in[i]));
-    }
-
-    return ss.str();
-}
-
-string hex_to_string(const string& in) {
-    string output;
-
-    if ((in.length() % 2) != 0) {
-        throw runtime_error("String is not valid length ...");
-    }
-
-    size_t cnt = in.length() / 2;
-
-    for (size_t i = 0; cnt > i; ++i) {
-        uint32_t s = 0;
-        stringstream ss;
-        ss << hex << in.substr(i * 2, 2);
-        ss >> s;
-
-        output.push_back(static_cast<unsigned char>(s));
-    }
-
-    return output;
-}
-
-int process_client(client_type& new_client, std::vector<client_type>& client_array, std::thread& thread)
-{
-    std::string msg = "";
-    char tempmsg[DEFAULT_BUFLEN] = "";
-
-    //Session
-    while (1)
-    {
-        memset(tempmsg, 0, DEFAULT_BUFLEN);
-
-        if (new_client.socket != 0)
-        {
-            int iResult = recv(new_client.socket, tempmsg, DEFAULT_BUFLEN, 0);
-
-            if (iResult != SOCKET_ERROR)
-            {
-                if (strcmp("", tempmsg))
-                    msg = "Client #" + std::to_string(new_client.id) + ": " + hex_to_string(tempmsg);
-
-                std::cout << msg.c_str() << std::endl;
-
-                //Broadcast that message to the other clients
-                for (int i = 0; i < MAX_CLIENTS; i++)
-                {
-                    if (client_array[i].socket != INVALID_SOCKET)
-                        if (new_client.id != i)
-                            iResult = send(client_array[i].socket, msg.c_str(), strlen(msg.c_str()), 0);
-                }
-            }
-            else
-            {
-                msg = "Client #" + std::to_string(new_client.id) + " Disconnected";
-
-                std::cout << msg << std::endl;
-
-                closesocket(new_client.socket);
-                closesocket(client_array[new_client.id].socket);
-                client_array[new_client.id].socket = INVALID_SOCKET;
-
-                //Broadcast the disconnection message to the other clients
-                for (int i = 0; i < MAX_CLIENTS; i++)
-                {
-                    if (client_array[i].socket != INVALID_SOCKET)
-                        iResult = send(client_array[i].socket, msg.c_str(), strlen(msg.c_str()), 0);
-                }
-
-                break;
-            }
-        }
-    } //end while
-
-    thread.detach();
-
-    return 0;
-}
-
 int main()
 {
-    WSADATA wsaData;
-    struct addrinfo hints;
-    struct addrinfo* server = NULL;
-    SOCKET server_socket = INVALID_SOCKET;
+    struct sockaddr_in addrport;
+    struct sockaddr_in* server = NULL;
+    SOCKET sockid = INVALID_SOCKET;
     std::string msg = "";
     std::vector<client_type> client(MAX_CLIENTS);
     int num_clients = 0;
     int temp_id = -1;
     std::thread my_thread[MAX_CLIENTS];
 
-    //Initialize Winsock
+    std::string str;
+    std::cout << "Input client ip address: ";
+    getline(std::cin, str);
+    const char* c = str.c_str();
+
     std::cout << "Intializing Winsock..." << std::endl;
-    WSAStartup(MAKEWORD(2, 2), &wsaData);
 
-    //Setup hints
-    ZeroMemory(&hints, sizeof(hints));
-    hints.ai_family = AF_INET;
-    hints.ai_socktype = SOCK_STREAM;
-    hints.ai_protocol = IPPROTO_TCP;
-    hints.ai_flags = AI_PASSIVE;
+    WSADATA wsaData;
+    int wsOK = WSAStartup(MAKEWORD(2, 2), &wsaData);
+    if (wsOK != 0) {
+        std::cout << "Can't initialize winsock. Application is now exiting..." << std::endl;
+        return 0;
+    }
 
-    //Setup Server
-    std::cout << "Setting up server..." << std::endl;
-    getaddrinfo(IP_ADDRESS, DEFAULT_PORT, &hints, &server);
+    ZeroMemory(&addrport, sizeof(addrport));
+    addrport.sin_family = AF_INET;
+    addrport.sin_port = htons(5000);
+    addrport.sin_addr.s_addr = inet_addr(c);
 
-    //Create a listening socket for connecting to server
-    std::cout << "Creating server socket..." << std::endl;
-    server_socket = socket(server->ai_family, server->ai_socktype, server->ai_protocol);
+    /*std::cout << "Setting up server..." << std::endl;
+    getaddrinfo(IP_ADDRESS, PORT, &hints, &server);*/
 
-    //Setup socket options
-    setsockopt(server_socket, SOL_SOCKET, SO_REUSEADDR, &OPTION_VALUE, sizeof(int)); //Make it possible to re-bind to a port that was used within the last 2 minutes
-    setsockopt(server_socket, IPPROTO_TCP, TCP_NODELAY, &OPTION_VALUE, sizeof(int)); //Used for interactive programs
+    sockid = socket(PF_INET, SOCK_STREAM, 0);
 
-    //Assign an address to the server socket.
-    std::cout << "Binding socket..." << std::endl;
-    bind(server_socket, server->ai_addr, (int)server->ai_addrlen);
+    ////Setup socket options
+    //setsockopt(server_socket, SOL_SOCKET, SO_REUSEADDR, &OPTION_VALUE, sizeof(int)); //Make it possible to re-bind to a port that was used within the last 2 minutes
+    //setsockopt(server_socket, IPPROTO_TCP, TCP_NODELAY, &OPTION_VALUE, sizeof(int)); //Used for interactive programs
 
-    //Listen for incoming connections.
-    std::cout << "Listening..." << std::endl;
-    listen(server_socket, SOMAXCONN);
+
+    bind(sockid, (struct sockaddr*)&addrport, sizeof(addrport));
+    listen(sockid, SOMAXCONN);
 
     //Initialize the client list
     for (int i = 0; i < MAX_CLIENTS; i++)
@@ -169,12 +71,12 @@ int main()
         client[i] = { -1, INVALID_SOCKET };
     }
 
-    while (1)
+    while (true)
     {
-        SOCKET incoming = INVALID_SOCKET;
-        incoming = accept(server_socket, NULL, NULL);
+        SOCKET NewSockid = INVALID_SOCKET;
+        NewSockid = accept(sockid, NULL, NULL);
 
-        if (incoming == INVALID_SOCKET) continue;
+        if (NewSockid == INVALID_SOCKET) continue;
 
         //Reset the number of clients
         num_clients = -1;
@@ -185,7 +87,7 @@ int main()
         {
             if (client[i].socket == INVALID_SOCKET && temp_id == -1)
             {
-                client[i].socket = incoming;
+                client[i].socket = NewSockid;
                 client[i].id = i;
                 temp_id = i;
             }
@@ -204,28 +106,25 @@ int main()
             send(client[temp_id].socket, msg.c_str(), strlen(msg.c_str()), 0);
 
             //Create a thread process for that client
-            my_thread[temp_id] = std::thread(process_client, std::ref(client[temp_id]), std::ref(client), std::ref(my_thread[temp_id]));
+            //my_thread[temp_id] = std::thread(process_client, std::ref(client[temp_id]), std::ref(client), std::ref(my_thread[temp_id]));
         }
         else
         {
             msg = "Server is full";
-            send(incoming, msg.c_str(), strlen(msg.c_str()), 0);
+            send(NewSockid, msg.c_str(), strlen(msg.c_str()), 0);
             std::cout << msg << std::endl;
         }
-    } //end while
+    }
 
 
-    //Close listening socket
-    closesocket(server_socket);
+    closesocket(sockid);
 
-    //Close client socket
     for (int i = 0; i < MAX_CLIENTS; i++)
     {
         my_thread[i].detach();
         closesocket(client[i].socket);
     }
 
-    //Clean up Winsock
     WSACleanup();
     std::cout << "Program has ended successfully" << std::endl;
 

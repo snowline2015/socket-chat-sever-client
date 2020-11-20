@@ -13,7 +13,7 @@ int main() {
 	getline(std::cin, str);
 	const char* c = str.c_str();
 
-	int sockid = socket(PF_INET, SOCK_STREAM, 0);
+	SOCKET sockid = socket(PF_INET, SOCK_STREAM, 0);
 	struct sockaddr_in addrport;
 	addrport.sin_family = AF_INET;
 	addrport.sin_port = htons(PORT);
@@ -31,6 +31,7 @@ int main() {
 			const char* c = str.c_str();
 			send(sockid, c, sizeof(c), 0);*/
 		//}
+		delete[] temp;
 	}
 	return 0;
 }

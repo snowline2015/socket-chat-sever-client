@@ -14,7 +14,7 @@ int main() {
 	getline(std::cin, str);
 	const char* c = str.c_str();
 
-	int sockid = socket(PF_INET, SOCK_STREAM, 0), NewSockid;
+	SOCKET sockid = socket(PF_INET, SOCK_STREAM, 0), NewSockid;
 	struct sockaddr_in addrport; 
 	int AddrSize = sizeof(addrport);
 	addrport.sin_family = AF_INET;
@@ -38,6 +38,7 @@ int main() {
 			send(NewSockid, c, sizeof(c), 0);
 		//}
 		closesocket(sockid);
+		delete[] temp;
 	}
 
 		

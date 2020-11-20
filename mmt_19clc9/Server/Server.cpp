@@ -85,8 +85,26 @@ int main()
         {
             //Send the id to that client
             std::cout << "Client #" << client[temp_id].id << " Accepted" << std::endl;
-            msg = "OK nha";
-            send(client[temp_id].socket, msg.c_str(), strlen(msg.c_str()), 0);
+            char temp[4096] = "Ok nha";
+            
+            while (true) {
+                int BytesSent = send(NewSockid, temp, 4096, 0);
+                if (BytesSent == SOCKET_ERROR)
+                    send(NewSockid, temp, 4096, 0);
+                else if (BytesSent == 0) continue;
+                else {
+                    ZeroMemory(&temp, sizeof(temp));
+                    recv(NewSockid, temp, 4096, 0);
+                    str = temp;
+
+                    if (str != "bye") {
+                        std::cout << str << "\nMessage: ";
+                        getline(std::cin, str);
+                        send(NewSockid, str.c_str(), strlen(str.c_str()), 0);
+                    }
+                    else break;
+                }
+            }
 
             //Create a thread process for that client
             //my_thread[temp_id] = std::thread(process_client, std::ref(client[temp_id]), std::ref(client), std::ref(my_thread[temp_id]));
@@ -95,7 +113,7 @@ int main()
         {
             msg = "Server is full";
             send(NewSockid, msg.c_str(), strlen(msg.c_str()), 0);
-            std::cout << msg << std::endl;
+            //std::cout << msg << std::endl;
         }
     }
 

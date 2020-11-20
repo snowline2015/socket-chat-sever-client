@@ -8,7 +8,7 @@ int main() {
     int iResult = 0;
 
     std::string str;
-    std::cout << "Input client ip address: ";
+    std::cout << "Input server ip address: ";
     getline(std::cin, str);
     const char* c = str.c_str();
 
@@ -29,21 +29,20 @@ int main() {
     /*std::cout << "Setting up server..." << std::endl;
     getaddrinfo(IP_ADDRESS, PORT, &hints, &server);*/
 
-    sockid = socket(PF_INET, SOCK_STREAM, 0);
 
     // Attempt to connect to an address until one succeeds
     while (true) {
+        sockid = socket(PF_INET, SOCK_STREAM, 0);
         iResult = connect(sockid, (struct sockaddr*)&addrport, sizeof(addrport));
-        NewSockid = socket(PF_INET, SOCK_STREAM, 0);
         if (iResult == SOCKET_ERROR) {
-            closesocket(NewSockid);
-            NewSockid = INVALID_SOCKET;
+            closesocket(sockid);
+            sockid = INVALID_SOCKET;
             continue;
         }
         break;
     }
 
-    if (NewSockid == INVALID_SOCKET) {
+    if (sockid == INVALID_SOCKET) {
         std::cout << "Unable to connect to server!" << std::endl;
         WSACleanup();
         system("pause");
@@ -52,21 +51,28 @@ int main() {
 
     std::cout << "Successfully Connected" << std::endl;
 
-    char* temp = new char[200];
-    recv(NewSockid, temp, sizeof(temp), 0);
-    std::cout << temp << std::endl;
+    char* temp = new char[4096];
+    
 
     while (true)
     {
-        std::cout << "Message: ";
-        getline(std::cin, str);
-        //str = string_to_hex(str);
-        iResult = send(NewSockid, str.c_str(), sizeof(str.c_str()), 0);
+        int BytesReceived = recv(sockid, temp, 4096, 0);
+        
+        if (BytesReceived == SOCKET_ERROR) continue;
+        else if (BytesReceived == 0) break;
+        else {
+            std::cout << temp << std::endl;
 
-        if (iResult <= 0)
-        {
-            std::cout << "send() failed: " << WSAGetLastError() << std::endl;
-            break;
+            std::cout << "Message: ";
+            getline(std::cin, str);
+            //str = string_to_hex(str);
+            iResult = send(sockid, str.c_str(), sizeof(str.c_str()), 0);
+
+            if (iResult <= 0)
+            {
+                std::cout << "send() failed: " << WSAGetLastError() << std::endl;
+                break;
+            }
         }
     }
     std::cout << "Shutting down socket..." << std::endl;
@@ -79,7 +85,7 @@ int main() {
         return 1;
     }*/
 
-    closesocket(NewSockid);
+    closesocket(sockid);
     WSACleanup();
     system("pause");
     return 0;

@@ -102,7 +102,7 @@ int main()
         {
             //Send the id to that client
             std::cout << "Client #" << client[temp_id].id << " Accepted" << std::endl;
-            msg = std::to_string(client[temp_id].id);
+            msg = "OK nha";
             send(client[temp_id].socket, msg.c_str(), strlen(msg.c_str()), 0);
 
             //Create a thread process for that client

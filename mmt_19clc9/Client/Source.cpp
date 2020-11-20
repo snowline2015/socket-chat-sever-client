@@ -77,12 +77,14 @@ int main() {
 
     char* temp = new char[200];
     recv(NewSockid, temp, sizeof(temp), 0);
+    std::cout << temp << std::endl;
 
     while (true)
     {
+        std::cout << "Message: ";
         getline(std::cin, str);
         //str = string_to_hex(str);
-        iResult = send(NewSockid, str.c_str(), strlen(str.c_str()), 0);
+        iResult = send(NewSockid, str.c_str(), sizeof(str.c_str()), 0);
 
         if (iResult <= 0)
         {
@@ -91,14 +93,14 @@ int main() {
         }
     }
     std::cout << "Shutting down socket..." << std::endl;
-    iResult = shutdown(NewSockid, SD_SEND);
+    /*iResult = shutdown(NewSockid, SD_SEND);
     if (iResult == SOCKET_ERROR) {
         std::cout << "shutdown() failed with error: " << WSAGetLastError() << std::endl;
         closesocket(NewSockid);
         WSACleanup();
         system("pause");
         return 1;
-    }
+    }*/
 
     closesocket(NewSockid);
     WSACleanup();

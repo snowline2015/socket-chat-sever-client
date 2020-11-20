@@ -3,24 +3,7 @@
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include <string>
-#include <thread>
-#include <vector>
-#include <stdexcept>
-#include <sstream>
-#include <iomanip>
-#include <cstdint>
-#pragma comment( lib, "wsock32.lib" )
-
-#define PORT "5000"
-
-const char OPTION_VALUE = 1;
-const int MAX_CLIENTS = 5;
-
-struct client_type
-{
-    int id;
-    SOCKET socket;
-};
+#include "Header.h"
 
 int main()
 {

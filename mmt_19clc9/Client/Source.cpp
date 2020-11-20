@@ -1,27 +1,4 @@
-#define _WINSOCK_DEPRECATED_NO_WARNINGS
-#include <iostream>
-#include <winsock2.h>
-#include <ws2tcpip.h>
-#include <string>
-#include <thread>
-#include <stdexcept>
-#include <sstream>
-#include <iomanip>
-#include <cstdint>
-#pragma comment( lib, "wsock32.lib" )
-
-#define PORT "5000"
-
-std::string string_to_hex(const std::string& in) {
-    std::stringstream ss;
-
-    ss << std::hex << std::setfill('0');
-    for (size_t i = 0; in.length() > i; ++i) {
-        ss << std::setw(2) << static_cast<unsigned int>(static_cast<unsigned char>(in[i]));
-    }
-
-    return ss.str();
-}
+#include "Header.h"
 
 int main() {
     struct sockaddr_in addrport;

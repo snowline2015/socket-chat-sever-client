@@ -7,7 +7,7 @@ void Client_Multiple_Chatting(client_type& new_client, std::vector<client_type>&
     while (true) {
         memset(&tempmsg, NULL, sizeof(tempmsg));
 
-        if (new_client.socket != INVALID_SOCKET) {
+        if (new_client.socket != 0) {
             int iResult = recv(new_client.socket, tempmsg, 4096, 0);
             //tempmsg[strlen(tempmsg)] = '\0';
             if (iResult != SOCKET_ERROR) {
@@ -27,6 +27,7 @@ void Client_Multiple_Chatting(client_type& new_client, std::vector<client_type>&
 
                 for (int i = 0; i < MAX_CLIENTS; i++) {
                     if (client_array[i].socket != INVALID_SOCKET)
+                        if (client_array[i].socket == SOCKET_ERROR) continue;
                         if (new_client.id != i)
                             iResult = send(client_array[i].socket, msg.c_str(), strlen(msg.c_str()), 0);
                 }
@@ -34,7 +35,7 @@ void Client_Multiple_Chatting(client_type& new_client, std::vector<client_type>&
             else {
                 msg = "Client #" + std::to_string(new_client.id) + " has disconnected";
 
-                PlaySound(TEXT("Sound/Summoner.mp3"), NULL, SND_SYNC);
+                PlaySound(TEXT("Sound\\Summoner.wav"), NULL, SND_SYNC);
 
                 std::cout << msg << std::endl;
 

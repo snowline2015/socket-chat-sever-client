@@ -65,11 +65,14 @@ int main() {
 
             //Encryt message before send
             //sent_message = string_to_hex(sent_message);
+            if (str.compare("exit") == 0) break;
+
             iResult = send(client.socket, str.c_str(), strlen(str.c_str()), 0);
 
             if (iResult <= 0) break;
         }
 
+        client.socket = INVALID_SOCKET;
         my_thread.detach();
     }
     //else

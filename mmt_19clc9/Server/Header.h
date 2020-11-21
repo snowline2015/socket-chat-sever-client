@@ -14,7 +14,7 @@
 #include <Windows.h>
 #pragma comment( lib, "wsock32.lib" )
 #pragma comment( lib, "Ws2_32.lib")
-#pragma comment( lib, "winmm.lib")
+#pragma comment( lib, "Winmm.lib")
 
 #define PORT "5000"
 

@@ -55,7 +55,6 @@ int main() {
     
     while (true)
     {
-        
         int BytesReceived = recv(sockid, temp, 4096, 0);
         
         if (BytesReceived == SOCKET_ERROR) continue;

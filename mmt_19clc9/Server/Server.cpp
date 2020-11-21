@@ -1,14 +1,8 @@
-#define _WINSOCK_DEPRECATED_NO_WARNINGS
-#include <iostream>
-#include <winsock2.h>
-#include <ws2tcpip.h>
-#include <string>
 #include "Header.h"
 
 int main()
 {
     struct sockaddr_in addrport;
-    struct sockaddr_in* server = NULL;
     SOCKET sockid = INVALID_SOCKET;
     std::string msg = "";
     std::vector<client_type> client(MAX_CLIENTS);
@@ -17,9 +11,6 @@ int main()
     std::thread my_thread[MAX_CLIENTS];
 
     std::string str;
-    std::cout << "Input client ip address: ";
-    getline(std::cin, str);
-    const char* c = str.c_str();
 
     std::cout << "Intializing Winsock..." << std::endl;
 
@@ -33,7 +24,7 @@ int main()
     ZeroMemory(&addrport, sizeof(addrport));
     addrport.sin_family = AF_INET;
     addrport.sin_port = htons(5000);
-    addrport.sin_addr.s_addr = inet_addr(c);
+    addrport.sin_addr.s_addr = htonl(INADDR_ANY);// inet_addr(c);
 
     /*std::cout << "Setting up server..." << std::endl;
     getaddrinfo(IP_ADDRESS, PORT, &hints, &server);*/
@@ -48,11 +39,7 @@ int main()
     bind(sockid, (struct sockaddr*)&addrport, sizeof(addrport));
     listen(sockid, SOMAXCONN);
 
-    //Initialize the client list
-    for (int i = 0; i < MAX_CLIENTS; i++)
-    {
-        client[i] = { -1, INVALID_SOCKET };
-    }
+    Initialize(client);
 
     while (true)
     {
@@ -73,12 +60,15 @@ int main()
                 client[i].socket = NewSockid;
                 client[i].id = i;
                 temp_id = i;
+                char clientIP[16];
+                int client_len = sizeof(addrport);
+                getpeername(NewSockid, (struct sockaddr*)&addrport, &client_len);
+                client[i].IP = inet_ntop(AF_INET, &addrport.sin_addr, clientIP, sizeof(clientIP));
+                memset(&clientIP, NULL, sizeof(clientIP));
             }
 
             if (client[i].socket != INVALID_SOCKET)
                 num_clients++;
-
-            //std::cout << client[i].socket << std::endl;
         }
 
         if (temp_id != -1)

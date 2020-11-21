@@ -79,15 +79,8 @@ int main() {
     //    std::cout << client.RecvMsg << std::endl;
 
     std::cout << "Shutting down socket..." << std::endl;
-    iResult = shutdown(client.socket, SD_SEND);
-    if (iResult == SOCKET_ERROR) {
-        std::cout << "shutdown() failed with error: " << WSAGetLastError() << std::endl;
-        closesocket(client.socket);
-        WSACleanup();
-        system("pause");
-        return 1;
-    }
 
+    shutdown(client.socket, SD_SEND);
     closesocket(client.socket);
     WSACleanup();
     system("pause");

@@ -51,18 +51,18 @@ int main() {
 
     std::cout << "Successfully Connected" << std::endl;
 
-    char* temp = new char[4096];
+    char temp[4096];
     
-
     while (true)
     {
+        
         int BytesReceived = recv(sockid, temp, 4096, 0);
         
         if (BytesReceived == SOCKET_ERROR) continue;
         else if (BytesReceived == 0) break;
         else {
             std::cout << temp << std::endl;
-
+            memset(&temp, NULL, sizeof(temp));
             std::cout << "Message: ";
             getline(std::cin, str);
             //str = string_to_hex(str);

@@ -86,24 +86,22 @@ int main()
             //Send the id to that client
             std::cout << "Client #" << client[temp_id].id << " Accepted" << std::endl;
             char temp[4096] = "Ok nha";
-            
+            send(NewSockid, temp, 4096, 0);
             while (true) {
-                int BytesSent = send(NewSockid, temp, 4096, 0);
-                if (BytesSent == SOCKET_ERROR)
-                    send(NewSockid, temp, 4096, 0);
-                else if (BytesSent == 0) continue;
-                else {
-                    ZeroMemory(&temp, sizeof(temp));
-                    recv(NewSockid, temp, 4096, 0);
-                    str = temp;
+                memset(&temp, NULL, sizeof(temp));
+                recv(NewSockid, temp, 4096, 0);
+                temp[strlen(temp)] = '\0';
+                str = temp;
 
-                    if (str != "bye") {
-                        std::cout << str << "\nMessage: ";
-                        getline(std::cin, str);
-                        send(NewSockid, str.c_str(), strlen(str.c_str()), 0);
-                    }
-                    else break;
+                if (str != "bye") {
+                    std::cout << str << "\nMessage: ";
+                    getline(std::cin, str);
+                    int BytesSent = send(NewSockid, str.c_str(), strlen(str.c_str()), 0);
+                    if (BytesSent == SOCKET_ERROR)
+                        send(NewSockid, temp, 4096, 0);
+                    else if (BytesSent == 0) break;
                 }
+                else break;
             }
 
             //Create a thread process for that client

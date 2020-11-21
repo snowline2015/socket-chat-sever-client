@@ -11,8 +11,10 @@
 #include <sstream>
 #include <iomanip>
 #include <cstdint>
+#include <Windows.h>
 #pragma comment( lib, "wsock32.lib" )
 #pragma comment( lib, "Ws2_32.lib")
+#pragma comment( lib, "winmm.lib")
 
 #define PORT "5000"
 
@@ -21,13 +23,13 @@ const int MAX_CLIENTS = 10;
 
 struct client_type
 {
-    int id;
+    int id = -1;
     std::string IP, Username, 
         Password = "123";
-    SOCKET socket;
+    SOCKET socket = INVALID_SOCKET;
 };
 
-void Initialize(std::vector<client_type>& client);
+void Client_Multiple_Chatting(client_type& new_client, std::vector<client_type>& client_array, std::thread& thread);
 
 
 #endif

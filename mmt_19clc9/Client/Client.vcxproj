@@ -142,6 +142,7 @@
   <ItemGroup>
     <ClCompile Include="Encryption.cpp" />
     <ClCompile Include="Client.cpp" />
+    <ClCompile Include="Function.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header.h" />

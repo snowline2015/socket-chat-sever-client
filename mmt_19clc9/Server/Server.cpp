@@ -39,8 +39,6 @@ int main()
     bind(sockid, (struct sockaddr*)&addrport, sizeof(addrport));
     listen(sockid, SOMAXCONN);
 
-    Initialize(client);
-
     while (true)
     {
         SOCKET NewSockid = INVALID_SOCKET;
@@ -77,25 +75,10 @@ int main()
             std::cout << "Client #" << client[temp_id].id << " Accepted" << std::endl;
             char temp[4096] = "Ok nha";
             send(NewSockid, temp, 4096, 0);
-            while (true) {
-                memset(&temp, NULL, sizeof(temp));
-                recv(NewSockid, temp, 4096, 0);
-                temp[strlen(temp)] = '\0';
-                str = temp;
-
-                if (str != "bye") {
-                    std::cout << str << "\nMessage: ";
-                    getline(std::cin, str);
-                    int BytesSent = send(NewSockid, str.c_str(), strlen(str.c_str()), 0);
-                    if (BytesSent == SOCKET_ERROR)
-                        send(NewSockid, temp, 4096, 0);
-                    else if (BytesSent == 0) break;
-                }
-                else break;
-            }
+            
 
             //Create a thread process for that client
-            //my_thread[temp_id] = std::thread(process_client, std::ref(client[temp_id]), std::ref(client), std::ref(my_thread[temp_id]));
+            my_thread[temp_id] = std::thread(Client_Multiple_Chatting, std::ref(client[temp_id]), std::ref(client), std::ref(my_thread[temp_id]));
         }
         else
         {

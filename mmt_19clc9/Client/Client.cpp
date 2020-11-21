@@ -2,8 +2,8 @@
 
 int main() {
     struct sockaddr_in addrport;
-    struct sockaddr_in* server = NULL, * ptr = NULL, * result = NULL;
-    SOCKET sockid = INVALID_SOCKET, NewSockid;
+    struct sockaddr_in* server = NULL, * result = NULL;
+    client_type client;
     std::string msg = "";
     int iResult = 0;
 
@@ -32,17 +32,17 @@ int main() {
 
     // Attempt to connect to an address until one succeeds
     while (true) {
-        sockid = socket(PF_INET, SOCK_STREAM, 0);
-        iResult = connect(sockid, (struct sockaddr*)&addrport, sizeof(addrport));
+        client.socket = socket(PF_INET, SOCK_STREAM, 0);
+        iResult = connect(client.socket, (struct sockaddr*)&addrport, sizeof(addrport));
         if (iResult == SOCKET_ERROR) {
-            closesocket(sockid);
-            sockid = INVALID_SOCKET;
+            closesocket(client.socket);
+            client.socket = INVALID_SOCKET;
             continue;
         }
         break;
     }
 
-    if (sockid == INVALID_SOCKET) {
+    if (client.socket == INVALID_SOCKET) {
         std::cout << "Unable to connect to server!" << std::endl;
         WSACleanup();
         system("pause");
@@ -51,40 +51,41 @@ int main() {
 
     std::cout << "Successfully Connected" << std::endl;
 
-    char temp[4096];
+    recv(client.socket, client.RecvMsg, 4096, 0);
+    std::cout << client.RecvMsg << std::endl;
     
-    while (true)
+    if (strcmp(client.RecvMsg, "Server is full") != 0)
     {
-        int BytesReceived = recv(sockid, temp, 4096, 0);
-        
-        if (BytesReceived == SOCKET_ERROR) continue;
-        else if (BytesReceived == 0) break;
-        else {
-            std::cout << temp << std::endl;
-            memset(&temp, NULL, sizeof(temp));
-            std::cout << "Message: ";
-            getline(std::cin, str);
-            //str = string_to_hex(str);
-            iResult = send(sockid, str.c_str(), sizeof(str.c_str()), 0);
 
-            if (iResult <= 0)
-            {
-                std::cout << "send() failed: " << WSAGetLastError() << std::endl;
-                break;
-            }
+        std::thread my_thread(Client_Multiple_Chatting, std::ref(client));
+
+        while (true)
+        {
+            getline(std::cin, str);
+
+            //Encryt message before send
+            //sent_message = string_to_hex(sent_message);
+            iResult = send(client.socket, str.c_str(), strlen(str.c_str()), 0);
+
+            if (iResult <= 0) break;
         }
+
+        my_thread.detach();
     }
+    //else
+    //    std::cout << client.RecvMsg << std::endl;
+
     std::cout << "Shutting down socket..." << std::endl;
-    /*iResult = shutdown(NewSockid, SD_SEND);
+    iResult = shutdown(client.socket, SD_SEND);
     if (iResult == SOCKET_ERROR) {
         std::cout << "shutdown() failed with error: " << WSAGetLastError() << std::endl;
-        closesocket(NewSockid);
+        closesocket(client.socket);
         WSACleanup();
         system("pause");
         return 1;
-    }*/
+    }
 
-    closesocket(sockid);
+    closesocket(client.socket);
     WSACleanup();
     system("pause");
     return 0;

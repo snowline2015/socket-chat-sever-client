@@ -5,7 +5,7 @@ int main()
     struct sockaddr_in addrport;
     SOCKET sockid = INVALID_SOCKET;
     std::string msg = "";
-    std::vector<client_type> client(MAX_CLIENTS);
+    std::vector<client_type> client(MAX_CLIENTS), client_List;
     int num_clients = 0;
     int temp_id = -1;
     std::thread my_thread[MAX_CLIENTS];
@@ -20,6 +20,8 @@ int main()
         std::cout << "Can't initialize winsock. Application is now exiting..." << std::endl;
         return 0;
     }
+
+    Read_Account(client_List);
 
     ZeroMemory(&addrport, sizeof(addrport));
     addrport.sin_family = AF_INET;
@@ -76,8 +78,6 @@ int main()
             char temp[4096] = "Ok nha";
             send(NewSockid, temp, 4096, 0);
             
-
-            //Create a thread process for that client
             my_thread[temp_id] = std::thread(Client_Multiple_Chatting, std::ref(client[temp_id]), std::ref(client), std::ref(my_thread[temp_id]));
         }
         else

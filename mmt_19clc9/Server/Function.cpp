@@ -1,5 +1,21 @@
 #include "Header.h"
 
+void Read_Account(std::vector<client_type>& User_List) {
+    std::ifstream f("Data\Account.csv");
+    //SkipBOM(f);
+    if (!f.is_open())
+        return;
+    string temp;
+    while (!f.eof()) {
+        client_type user;
+        getline(f, user.Username, ',');
+        getline(f, user.Password, '\n');
+        if (user.Username.size() != 0)
+            User_List.push_back(user);
+    }
+    f.close();
+}
+
 void Client_Multiple_Chatting(client_type& new_client, std::vector<client_type>& client_array, std::thread& thread) {
     std::string msg = "";
     char tempmsg[4096] = "";
@@ -17,9 +33,6 @@ void Client_Multiple_Chatting(client_type& new_client, std::vector<client_type>&
                     
                     msg = "Client #" + std::to_string(new_client.id) + ": " + (tempmsg);  // De y dong nay, client # la tam thoi
                     // Sau nay co username thi chinh sua lai
-
-
-
 
 
 
@@ -56,3 +69,5 @@ void Client_Multiple_Chatting(client_type& new_client, std::vector<client_type>&
 
     thread.detach();
 }
+
+

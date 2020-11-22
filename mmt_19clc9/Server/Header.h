@@ -11,10 +11,12 @@
 #include <sstream>
 #include <iomanip>
 #include <cstdint>
+#include <fstream>
 #include <Windows.h>
 #pragma comment( lib, "wsock32.lib" )
 #pragma comment( lib, "Ws2_32.lib")
 #pragma comment( lib, "Winmm.lib")
+using namespace std;
 
 #define PORT "5000"
 
@@ -30,6 +32,8 @@ struct client_type
 };
 
 void Client_Multiple_Chatting(client_type& new_client, std::vector<client_type>& client_array, std::thread& thread);
+void Read_Account(std::vector<client_type>& User_List);
+void Register(std::vector<client_type>& User_List);
 
 
 #endif

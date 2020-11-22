@@ -48,7 +48,7 @@ void Client_Multiple_Chatting(client_type& new_client, std::vector<client_type>&
             else {
                 msg = "Client #" + std::to_string(new_client.id) + " has disconnected";
 
-                PlaySound(TEXT("Sound\\Summoner.wav"), NULL, SND_SYNC);
+                PlaySound(TEXT("Sound\\Summoner.wav"), NULL, SND_ASYNC);
 
                 std::cout << msg << std::endl;
 

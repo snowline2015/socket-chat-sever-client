@@ -23,7 +23,7 @@ void Client_Multiple_Chatting(client_type& new_client, std::vector<client_type>&
 
 
 
-                std::cout << msg.c_str() << std::endl;
+                //std::cout << msg.c_str() << std::endl;
 
                 for (int i = 0; i < MAX_CLIENTS; i++) {
                     if (client_array[i].socket != INVALID_SOCKET)

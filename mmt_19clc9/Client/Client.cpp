@@ -65,7 +65,10 @@ int main() {
 
             //Encryt message before send
             //sent_message = string_to_hex(sent_message);
-            if (str.compare("exit") == 0) break;
+
+
+
+            if (str.compare("exit") == 0) break;    // De y dong nay, sau nay se chinh lai neu client muon out group chat
 
             iResult = send(client.socket, str.c_str(), strlen(str.c_str()), 0);
 
@@ -73,10 +76,12 @@ int main() {
         }
 
         client.socket = INVALID_SOCKET;
+
         my_thread.detach();
     }
-    //else
-    //    std::cout << client.RecvMsg << std::endl;
+
+    else
+        std::cout << client.RecvMsg << std::endl;
 
     std::cout << "Shutting down socket..." << std::endl;
 

@@ -11,6 +11,8 @@
 #include <iomanip>
 #include <cstdint>
 #include <Windows.h>
+#include<vector>
+#include <conio.h>
 #pragma comment( lib, "wsock32.lib" )
 #pragma comment( lib, "Ws2_32.lib")
 #pragma comment( lib, "winmm.lib")
@@ -23,6 +25,11 @@ struct client_type {
     int id = -1;
     std::string IP, Username, Password;
     char RecvMsg[4096];
+};
+
+struct User {
+    string ID;
+    string Password;
 };
 
 void Client_Multiple_Chatting(client_type& new_client);

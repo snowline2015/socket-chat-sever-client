@@ -16,15 +16,27 @@ void Read_Account(std::vector<client_type>& User_List) {
     f.close();
 }
 
+void Write_Account(vector<client_type>& users) {
+    ofstream o;
+    o.open("Data\Account.csv");
+    if (!o.is_open())
+        return;
+    for (int i = 0; i < users.size(); ++i) {
+        o << users[i].Username << ',';
+        o << users[i].Password;
+    }
+    o.close();
+}
+
 void Client_Multiple_Chatting(client_type& new_client, std::vector<client_type>& client_array, std::thread& thread) {
     std::string msg = "";
-    char tempmsg[4096] = "";
+    char tempmsg[DEFAULT_BUFFER_LENGTH] = "";
 
     while (true) {
         memset(&tempmsg, NULL, sizeof(tempmsg));
 
         if (new_client.socket != 0) {
-            int iResult = recv(new_client.socket, tempmsg, 4096, 0);
+            int iResult = recv(new_client.socket, tempmsg, DEFAULT_BUFFER_LENGTH, 0);
             //tempmsg[strlen(tempmsg)] = '\0';
             if (iResult != SOCKET_ERROR) {
                 //if (strcmp("", tempmsg) == 0)
@@ -70,4 +82,33 @@ void Client_Multiple_Chatting(client_type& new_client, std::vector<client_type>&
     thread.detach();
 }
 
+bool Register(SOCKET NewSockid, std::vector<client_type>& User_List) {
+    char temp[DEFAULT_BUFFER_LENGTH] = "";
+    int iResult = recv(NewSockid, temp, DEFAULT_BUFFER_LENGTH, 0);
+    if (iResult != SOCKET_ERROR) {
+        client_type new_user;
+        new_user.Username = std::string(temp);
+        User_List.push_back(new_user);
+        return true;
+    }
+    return false;
+}
 
+bool Login(SOCKET NewSockid, std::vector<client_type>& User_List) {
+    char temp[DEFAULT_BUFFER_LENGTH] = "";
+    int iResult = recv(NewSockid, temp, DEFAULT_BUFFER_LENGTH, 0);
+    if (iResult != SOCKET_ERROR) {
+        for (std::vector<client_type>::iterator p = User_List.begin(); p != User_List.end(); p++) {
+            if ((*p).Username.compare(std::string(temp)) == 0) {
+                memset(&temp, NULL, sizeof(temp));
+                iResult = recv(NewSockid, temp, DEFAULT_BUFFER_LENGTH, 0);
+                if (iResult != SOCKET_ERROR) 
+                    if ((*p).Password.compare(std::string(temp)) == 0)
+                        return true;
+                else return false;
+            }
+        }
+        return false;
+    }
+    return false;
+}

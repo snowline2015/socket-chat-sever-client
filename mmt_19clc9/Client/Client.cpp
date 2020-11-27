@@ -49,39 +49,14 @@ int main() {
         return 1;
     }
 
-    std::cout << "Successfully Connected" << std::endl;
-
-    recv(client.socket, client.RecvMsg, 4096, 0);
-    std::cout << client.RecvMsg << std::endl;
-    
-    if (strcmp(client.RecvMsg, "Server is full") != 0)
-    {
-
-        std::thread my_thread(Client_Multiple_Chatting, std::ref(client));
-
-        while (true)
-        {
-            getline(std::cin, str);
-
-            //Encryt message before send
-            //sent_message = string_to_hex(sent_message);
-
-
-
-            if (str.compare("exit") == 0) break;    // De y dong nay, sau nay se chinh lai neu client muon out group chat
-
-            iResult = send(client.socket, str.c_str(), strlen(str.c_str()), 0);
-
-            if (iResult <= 0) break;
+    /*while (true) {
+        if (Login(client)) {
+            std::cout << "Successfully Connected" << std::endl;
+            break;
         }
+    }*/
 
-        client.socket = INVALID_SOCKET;
-
-        my_thread.detach();
-    }
-
-    else
-        std::cout << client.RecvMsg << std::endl;
+    Client_Group_Chat(client);
 
     std::cout << "Shutting down socket..." << std::endl;
 

@@ -19,19 +19,19 @@
 using namespace std;
 
 #define PORT "5000"
+#define DEFAULT_BUFFER_LENGTH 4096
 
 struct client_type {
     SOCKET socket = INVALID_SOCKET;
     int id = -1;
     std::string IP, Username, Password;
-    char RecvMsg[4096];
+    char RecvMsg[DEFAULT_BUFFER_LENGTH];
 };
 
-struct User {
-    string ID;
-    string Password;
-};
-
-void Client_Multiple_Chatting(client_type& new_client);
+bool Login(client_type& client);
+void Client_Thread(client_type& new_client);
+void Client_Group_Chat(client_type& client);
+void Client_Private_Chat(client_type& client);
+void Client_Send_File();
 
 #endif

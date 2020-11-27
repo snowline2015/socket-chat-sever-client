@@ -60,11 +60,11 @@ int main()
                 client[i].socket = NewSockid;
                 client[i].id = i;
                 temp_id = i;
-                char clientIP[16];
+                /*char clientIP[16];
                 int client_len = sizeof(addrport);
                 getpeername(NewSockid, (struct sockaddr*)&addrport, &client_len);
                 client[i].IP = inet_ntop(AF_INET, &addrport.sin_addr, clientIP, sizeof(clientIP));
-                memset(&clientIP, NULL, sizeof(clientIP));
+                memset(&clientIP, NULL, sizeof(clientIP));*/
             }
 
             if (client[i].socket != INVALID_SOCKET)
@@ -75,8 +75,8 @@ int main()
         {
             //Send the id to that client
             std::cout << "Client #" << client[temp_id].id << " Accepted" << std::endl;
-            char temp[4096] = "Ok nha";
-            send(NewSockid, temp, 4096, 0);
+            char temp[DEFAULT_BUFFER_LENGTH] = "Ok nha";
+            send(NewSockid, temp, DEFAULT_BUFFER_LENGTH, 0);
             
             my_thread[temp_id] = std::thread(Client_Multiple_Chatting, std::ref(client[temp_id]), std::ref(client), std::ref(my_thread[temp_id]));
         }

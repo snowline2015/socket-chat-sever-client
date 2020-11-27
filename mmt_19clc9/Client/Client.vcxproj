@@ -143,6 +143,7 @@
     <ClCompile Include="Encryption.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="Function.cpp" />
+    <ClCompile Include="Login.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header.h" />

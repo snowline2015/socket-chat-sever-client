@@ -49,12 +49,15 @@ int main() {
         return 1;
     }
 
-    /*while (true) {
-        if (Login(client)) {
+    Register(client);
+    Login(client);
+
+    while (true) {
+        if (Login(client) == true) {
             std::cout << "Successfully Connected" << std::endl;
             break;
         }
-    }*/
+    }
 
     Client_Group_Chat(client);
 

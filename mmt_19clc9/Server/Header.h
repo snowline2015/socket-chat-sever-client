@@ -1,6 +1,7 @@
 #ifndef HEADER_H
 #define HEADER_H
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include <winsock2.h>
 #include <ws2tcpip.h>
@@ -27,8 +28,7 @@ const int MAX_CLIENTS = 10;
 struct client_type
 {
     int id = -1;
-    std::string IP, Username, 
-        Password = "123";
+    std::string IP, Username, Password;
     SOCKET socket = INVALID_SOCKET;
 };
 

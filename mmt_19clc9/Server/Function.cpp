@@ -1,7 +1,7 @@
 #include "Header.h"
 
 void Read_Account(std::vector<client_type>& User_List) {
-    std::ifstream f("Data\Account.csv");
+    std::ifstream f("Data\\Account.csv");
     //SkipBOM(f);
     if (!f.is_open())
         return;
@@ -86,10 +86,27 @@ bool Register(SOCKET NewSockid, std::vector<client_type>& User_List) {
     char temp[DEFAULT_BUFFER_LENGTH] = "";
     int iResult = recv(NewSockid, temp, DEFAULT_BUFFER_LENGTH, 0);
     if (iResult != SOCKET_ERROR) {
+        for (std::vector<client_type>::iterator p = User_List.begin(); p != User_List.end(); p++) {
+            if ((*p).Username.compare(std::string(temp)) == 0) {
+                memset(&temp, NULL, sizeof(temp));
+                strncpy(temp, "Username already taken", DEFAULT_BUFFER_LENGTH);
+                send(NewSockid, temp, DEFAULT_BUFFER_LENGTH, 0);
+                return false;
+            }
+        }
         client_type new_user;
         new_user.Username = std::string(temp);
-        User_List.push_back(new_user);
-        return true;
+        memset(&temp, NULL, sizeof(temp));
+        iResult = recv(NewSockid, temp, DEFAULT_BUFFER_LENGTH, 0);
+        if (iResult != SOCKET_ERROR) {
+            new_user.Password = std::string(temp);
+            User_List.push_back(new_user);
+            memset(&temp, NULL, sizeof(temp));
+            strncpy(temp, "Register successfully", DEFAULT_BUFFER_LENGTH);
+            send(NewSockid, temp, DEFAULT_BUFFER_LENGTH, 0);
+            return true;
+        }
+        return false;   
     }
     return false;
 }
@@ -103,9 +120,19 @@ bool Login(SOCKET NewSockid, std::vector<client_type>& User_List) {
                 memset(&temp, NULL, sizeof(temp));
                 iResult = recv(NewSockid, temp, DEFAULT_BUFFER_LENGTH, 0);
                 if (iResult != SOCKET_ERROR) 
-                    if ((*p).Password.compare(std::string(temp)) == 0)
+                    if ((*p).Password.compare(std::string(temp)) == 0) {
+                        memset(&temp, NULL, sizeof(temp));
+                        strncpy(temp, "Login successfully", DEFAULT_BUFFER_LENGTH);
+                        send(NewSockid, temp, DEFAULT_BUFFER_LENGTH, 0);
                         return true;
-                else return false;
+                    }
+                    else {
+                        memset(&temp, NULL, sizeof(temp));
+                        strncpy(temp, "ID or Password is incorrect", DEFAULT_BUFFER_LENGTH);
+                        send(NewSockid, temp, DEFAULT_BUFFER_LENGTH, 0);
+                        return false;
+                    }
+                return false;
             }
         }
         return false;

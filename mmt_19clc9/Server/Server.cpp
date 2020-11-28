@@ -73,12 +73,36 @@ int main()
 
         if (temp_id != -1)
         {
-            //Send the id to that client
-            std::cout << "Client #" << client[temp_id].id << " Accepted" << std::endl;
-            char temp[DEFAULT_BUFFER_LENGTH] = "Ok nha";
-            send(NewSockid, temp, DEFAULT_BUFFER_LENGTH, 0);
+            ////Send the id to that client
+            //std::cout << "Client #" << client[temp_id].id << " Accepted" << std::endl;
+            char temp[DEFAULT_BUFFER_LENGTH];
+            //send(NewSockid, temp, DEFAULT_BUFFER_LENGTH, 0);
+
+
+            int iResult = recv(NewSockid, temp, DEFAULT_BUFFER_LENGTH, 0);
+
             
-            my_thread[temp_id] = std::thread(Client_Multiple_Chatting, std::ref(client[temp_id]), std::ref(client), std::ref(my_thread[temp_id]));
+
+            if (strcmp(temp, "register") == 0) {
+                send(NewSockid, "OK", DEFAULT_BUFFER_LENGTH, 0);
+                if (Register(NewSockid, client_List) == true) {
+                    
+                }
+                else {
+
+                }
+            }
+
+            if (strcmp(temp, "login") == 0) {
+                send(NewSockid, "OK", DEFAULT_BUFFER_LENGTH, 0);
+                if (Login(NewSockid, client_List) == true) 
+                    my_thread[temp_id] = std::thread(Client_Multiple_Chatting, std::ref(client[temp_id]), std::ref(client), std::ref(my_thread[temp_id]));
+                else {
+
+                }
+            }
+            
+            //my_thread[temp_id] = std::thread(Client_Multiple_Chatting, std::ref(client[temp_id]), std::ref(client), std::ref(my_thread[temp_id]));
         }
         else
         {

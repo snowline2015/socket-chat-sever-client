@@ -49,8 +49,12 @@ int main() {
         return 1;
     }
 
+
+
     Register(client);
     //int iSuccess = Login(client);
+
+
 
     while (true) {
         if (Login(client) == true) {

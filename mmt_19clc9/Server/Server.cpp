@@ -83,10 +83,10 @@ int main()
 
             
 
-            if (strcmp(temp, "register") == 0) {
+            if (strcmp(temp, "register") == 0) {        
                 send(NewSockid, "OK", DEFAULT_BUFFER_LENGTH, 0);
-                if (Register(NewSockid, client_List) == true) {
-                    
+                if (Register(NewSockid, client_List) == true) { // De y dong nay, dong nay khi lam register xong thi lam gi phu thuoc vao UI
+                    Write_Account(client_List);
                 }
                 else {
 

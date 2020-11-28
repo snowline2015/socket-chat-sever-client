@@ -94,6 +94,7 @@ bool Register(SOCKET NewSockid, std::vector<client_type>& User_List) {
                 return false;
             }
         }
+        send(NewSockid, "OK", DEFAULT_BUFFER_LENGTH, 0);
         client_type new_user;
         new_user.Username = std::string(temp);
         memset(&temp, NULL, sizeof(temp));
@@ -115,6 +116,7 @@ bool Login(SOCKET NewSockid, std::vector<client_type>& User_List) {
     char temp[DEFAULT_BUFFER_LENGTH] = "";
     int iResult = recv(NewSockid, temp, DEFAULT_BUFFER_LENGTH, 0);
     if (iResult != SOCKET_ERROR) {
+        send(NewSockid, "OK", DEFAULT_BUFFER_LENGTH, 0);
         for (std::vector<client_type>::iterator p = User_List.begin(); p != User_List.end(); p++) {
             if ((*p).Username.compare(std::string(temp)) == 0) {
                 memset(&temp, NULL, sizeof(temp));

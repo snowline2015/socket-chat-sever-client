@@ -34,6 +34,7 @@ struct client_type
 
 void Client_Multiple_Chatting(client_type& new_client, std::vector<client_type>& client_array, std::thread& thread);
 void Read_Account(std::vector<client_type>& User_List);
+void Write_Account(std::vector<client_type>& User_List);
 bool Register(SOCKET NewSockid, std::vector<client_type>& User_List);
 bool Login(SOCKET NewSockid, std::vector<client_type>& User_List);
 

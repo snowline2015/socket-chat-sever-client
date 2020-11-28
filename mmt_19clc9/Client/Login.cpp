@@ -5,6 +5,7 @@ bool Login(client_type& client) {
 	cout << "ID: ";
 	getline(cin, id);
 	cout << "Password: ";
+
 	char c;
 	while (true)
 	{
@@ -37,6 +38,13 @@ bool Login(client_type& client) {
 	}
 
 	send(client.socket, id.c_str(), strlen(id.c_str()), 0);
+
+	iResult = recv(client.socket, client.RecvMsg, DEFAULT_BUFFER_LENGTH, 0);
+	if (iResult != SOCKET_ERROR) {
+		if (strcmp(client.RecvMsg, "OK") != 0)
+			return false;
+	}
+
 	send(client.socket, password.c_str(), strlen(password.c_str()), 0);
 
 	while (true) {
@@ -70,6 +78,7 @@ bool Register(client_type& client) {
 			return false;
 	}
 	send(client.socket, id.c_str(), strlen(id.c_str()), 0);
+
 	iResult = recv(client.socket, client.RecvMsg, DEFAULT_BUFFER_LENGTH, 0);
 	if (iResult != SOCKET_ERROR) {
 		if (strcmp(client.RecvMsg, "Username already taken") == 0) {

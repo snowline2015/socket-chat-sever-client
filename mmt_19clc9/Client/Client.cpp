@@ -50,7 +50,7 @@ int main() {
     }
 
     Register(client);
-    Login(client);
+    //int iSuccess = Login(client);
 
     while (true) {
         if (Login(client) == true) {

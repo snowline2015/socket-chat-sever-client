@@ -1,0 +1,274 @@
+﻿<Window x:Name="window" x:Class="TestGUI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TestGUI"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="550" Width="1000" Background="{x:Null}" BorderBrush="Black" AllowsTransparency="True" WindowStyle="None" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <Storyboard x:Key="LoginAnimation">
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="_register">
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value="{x:Static Visibility.Hidden}"/>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="label">
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value="{x:Static Visibility.Hidden}"/>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="label1">
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value="{x:Static Visibility.Hidden}"/>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="username">
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value="{x:Static Visibility.Hidden}"/>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="password">
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value="{x:Static Visibility.Hidden}"/>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="LoginButton">
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value="{x:Static Visibility.Hidden}"/>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="ForgetAccount">
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value="{x:Static Visibility.Hidden}"/>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="register">
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value="{x:Static Visibility.Hidden}"/>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="_about">
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value="{x:Static Visibility.Hidden}"/>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="about">
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value="{x:Static Visibility.Hidden}"/>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="Exit">
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value="{x:Static Visibility.Hidden}"/>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="fullname_regis">
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value="{x:Static Visibility.Hidden}"/>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="label2">
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value="{x:Static Visibility.Hidden}"/>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="username_regis">
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value="{x:Static Visibility.Hidden}"/>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="password_regis">
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value="{x:Static Visibility.Hidden}"/>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="email_regis">
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value="{x:Static Visibility.Hidden}"/>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="label3">
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value="{x:Static Visibility.Hidden}"/>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="phone_regis">
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value="{x:Static Visibility.Hidden}"/>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="button">
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value="{x:Static Visibility.Hidden}"/>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="line_fn">
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value="{x:Static Visibility.Hidden}"/>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="line_usr">
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value="{x:Static Visibility.Hidden}"/>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="line_pass">
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value="{x:Static Visibility.Hidden}"/>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="line_email">
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value="{x:Static Visibility.Hidden}"/>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="line_phone">
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value="{x:Static Visibility.Hidden}"/>
+            </ObjectAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)" Storyboard.TargetName="RegisterPanel">
+                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="-20"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)" Storyboard.TargetName="rectangle">
+                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="-20"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)" Storyboard.TargetName="MainPanel">
+                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="-40"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.4" Value="-210"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="-420"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.6" Value="-520"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Key="RegisterAnimation">
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="_register">
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value="{x:Static Visibility.Hidden}"/>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="label">
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value="{x:Static Visibility.Hidden}"/>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="label1">
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value="{x:Static Visibility.Hidden}"/>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="username">
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value="{x:Static Visibility.Hidden}"/>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="password">
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value="{x:Static Visibility.Hidden}"/>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="LoginButton">
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value="{x:Static Visibility.Hidden}"/>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="ForgetAccount">
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value="{x:Static Visibility.Hidden}"/>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="register">
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value="{x:Static Visibility.Hidden}"/>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="_about">
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value="{x:Static Visibility.Hidden}"/>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="about">
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value="{x:Static Visibility.Hidden}"/>
+            </ObjectAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)" Storyboard.TargetName="rectangle">
+                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="120"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="240"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.7" Value="360"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.9" Value="480"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="fullname_regis">
+                <DiscreteDoubleKeyFrame KeyTime="0:0:1.2" Value="0.3"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.3" Value="0.6"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.4" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="label2">
+                <DiscreteDoubleKeyFrame KeyTime="0:0:1.2" Value="0.3"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.3" Value="0.6"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.4" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="username_regis">
+                <DiscreteDoubleKeyFrame KeyTime="0:0:1.2" Value="0.3"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.3" Value="0.6"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.4" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="password_regis">
+                <DiscreteDoubleKeyFrame KeyTime="0:0:1.2" Value="0.3"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.3" Value="0.6"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.4" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="email_regis">
+                <DiscreteDoubleKeyFrame KeyTime="0:0:1.2" Value="0.3"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.3" Value="0.6"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.4" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="label3">
+                <DiscreteDoubleKeyFrame KeyTime="0:0:1.2" Value="0.3"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.3" Value="0.6"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.4" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="phone_regis">
+                <DiscreteDoubleKeyFrame KeyTime="0:0:1.2" Value="0.3"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.3" Value="0.6"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.4" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="button">
+                <DiscreteDoubleKeyFrame KeyTime="0:0:1.2" Value="0.3"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.3" Value="0.6"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.4" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="line_fn">
+                <DiscreteDoubleKeyFrame KeyTime="0:0:1.2" Value="0.3"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.3" Value="0.6"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.4" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="line_usr">
+                <DiscreteDoubleKeyFrame KeyTime="0:0:1.2" Value="0.3"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.3" Value="0.6"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.4" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="line_pass">
+                <DiscreteDoubleKeyFrame KeyTime="0:0:1.2" Value="0.3"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.3" Value="0.6"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.4" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="line_email">
+                <DiscreteDoubleKeyFrame KeyTime="0:0:1.2" Value="0.3"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.3" Value="0.6"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.4" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="line_phone">
+                <DiscreteDoubleKeyFrame KeyTime="0:0:1.2" Value="0.3"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.3" Value="0.6"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.4" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+    </Window.Resources>
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="LoginButton">
+            <BeginStoryboard Storyboard="{StaticResource LoginAnimation}"/>
+        </EventTrigger>
+        <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="register">
+            <BeginStoryboard x:Name="RegisterAnimation_BeginStoryboard" Storyboard="{StaticResource RegisterAnimation}"/>
+        </EventTrigger>
+    </Window.Triggers>
+    <Grid x:Name="MainPrgWindow" HorizontalAlignment="Left" Height="550" Margin="-3.2,0,0,0" VerticalAlignment="Top" Width="1003.2">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="803*"/>
+            <ColumnDefinition Width="14*"/>
+        </Grid.ColumnDefinitions>
+        <Grid x:Name="WhenOpenWindow" Margin="259.2,67.816,290.407,68.428">
+            <Grid x:Name="RegisterGrid" Margin="24.384,0,0,26.584">
+                <Rectangle x:Name="RegisterPanel" HorizontalAlignment="Left" Height="387.172" VerticalAlignment="Top" Width="412.018" RenderTransformOrigin="0.5,0.5" RadiusY="13.566" RadiusX="13.566" Fill="#FF3A76EA">
+                    <Rectangle.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform Angle="0.136"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Rectangle.RenderTransform>
+                </Rectangle>
+                <TextBox x:Name="fullname_regis" HorizontalAlignment="Left" Height="27.337" Margin="31.365,99.957,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="344.533" Background="{x:Null}" VerticalContentAlignment="Center" Text="Full name" Foreground="#FF15215A" SelectionBrush="#FF15215A" SelectionTextBrush="{x:Null}" BorderBrush="{x:Null}" BorderThickness="1" Opacity="0"/>
+                <Label x:Name="label2" Content="Register" HorizontalAlignment="Left" Height="31" Margin="31.365,26.584,0,0" VerticalAlignment="Top" Width="344.533" Background="{x:Null}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="16" FontWeight="Bold" Foreground="#FF15215A" Opacity="0"/>
+                <TextBox x:Name="username_regis" HorizontalAlignment="Left" Height="27.337" Margin="31.365,147.494,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="344.533" Background="{x:Null}" VerticalContentAlignment="Center" Text="Username" Foreground="#FF15215A" SelectionBrush="#FF15215A" SelectionTextBrush="{x:Null}" BorderBrush="{x:Null}" BorderThickness="2" Opacity="0"/>
+                <TextBox x:Name="password_regis" HorizontalAlignment="Left" Height="27.337" Margin="31.365,192.231,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="344.533" Background="{x:Null}" VerticalContentAlignment="Center" Text="Password" Foreground="#FF15215A" SelectionBrush="#FF15215A" SelectionTextBrush="{x:Null}" BorderBrush="{x:Null}" BorderThickness="2" Opacity="0"/>
+                <TextBox x:Name="email_regis" HorizontalAlignment="Left" Height="27.337" Margin="31.365,238.168,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="344.533" Background="{x:Null}" VerticalContentAlignment="Center" Text="E-mail" Foreground="#FF15215A" SelectionBrush="#FF15215A" SelectionTextBrush="{x:Null}" BorderBrush="{x:Null}" BorderThickness="2" Opacity="0"/>
+                <Label x:Name="label3" Content="Please fill all the information below" HorizontalAlignment="Left" Height="23" Margin="31.365,57.584,0,0" VerticalAlignment="Top" Width="344.533" Background="{x:Null}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="#FF15215A" Opacity="0"/>
+                <TextBox x:Name="phone_regis" HorizontalAlignment="Left" Height="27.337" Margin="31.365,278.968,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="344.533" Background="{x:Null}" VerticalContentAlignment="Center" Text="Phone Number" Foreground="#FF15215A" SelectionBrush="#FF15215A" SelectionTextBrush="{x:Null}" BorderBrush="{x:Null}" BorderThickness="2" Opacity="0"/>
+                <Button x:Name="button" Content="Finish" HorizontalAlignment="Left" Height="22.4" Margin="249.816,334.384,0,0" VerticalAlignment="Top" Width="72.8" BorderBrush="{x:Null}" Foreground="#FFD4C704" Background="{x:Null}" Opacity="0"/>
+                <Path x:Name="line_fn" Data="M31.365,140.894 L375.898,140.894" Fill="#FF8AC1F4" HorizontalAlignment="Left" Height="3" Margin="30.365,126.294,0,0" Stretch="Fill" Stroke="#FF8AC1F4" StrokeThickness="2" VerticalAlignment="Top" Width="347.533" Opacity="0"/>
+                <Path x:Name="line_usr" Data="M30.365,181.231 L375.898,181.231" Fill="#FF8AC1F4" HorizontalAlignment="Left" Height="3" Margin="29.365,173.831,0,0" Stretch="Fill" Stroke="#FF8AC1F4" StrokeThickness="2" VerticalAlignment="Top" Width="348.533" Opacity="0"/>
+                <Path x:Name="line_pass" Data="M30.365,223.568 L375.898,223.568" Fill="#FF8AC1F4" HorizontalAlignment="Left" Height="3" Margin="29.365,218.568,0,0" Stretch="Fill" Stroke="#FF8AC1F4" StrokeThickness="2" VerticalAlignment="Top" Width="348.533" Opacity="0"/>
+                <Path x:Name="line_email" Data="M29.365,265.505 L375.898,265.505" Fill="#FF8AC1F4" HorizontalAlignment="Left" Height="3" Margin="28.365,264.505,0,0" Stretch="Fill" Stroke="#FF8AC1F4" StrokeThickness="2" VerticalAlignment="Top" Width="349.533" Opacity="0"/>
+                <Path x:Name="line_phone" Data="M30.365,306.305 L375.898,306.305" Fill="#FF8AC1F4" HorizontalAlignment="Left" Height="3" Margin="29.365,305.305,0,0" Stretch="Fill" Stroke="#FF8AC1F4" StrokeThickness="2" VerticalAlignment="Top" Width="348.533" Opacity="0"/>
+            </Grid>
+            <Grid x:Name="LoginGrid" Margin="0,26.584,24.384,0">
+                <Rectangle x:Name="rectangle" HorizontalAlignment="Left" Height="387.172" VerticalAlignment="Top" Width="412.018" RenderTransformOrigin="0.5,0.5" RadiusY="13.566" RadiusX="13.566" Fill="#FF0D172B">
+                    <Rectangle.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform Angle="0.136"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Rectangle.RenderTransform>
+                </Rectangle>
+                <Rectangle x:Name="_register" Fill="#FF2DAAB1" HorizontalAlignment="Left" Height="2" Margin="53.616,381.584,0,0" Stroke="{x:Null}" StrokeThickness="2" VerticalAlignment="Top" Width="64.5"/>
+                <Label x:Name="label" Content="WELCOME BACK" HorizontalAlignment="Left" Height="23.999" Margin="10.949,46.185,0,0" VerticalAlignment="Top" Width="388.8" Background="{x:Null}" Foreground="#FFAE9F9F" HorizontalContentAlignment="Center" VerticalContentAlignment="Bottom" FontSize="13"/>
+                <Label x:Name="label1" Content="Log into your account" HorizontalAlignment="Left" Height="31.999" Margin="10.949,70.184,0,0" VerticalAlignment="Top" Width="388.8" Background="{x:Null}" Foreground="#FFCAC8C8" HorizontalContentAlignment="Center" FontWeight="Bold" FontSize="16"/>
+                <TextBox x:Name="username" HorizontalAlignment="Left" Height="27.337" Margin="33.349,138.114,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="344.533" Background="{x:Null}" VerticalContentAlignment="Center" Text="Username" Foreground="#FFE2E2E2" SelectionBrush="#FF00CBD7" SelectionTextBrush="White" BorderBrush="#FF2DAAB1"/>
+                <PasswordBox x:Name="password" HorizontalAlignment="Left" Height="27.733" Margin="33.349,188.051,0,0" VerticalAlignment="Top" Width="344.533" Background="{x:Null}" Foreground="#FFFCEFEF" BorderBrush="#FF2DAAB1" VerticalContentAlignment="Center" Password="Password"/>
+                <Button x:Name="LoginButton" Content="Log In" HorizontalAlignment="Left" Height="27.2" Margin="33.349,240.317,0,0" VerticalAlignment="Top" Width="344.533" Foreground="#FF0D172B" Background="#FF2DAAB1" FontWeight="Bold" FontSize="14" BorderBrush="{x:Null}"/>
+                <Button x:Name="ForgetAccount" Content="Forget your account ?" HorizontalAlignment="Left" Height="22.933" Margin="137.005,272.517,0,0" VerticalAlignment="Top" Width="142.933" Foreground="#FFB01D1D" Background="{x:Null}" FontSize="10" BorderBrush="{x:Null}"/>
+                <Button x:Name="register" Content="Register" HorizontalAlignment="Left" Height="16" Margin="53.616,360.584,0,0" VerticalAlignment="Top" Width="64.5" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" FontSize="9" Focusable="True"/>
+                <Rectangle x:Name="_about" Fill="#FF2DAAB1" HorizontalAlignment="Left" Height="2" Margin="123.116,381.584,0,0" Stroke="{x:Null}" StrokeThickness="2" VerticalAlignment="Top" Width="64.5"/>
+                <Button x:Name="about" Content="About us" HorizontalAlignment="Left" Height="16" Margin="123.116,360.584,0,0" VerticalAlignment="Top" Width="64.5" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" FontSize="9" Focusable="True"/>
+                <Button x:Name="Exit" Content="x" HorizontalAlignment="Left" Height="16.534" Margin="33.349,10,0,0" VerticalAlignment="Top" Width="19.2" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FFF7F2F2" FontSize="11" Click="ExitClick"/>
+            </Grid>
+            <Rectangle x:Name="MainPanel" HorizontalAlignment="Left" Height="387.172" VerticalAlignment="Top" Width="412.018" RenderTransformOrigin="0.5,0.5" RadiusY="13.566" RadiusX="13.566" Fill="#FF3A76EA" Margin="-37.6,573.6,0,-547.016">
+                <Rectangle.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform Angle="0.136"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Rectangle.RenderTransform>
+            </Rectangle>
+        </Grid>
+    </Grid>
+</Window>

@@ -1,6 +1,7 @@
 #ifndef HEADER_H
 #define HEADER_H
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include <winsock2.h>
 #include <ws2tcpip.h>
@@ -29,6 +30,7 @@ struct client_type {
 };
 
 bool Login(client_type& client);
+bool Register(client_type& client);
 void Client_Thread(client_type& new_client);
 void Client_Group_Chat(client_type& client);
 void Client_Private_Chat(client_type& client);

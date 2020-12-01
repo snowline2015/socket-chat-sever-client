@@ -20,14 +20,26 @@ namespace TestGUI
     /// </summary>
     public partial class MainWindow : Window
     {
+        private string name, pass;
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void TakeUsername(object sender, RoutedEventArgs e)
+        {
+            name = username.Text;
+        }
+
+        private void TakePassword(object sender, RoutedEventArgs e)
+        {
+            pass = password.Password;
         }
 
         private void ExitClick(object sender, RoutedEventArgs e)
         {
             Close();
         }
+
     }
 }

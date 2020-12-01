@@ -37,8 +37,8 @@ struct client_type {
     char RecvMsg[DEFAULT_BUFFER_LENGTH];
 };
 
-bool Login(client_type& client);
-bool Register(client_type& client);
+bool Login(client_type& client, string id, string password);
+bool Register(client_type& client, string id, string password);
 void Client_Thread(client_type& new_client);
 void Client_Group_Chat(client_type& client);
 void Client_Private_Chat(client_type& client);

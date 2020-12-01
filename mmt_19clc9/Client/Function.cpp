@@ -116,15 +116,15 @@ int Init() {
 
 
 
-    Register(client);
+    //Register(client);
 
 
-    while (true) {
+    /*while (true) {
         if (Login(client) == true) {
             std::cout << "Successfully Connected" << std::endl;
             break;
         }
-    }
+    }*/
 
     Client_Group_Chat(client);
 

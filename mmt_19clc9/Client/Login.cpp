@@ -63,14 +63,7 @@ bool Login(client_type& client, string id, string password) {
 	return true;
 }
 
-bool Register(client_type& client) {
-	blabla:
-	string id, password;
-	cout << "New ID: ";
-	getline(cin, id);
-	cout << "New password: ";
-	getline(cin, password);
-
+bool Register(client_type& client, string id, string password) {
 	char temp[DEFAULT_BUFFER_LENGTH] = "register";
 	send(client.socket, temp, DEFAULT_BUFFER_LENGTH, 0);
 	int iResult = recv(client.socket, client.RecvMsg, DEFAULT_BUFFER_LENGTH, 0);

@@ -1,8 +1,8 @@
 #define CLIENT_DLL
 #include "Header.h"
 
-bool Login(client_type& client) {
-	string id, password;
+bool Login(client_type& client, string id, string password) {
+	/*string id, password;
 	cout << "ID: ";
 	getline(cin, id);
 	cout << "Password: ";
@@ -27,7 +27,7 @@ bool Login(client_type& client) {
 			password.push_back(c);
 			cout << "*";
 		}
-	}
+	}*/
 
 	char temp[DEFAULT_BUFFER_LENGTH] = "login";
 	send(client.socket, temp, DEFAULT_BUFFER_LENGTH, 0);

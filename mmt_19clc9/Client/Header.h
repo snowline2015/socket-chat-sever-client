@@ -1,3 +1,11 @@
+#pragma once
+
+#ifdef CLIENT_DLL
+    #define CLIENT_ _declspec(dllexport)
+#else
+    #define CLIENT_ _declspec(dllimport)
+#endif
+
 #ifndef HEADER_H
 #define HEADER_H
 #define _WINSOCK_DEPRECATED_NO_WARNINGS

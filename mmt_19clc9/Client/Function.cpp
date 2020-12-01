@@ -1,3 +1,4 @@
+#define CLIENT_DLL
 #include "Header.h"
 
 void Client_Thread(client_type& new_client) {

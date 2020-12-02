@@ -37,6 +37,7 @@ struct client_type {
     char RecvMsg[DEFAULT_BUFFER_LENGTH];
 };
 
+void Init();
 bool Login(client_type& client, string id, string password);
 bool Register(client_type& client, string id, string password);
 void Client_Thread(client_type& new_client);

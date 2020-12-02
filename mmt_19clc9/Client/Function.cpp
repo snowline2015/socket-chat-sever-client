@@ -65,7 +65,7 @@ void Client_Group_Chat(client_type& client) {
     ShutDownAndClose(client);
 }
 
-int Init() {
+void Init() {
     struct sockaddr_in addrport;
     struct sockaddr_in* server = NULL, * result = NULL;
     client_type client;
@@ -80,7 +80,7 @@ int Init() {
     int wsOK = WSAStartup(MAKEWORD(2, 2), &wsaData);
     if (wsOK != 0) {
         //std::cout << "Can't initialize winsock. Application is now exiting..." << std::endl;
-        return 0;
+        return;
     }
 
     ZeroMemory(&addrport, sizeof(addrport));
@@ -105,18 +105,11 @@ int Init() {
         break;
     }
 
-    /*if (client.socket == INVALID_SOCKET) {
-        std::cout << "Unable to connect to server!" << std::endl;
-        WSACleanup();
+    if (client.socket == INVALID_SOCKET) {
+        ShutDownAndClose(client);
         system("pause");
-        return 1;
+        return;
     }
-
-    std::cout << "Shutting down socket..." << std::endl;*/
-
-    ShutDownAndClose(client);
-    system("pause");
-    return 0;
 }
 
 

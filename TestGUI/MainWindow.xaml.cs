@@ -26,9 +26,21 @@ namespace TestGUI
             InitializeComponent();
         }
 
+        private void ClearUsername(object sender, MouseEventArgs e)
+        {
+            if (username.Text == "Username")
+            username.Text = "";
+        }
+
         private void TakeUsername(object sender, RoutedEventArgs e)
         {
             name = username.Text;
+        }
+
+        private void ClearPassword(object sender, MouseEventArgs e)
+        {
+            if (password.Password == "Password")
+                password.Password = "";
         }
 
         private void TakePassword(object sender, RoutedEventArgs e)

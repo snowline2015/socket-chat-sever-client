@@ -1,16 +1,18 @@
 #define CLIENT_DLL
 #include "Header.h"
 
+void ShutDownAndClose(client_type& client) {
+    shutdown(client.socket, SD_SEND);
+    closesocket(client.socket);
+    WSACleanup();
+}
+
 void Client_Thread(client_type& new_client) {
     while (true) {
         memset(new_client.RecvMsg, NULL, sizeof(new_client.RecvMsg));
 
         if (new_client.socket != 0) {
             int iResult = recv(new_client.socket, new_client.RecvMsg, DEFAULT_BUFFER_LENGTH, 0);
-
-            /*disconnected = new_client.RecvMsg;
-            if (disconnected.substr(disconnected.length() - 16).compare("has disconnected") == 0)
-                PlaySound(TEXT("Sound\\Summoner.wav"), NULL, SND_SYNC);*/
 
             if (iResult != SOCKET_ERROR)
                 std::cout << new_client.RecvMsg << std::endl;
@@ -60,16 +62,13 @@ void Client_Group_Chat(client_type& client) {
 
     std::cout << "Shutting down socket..." << std::endl;
 
-    shutdown(client.socket, SD_SEND);
-    closesocket(client.socket);
-    WSACleanup();
+    ShutDownAndClose(client);
 }
 
 int Init() {
     struct sockaddr_in addrport;
     struct sockaddr_in* server = NULL, * result = NULL;
     client_type client;
-    std::string msg = "";
     int iResult = 0;
 
     std::string str;
@@ -77,12 +76,10 @@ int Init() {
     getline(std::cin, str);
     const char* c = str.c_str();
 
-    //std::cout << "Intializing Winsock..." << std::endl;
-
     WSADATA wsaData;
     int wsOK = WSAStartup(MAKEWORD(2, 2), &wsaData);
     if (wsOK != 0) {
-        std::cout << "Can't initialize winsock. Application is now exiting..." << std::endl;
+        //std::cout << "Can't initialize winsock. Application is now exiting..." << std::endl;
         return 0;
     }
 
@@ -90,6 +87,7 @@ int Init() {
     addrport.sin_family = AF_INET;
     addrport.sin_port = htons(5000);
     addrport.sin_addr.s_addr = inet_addr(c);
+
 
     /*std::cout << "Setting up server..." << std::endl;
     getaddrinfo(IP_ADDRESS, PORT, &hints, &server);*/
@@ -107,32 +105,18 @@ int Init() {
         break;
     }
 
-    if (client.socket == INVALID_SOCKET) {
+    /*if (client.socket == INVALID_SOCKET) {
         std::cout << "Unable to connect to server!" << std::endl;
         WSACleanup();
         system("pause");
         return 1;
     }
 
+    std::cout << "Shutting down socket..." << std::endl;*/
 
-
-    //Register(client);
-
-
-    /*while (true) {
-        if (Login(client) == true) {
-            std::cout << "Successfully Connected" << std::endl;
-            break;
-        }
-    }*/
-
-    Client_Group_Chat(client);
-
-    std::cout << "Shutting down socket..." << std::endl;
-
-    shutdown(client.socket, SD_SEND);
-    closesocket(client.socket);
-    WSACleanup();
+    ShutDownAndClose(client);
     system("pause");
     return 0;
 }
+
+

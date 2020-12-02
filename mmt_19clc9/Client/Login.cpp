@@ -2,33 +2,6 @@
 #include "Header.h"
 
 bool Login(client_type& client, string id, string password) {
-	/*string id, password;
-	cout << "ID: ";
-	getline(cin, id);
-	cout << "Password: ";
-
-	char c;
-	while (true)
-	{
-		c = _getch();
-
-		if (c == 13) break;
-
-		if (c == 8)
-		{
-			if (password.size() == 0);
-			else cout << "\b \b";
-			if (password.size() > 0)
-				password.pop_back();
-		}
-
-		else
-		{
-			password.push_back(c);
-			cout << "*";
-		}
-	}*/
-
 	char temp[DEFAULT_BUFFER_LENGTH] = "login";
 	send(client.socket, temp, DEFAULT_BUFFER_LENGTH, 0);
 

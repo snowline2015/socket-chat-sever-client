@@ -84,13 +84,11 @@
                 <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="-20"/>
                 <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="-40"/>
                 <EasingDoubleKeyFrame KeyTime="0:0:0.7" Value="-60"/>
-                <EasingDoubleKeyFrame KeyTime="0:0:0.8" Value="-70"/>
             </DoubleAnimationUsingKeyFrames>
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)" Storyboard.TargetName="rectangle">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)" Storyboard.TargetName="LoginPanel">
                 <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="-20"/>
                 <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="-40"/>
                 <EasingDoubleKeyFrame KeyTime="0:0:0.7" Value="-60"/>
-                <EasingDoubleKeyFrame KeyTime="0:0:0.8" Value="-70"/>
             </DoubleAnimationUsingKeyFrames>
             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)" Storyboard.TargetName="MainPanel">
                 <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="-90"/>
@@ -98,13 +96,36 @@
                 <EasingDoubleKeyFrame KeyTime="0:0:0.7" Value="-270"/>
                 <EasingDoubleKeyFrame KeyTime="0:0:0.8" Value="-360"/>
                 <EasingDoubleKeyFrame KeyTime="0:0:1" Value="-450"/>
-                <EasingDoubleKeyFrame KeyTime="0:0:1.1" Value="-570"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.1" Value="-495"/>
+                <DiscreteDoubleKeyFrame KeyTime="0:0:1.7" Value="-545.4"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.8" Value="-570.6"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.9" Value="-516.6"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:2" Value="-490.8"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="MainPanel">
+                <EasingDoubleKeyFrame KeyTime="0:0:1.1" Value="0"/>
+                <DiscreteDoubleKeyFrame KeyTime="0:0:1.7" Value="-171.6"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.8" Value="-223.2"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.9" Value="-37.8"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:2" Value="63"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)" Storyboard.TargetName="MainPanel">
+                <EasingDoubleKeyFrame KeyTime="0:0:1.8" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.9" Value="1.901"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:2" Value="2.391"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)" Storyboard.TargetName="MainPanel">
+                <EasingDoubleKeyFrame KeyTime="0:0:1.8" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.9" Value="1.277"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:2" Value="1.409"/>
             </DoubleAnimationUsingKeyFrames>
             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="RegisterPanel">
-                <DiscreteObjectKeyFrame KeyTime="0:0:0.8" Value="{x:Static Visibility.Visible}"/>
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.7" Value="{x:Static Visibility.Visible}"/>
+                <DiscreteObjectKeyFrame KeyTime="0:0:2" Value="{x:Static Visibility.Hidden}"/>
             </ObjectAnimationUsingKeyFrames>
-            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="rectangle">
-                <DiscreteObjectKeyFrame KeyTime="0:0:0.8" Value="{x:Static Visibility.Visible}"/>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="LoginPanel">
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.7" Value="{x:Static Visibility.Visible}"/>
+                <DiscreteObjectKeyFrame KeyTime="0:0:2" Value="{x:Static Visibility.Hidden}"/>
             </ObjectAnimationUsingKeyFrames>
         </Storyboard>
         <Storyboard x:Key="RegisterAnimation">
@@ -138,7 +159,7 @@
             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="about">
                 <DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value="{x:Static Visibility.Hidden}"/>
             </ObjectAnimationUsingKeyFrames>
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)" Storyboard.TargetName="rectangle">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)" Storyboard.TargetName="LoginPanel">
                 <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="120"/>
                 <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="240"/>
                 <EasingDoubleKeyFrame KeyTime="0:0:0.7" Value="360"/>
@@ -255,7 +276,7 @@
                     <ColumnDefinition Width="27*"/>
                     <ColumnDefinition Width="179*"/>
                 </Grid.ColumnDefinitions>
-                <Rectangle x:Name="rectangle" HorizontalAlignment="Left" Height="387.172" VerticalAlignment="Top" Width="412.018" RenderTransformOrigin="0.5,0.5" RadiusY="13.566" RadiusX="13.566" Fill="#FF0D172B" Grid.ColumnSpan="2">
+                <Rectangle x:Name="LoginPanel" HorizontalAlignment="Left" Height="387.172" VerticalAlignment="Top" Width="412.018" RenderTransformOrigin="0.5,0.5" RadiusY="13.566" RadiusX="13.566" Fill="#FF0D172B" Grid.ColumnSpan="2">
                     <Rectangle.RenderTransform>
                         <TransformGroup>
                             <ScaleTransform/>
@@ -277,16 +298,16 @@
                 <Button x:Name="about" Content="About us" HorizontalAlignment="Left" Height="16" Margin="68.716,360.584,0,0" VerticalAlignment="Top" Width="64.5" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" FontSize="9" Focusable="True" Grid.Column="1"/>
                 <Button x:Name="Exit" Content="x" HorizontalAlignment="Left" Height="16.534" Margin="33.349,10,0,0" VerticalAlignment="Top" Width="19.2" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FFF7F2F2" FontSize="11" Click="ExitClick"/>
             </Grid>
-            <Rectangle x:Name="MainPanel" HorizontalAlignment="Left" Height="387.172" VerticalAlignment="Top" Width="412.018" RenderTransformOrigin="0.5,0.5" RadiusY="13.566" RadiusX="13.566" Fill="#FF3A76EA" Margin="-37.6,573.6,0,-547.016">
-                <Rectangle.RenderTransform>
-                    <TransformGroup>
-                        <ScaleTransform/>
-                        <SkewTransform/>
-                        <RotateTransform Angle="0.136"/>
-                        <TranslateTransform/>
-                    </TransformGroup>
-                </Rectangle.RenderTransform>
-            </Rectangle>
         </Grid>
+        <Rectangle x:Name="MainPanel" HorizontalAlignment="Left" Height="387.172" VerticalAlignment="Top" Width="412.018" RenderTransformOrigin="0.5,0.5" RadiusY="13.566" RadiusX="13.566" Fill="#FF3A76EA" Margin="222.4,573.6,0,-410.772">
+            <Rectangle.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="0.136"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Rectangle.RenderTransform>
+        </Rectangle>
     </Grid>
 </Window>

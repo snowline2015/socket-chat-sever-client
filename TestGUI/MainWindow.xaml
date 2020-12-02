@@ -92,14 +92,6 @@
                 <EasingDoubleKeyFrame KeyTime="0:0:0.7" Value="-60"/>
                 <EasingDoubleKeyFrame KeyTime="0:0:0.8" Value="-70"/>
             </DoubleAnimationUsingKeyFrames>
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)" Storyboard.TargetName="MainPanel">
-                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="-90"/>
-                <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="-180"/>
-                <EasingDoubleKeyFrame KeyTime="0:0:0.7" Value="-270"/>
-                <EasingDoubleKeyFrame KeyTime="0:0:0.8" Value="-360"/>
-                <EasingDoubleKeyFrame KeyTime="0:0:1" Value="-450"/>
-                <EasingDoubleKeyFrame KeyTime="0:0:1.1" Value="-570"/>
-            </DoubleAnimationUsingKeyFrames>
             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="RegisterPanel">
                 <DiscreteObjectKeyFrame KeyTime="0:0:0.8" Value="{x:Static Visibility.Visible}"/>
             </ObjectAnimationUsingKeyFrames>
@@ -266,18 +258,20 @@
                     </Rectangle.RenderTransform>
                 </Rectangle>
                 <Rectangle x:Name="_register" Fill="#FF2DAAB1" HorizontalAlignment="Left" Height="2" Margin="53.616,381.584,0,0" Stroke="{x:Null}" StrokeThickness="2" VerticalAlignment="Top" Width="64.5" Grid.ColumnSpan="2"/>
-                <Label x:Name="label" Content="WELCOME BACK" HorizontalAlignment="Left" Height="23.999" Margin="10.949,46.185,0,0" VerticalAlignment="Top" Width="388.8" Background="{x:Null}" Foreground="#FFAE9F9F" HorizontalContentAlignment="Center" VerticalContentAlignment="Bottom" FontSize="13" Grid.ColumnSpan="2"/>
-                <Label x:Name="label1" Content="Log into your account" HorizontalAlignment="Left" Height="31.999" Margin="10.949,70.184,0,0" VerticalAlignment="Top" Width="388.8" Background="{x:Null}" Foreground="#FFCAC8C8" HorizontalContentAlignment="Center" FontWeight="Bold" FontSize="16" Grid.ColumnSpan="2"/>
-                <TextBox x:Name="username" HorizontalAlignment="Left" Height="27.337" Margin="33.349,138.114,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="344.533" Background="{x:Null}" VerticalContentAlignment="Center" Text="Username" Foreground="#FFE2E2E2" SelectionBrush="{x:Null}" SelectionTextBrush="White" BorderBrush="#FF2DAAB1" Grid.ColumnSpan="2" AcceptsReturn="true" SelectionChanged="TakeUsername"/>
-                <PasswordBox x:Name="password" HorizontalAlignment="Left" Height="27.733" Margin="33.349,188.051,0,0" VerticalAlignment="Top" Width="344.533" Background="{x:Null}" Foreground="#FFFCEFEF" BorderBrush="#FF2DAAB1" VerticalContentAlignment="Center" Password="Password" SelectionBrush="{x:Null}" Grid.ColumnSpan="2" PasswordChanged="TakePassword"/>
+                <Label x:Name="label" Content="WELCOME BACK" HorizontalAlignment="Left" Height="23.999" Margin="10.949,46.185,0,0" VerticalAlignment="Top" Width="388.8" Background="{x:Null}" Foreground="#FFD7B9B9" HorizontalContentAlignment="Center" VerticalContentAlignment="Bottom" FontSize="13" Grid.ColumnSpan="2"/>
+                <Label x:Name="label1" Content="Log into your account" HorizontalAlignment="Left" Height="31.999" Margin="10.949,70.184,0,0" VerticalAlignment="Top" Width="388.8" Background="{x:Null}" Foreground="#FFF7F4F4" HorizontalContentAlignment="Center" FontWeight="Bold" FontSize="16" Grid.ColumnSpan="2"/>
+                <TextBox x:Name="username" HorizontalAlignment="Left" Height="27.337" Margin="33.349,138.114,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="344.533" Background="{x:Null}" VerticalContentAlignment="Center" Foreground="White" SelectionBrush="{x:Null}" SelectionTextBrush="White" BorderBrush="#FF2DAAB1" Grid.ColumnSpan="2" AcceptsReturn="true" TextChanged="txt_Changed"/>
+                <PasswordBox x:Name="password" HorizontalAlignment="Left" Height="27.733" Margin="33.349,188.051,0,0" VerticalAlignment="Top" Width="344.533" Background="{x:Null}" Foreground="#FFFCEFEF" BorderBrush="#FF2DAAB1" VerticalContentAlignment="Center" SelectionBrush="{x:Null}" Grid.ColumnSpan="2" PasswordChanged="pass_Changed"/>
                 <Button x:Name="LoginButton" Content="Log In" HorizontalAlignment="Left" Height="27.2" Margin="33.349,240.317,0,0" VerticalAlignment="Top" Width="344.533" Foreground="#FF0D172B" Background="#FF2DAAB1" FontWeight="Bold" FontSize="14" BorderBrush="{x:Null}" Grid.ColumnSpan="2"/>
                 <Button x:Name="ForgetAccount" Content="Forget your account ?" HorizontalAlignment="Left" Height="22.933" Margin="82.605,272.517,0,0" VerticalAlignment="Top" Width="142.933" Foreground="#FFB01D1D" Background="{x:Null}" FontSize="10" BorderBrush="{x:Null}" Grid.Column="1"/>
                 <Button x:Name="register" Content="Register" HorizontalAlignment="Left" Height="16" Margin="53.616,360.584,0,0" VerticalAlignment="Top" Width="64.5" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" FontSize="9" Focusable="True" Grid.ColumnSpan="2"/>
                 <Rectangle x:Name="_about" Fill="#FF2DAAB1" HorizontalAlignment="Left" Height="2" Margin="68.716,381.584,0,0" Stroke="{x:Null}" StrokeThickness="2" VerticalAlignment="Top" Width="64.5" Grid.Column="1"/>
                 <Button x:Name="about" Content="About us" HorizontalAlignment="Left" Height="16" Margin="68.716,360.584,0,0" VerticalAlignment="Top" Width="64.5" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" FontSize="9" Focusable="True" Grid.Column="1"/>
                 <Button x:Name="Exit" Content="x" HorizontalAlignment="Left" Height="16.534" Margin="33.349,10,0,0" VerticalAlignment="Top" Width="19.2" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FFF7F2F2" FontSize="11" Click="ExitClick"/>
+                <TextBlock x:Name="username_mask" Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="27.337" Margin="33.349,138.114,0,0" Text="Username" VerticalAlignment="Top" Width="344.533" Foreground="#FFB7B7B7" TextWrapping="Wrap" Padding="3,5,0,0" IsHitTestVisible="False"/>
+                <TextBlock x:Name="password_mask" Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="27.733" Margin="33.349,188.051,0,0" TextWrapping="Wrap" Text="Password" VerticalAlignment="Top" Width="344.533" Foreground="#FFB7B7B7" Padding="4,5,0,0" IsHitTestVisible="False"/>
             </Grid>
-            <Rectangle x:Name="MainPanel" HorizontalAlignment="Left" Height="387.172" VerticalAlignment="Top" Width="412.018" RenderTransformOrigin="0.5,0.5" RadiusY="13.566" RadiusX="13.566" Fill="#FF3A76EA" Margin="-37.6,573.6,0,-547.016">
+            <Rectangle x:Name="MainPanel" HorizontalAlignment="Left" Height="387.172" VerticalAlignment="Top" Width="412.018" RenderTransformOrigin="0.5,0.5" RadiusY="13.566" RadiusX="13.566" Fill="#FF3A76EA" Margin="-85.912,502.648,0,-540.264">
                 <Rectangle.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform/>

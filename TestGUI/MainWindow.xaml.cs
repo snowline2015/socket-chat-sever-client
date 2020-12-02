@@ -26,14 +26,20 @@ namespace TestGUI
             InitializeComponent();
         }
 
-        private void TakeUsername(object sender, RoutedEventArgs e)
+        private void txt_Changed(object sender, TextChangedEventArgs e)
         {
-            name = username.Text;
+            if (username.Text.Length > 0)
+                username_mask.Visibility = Visibility.Collapsed;
+            else
+                username_mask.Visibility = Visibility.Visible;
         }
 
-        private void TakePassword(object sender, RoutedEventArgs e)
+        private void pass_Changed(object sender, RoutedEventArgs e)
         {
-            pass = password.Password;
+            if (password.Password.Length > 0)
+                password_mask.Visibility = Visibility.Collapsed;
+            else
+                password_mask.Visibility = Visibility.Visible;
         }
 
         private void ExitClick(object sender, RoutedEventArgs e)

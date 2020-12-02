@@ -20,33 +20,27 @@ namespace TestGUI
     /// </summary>
     public partial class MainWindow : Window
     {
-        private string name, pass;
+        private string name, pass, nameregis, passregis;
         public MainWindow()
         {
             InitializeComponent();
         }
 
-        private void ClearUsername(object sender, MouseEventArgs e)
-        {
-            if (username.Text == "Username")
-            username.Text = "";
-        }
+        private void ClearUsername(object sender, MouseEventArgs e) { username.Text = ""; }
 
-        private void TakeUsername(object sender, RoutedEventArgs e)
-        {
-            name = username.Text;
-        }
+        private void TakeUsername(object sender, RoutedEventArgs e) { name = username.Text; }
+        private void TakeUsernameRegis(object sender, RoutedEventArgs e) { nameregis = username_regis.Text; }
 
-        private void ClearPassword(object sender, MouseEventArgs e)
-        {
-            if (password.Password == "Password")
-                password.Password = "";
-        }
+        private void ClearPassword(object sender, MouseEventArgs e) { password.Password = ""; }
 
-        private void TakePassword(object sender, RoutedEventArgs e)
-        {
-            pass = password.Password;
-        }
+        private void TakePassword(object sender, RoutedEventArgs e) { pass = password.Password; }
+        private void TakePasswordRegis(object sender, RoutedEventArgs e) { passregis = password_regis.Text; }
+
+        private void ClearUsernameRegis(object sender, MouseEventArgs e) { username_regis.Text = ""; }
+        private void ClearPasswordRegis(object sender, MouseEventArgs e) { password_regis.Text = ""; }
+        private void ClearFullnameRegis(object sender, MouseEventArgs e) { fullname_regis.Text = ""; }
+        private void ClearEmailRegis(object sender, MouseEventArgs e) { email_regis.Text = ""; }
+        private void ClearPhoneRegis(object sender, MouseEventArgs e) { phone_regis.Text = ""; }
 
         private void ExitClick(object sender, RoutedEventArgs e)
         {

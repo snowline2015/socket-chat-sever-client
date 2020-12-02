@@ -7,6 +7,53 @@ void ShutDownAndClose(client_type& client) {
     WSACleanup();
 }
 
+void Init() {
+    struct sockaddr_in addrport;
+    struct sockaddr_in* server = NULL, * result = NULL;
+    client_type client;
+    int iResult = 0;
+
+    std::string str;
+    std::cout << "Input server ip address: ";
+    getline(std::cin, str);
+    const char* c = str.c_str();
+
+    WSADATA wsaData;
+    int wsOK = WSAStartup(MAKEWORD(2, 2), &wsaData);
+    if (wsOK != 0) {
+        //std::cout << "Can't initialize winsock. Application is now exiting..." << std::endl;
+        return;
+    }
+
+    ZeroMemory(&addrport, sizeof(addrport));
+    addrport.sin_family = AF_INET;
+    addrport.sin_port = htons(5000);
+    addrport.sin_addr.s_addr = inet_addr(c);
+
+
+    /*std::cout << "Setting up server..." << std::endl;
+    getaddrinfo(IP_ADDRESS, PORT, &hints, &server);*/
+
+
+    // Attempt to connect to an address until one succeeds
+    while (true) {
+        client.socket = socket(PF_INET, SOCK_STREAM, 0);
+        iResult = connect(client.socket, (struct sockaddr*)&addrport, sizeof(addrport));
+        if (iResult == SOCKET_ERROR) {
+            closesocket(client.socket);
+            client.socket = INVALID_SOCKET;
+            continue;
+        }
+        break;
+    }
+
+    if (client.socket == INVALID_SOCKET) {
+        ShutDownAndClose(client);
+        system("pause");
+        return;
+    }
+}
+
 void Client_Thread(client_type& new_client) {
     while (true) {
         memset(new_client.RecvMsg, NULL, sizeof(new_client.RecvMsg));
@@ -65,51 +112,6 @@ void Client_Group_Chat(client_type& client) {
     ShutDownAndClose(client);
 }
 
-void Init() {
-    struct sockaddr_in addrport;
-    struct sockaddr_in* server = NULL, * result = NULL;
-    client_type client;
-    int iResult = 0;
 
-    std::string str;
-    std::cout << "Input server ip address: ";
-    getline(std::cin, str);
-    const char* c = str.c_str();
-
-    WSADATA wsaData;
-    int wsOK = WSAStartup(MAKEWORD(2, 2), &wsaData);
-    if (wsOK != 0) {
-        //std::cout << "Can't initialize winsock. Application is now exiting..." << std::endl;
-        return;
-    }
-
-    ZeroMemory(&addrport, sizeof(addrport));
-    addrport.sin_family = AF_INET;
-    addrport.sin_port = htons(5000);
-    addrport.sin_addr.s_addr = inet_addr(c);
-
-
-    /*std::cout << "Setting up server..." << std::endl;
-    getaddrinfo(IP_ADDRESS, PORT, &hints, &server);*/
-
-
-    // Attempt to connect to an address until one succeeds
-    while (true) {
-        client.socket = socket(PF_INET, SOCK_STREAM, 0);
-        iResult = connect(client.socket, (struct sockaddr*)&addrport, sizeof(addrport));
-        if (iResult == SOCKET_ERROR) {
-            closesocket(client.socket);
-            client.socket = INVALID_SOCKET;
-            continue;
-        }
-        break;
-    }
-
-    if (client.socket == INVALID_SOCKET) {
-        ShutDownAndClose(client);
-        system("pause");
-        return;
-    }
-}
 
 

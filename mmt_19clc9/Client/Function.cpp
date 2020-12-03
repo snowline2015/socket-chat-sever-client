@@ -7,10 +7,8 @@ void ShutDownAndClose(client_type& client) {
     WSACleanup();
 }
 
-void Init() {
+void Init(client_type& client) {
     struct sockaddr_in addrport;
-    struct sockaddr_in* server = NULL, * result = NULL;
-    client_type client;
     int iResult = 0;
 
     std::string str;

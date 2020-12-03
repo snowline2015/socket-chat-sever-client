@@ -60,11 +60,11 @@ int main()
                 client[i].socket = NewSockid;
                 client[i].id = i;
                 temp_id = i;
-                /*char clientIP[16];
+                char clientIP[16];
                 int client_len = sizeof(addrport);
                 getpeername(NewSockid, (struct sockaddr*)&addrport, &client_len);
                 client[i].IP = inet_ntop(AF_INET, &addrport.sin_addr, clientIP, sizeof(clientIP));
-                memset(&clientIP, NULL, sizeof(clientIP));*/
+                memset(&clientIP, NULL, sizeof(clientIP));
             }
 
             if (client[i].socket != INVALID_SOCKET)
@@ -85,7 +85,7 @@ int main()
             
 
             if (strcmp(temp, "register") == 0) {        
-                send(NewSockid, "OK", DEFAULT_BUFFER_LENGTH, 0);
+                send(NewSockid, "OK", 3, 0);
                 if (Register(NewSockid, client_List) == true) { // De y dong nay, dong nay khi lam register xong thi lam gi phu thuoc vao UI
                     Write_Account(client_List);
                     goto blahblah;

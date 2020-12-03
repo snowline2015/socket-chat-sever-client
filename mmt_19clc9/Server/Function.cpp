@@ -9,7 +9,10 @@ void Read_Account(std::vector<client_type>& User_List) {
     while (!f.eof()) {
         client_type user;
         getline(f, user.Username, ',');
-        getline(f, user.Password, '\n');
+        getline(f, user.Password, ',');
+        getline(f, user.Fullname, ',');
+        getline(f, user.DOB, ',');
+        getline(f, user.Email, '\n');
         if (user.Username.size() != 0)
             User_List.push_back(user);
     }
@@ -23,7 +26,10 @@ void Write_Account(vector<client_type>& users) {
         return;
     for (int i = 0; i < users.size(); ++i) {
         o << users[i].Username << ',';
-        o << users[i].Password;
+        o << users[i].Password << ',';
+        o << users[i].Fullname << ',';
+        o << users[i].DOB << ',';
+        o << users[i].Email;
     }
     o.close();
 }
@@ -41,12 +47,7 @@ void Client_Multiple_Chatting(client_type& new_client, std::vector<client_type>&
             if (iResult != SOCKET_ERROR) {
                 //if (strcmp("", tempmsg) == 0)
                     
-                    
-                    
-                    msg = "Client #" + std::to_string(new_client.id) + ": " + (tempmsg);  // De y dong nay, client # la tam thoi
-                    // Sau nay co username thi chinh sua lai
-
-
+                    msg = new_client.Username + ": " + (tempmsg);
 
                 //std::cout << msg.c_str() << std::endl;
 
@@ -58,7 +59,7 @@ void Client_Multiple_Chatting(client_type& new_client, std::vector<client_type>&
                 }
             }
             else {
-                msg = "Client #" + std::to_string(new_client.id) + " has disconnected";
+                msg = new_client.Username + " has disconnected";
 
                 PlaySound(TEXT("Sound\\Summoner.wav"), NULL, SND_ASYNC);
 
@@ -83,6 +84,7 @@ void Client_Multiple_Chatting(client_type& new_client, std::vector<client_type>&
 }
 
 bool Register(SOCKET NewSockid, std::vector<client_type>& User_List) {
+    client_type new_user;
     char temp[DEFAULT_BUFFER_LENGTH] = "";
     int iResult = recv(NewSockid, temp, DEFAULT_BUFFER_LENGTH, 0);
     if (iResult != SOCKET_ERROR) {
@@ -94,18 +96,38 @@ bool Register(SOCKET NewSockid, std::vector<client_type>& User_List) {
                 return false;
             }
         }
-        send(NewSockid, "OK", DEFAULT_BUFFER_LENGTH, 0);
-        client_type new_user;
+        send(NewSockid, "OK", 3, 0);
         new_user.Username = std::string(temp);
         memset(&temp, NULL, sizeof(temp));
         iResult = recv(NewSockid, temp, DEFAULT_BUFFER_LENGTH, 0);
         if (iResult != SOCKET_ERROR) {
+            send(NewSockid, "OK", 3, 0);
             new_user.Password = std::string(temp);
-            User_List.push_back(new_user);
             memset(&temp, NULL, sizeof(temp));
-            strncpy(temp, "Register successfully", DEFAULT_BUFFER_LENGTH);
-            send(NewSockid, temp, DEFAULT_BUFFER_LENGTH, 0);
-            return true;
+            iResult = recv(NewSockid, temp, DEFAULT_BUFFER_LENGTH, 0);
+            if (iResult != SOCKET_ERROR) {
+                send(NewSockid, "OK", 3, 0);
+                new_user.Fullname = std::string(temp);
+                memset(&temp, NULL, sizeof(temp));
+                iResult = recv(NewSockid, temp, DEFAULT_BUFFER_LENGTH, 0);
+                if (iResult != SOCKET_ERROR) {
+                    send(NewSockid, "OK", 3, 0);
+                    new_user.DOB = std::string(temp);
+                    memset(&temp, NULL, sizeof(temp));
+                    iResult = recv(NewSockid, temp, DEFAULT_BUFFER_LENGTH, 0);
+                    if (iResult != SOCKET_ERROR) {
+                        new_user.Email = std::string(temp);
+                        User_List.push_back(new_user);
+                        memset(&temp, NULL, sizeof(temp));
+                        strncpy(temp, "Register successfully", DEFAULT_BUFFER_LENGTH);
+                        send(NewSockid, temp, DEFAULT_BUFFER_LENGTH, 0);
+                        return true;
+                    }
+                    return false;
+                }
+                return false;
+            } 
+            return false;
         }
         return false;   
     }

@@ -21,6 +21,7 @@ using namespace std;
 
 #define PORT "5000"
 #define DEFAULT_BUFFER_LENGTH 4096
+#define DEFAULT_TRANSFER_BUFFER 1024
 
 const char OPTION_VALUE = 1;
 const int MAX_CLIENTS = 10;
@@ -28,7 +29,7 @@ const int MAX_CLIENTS = 10;
 struct client_type
 {
     int id = -1;
-    std::string IP, Username, Password;
+    std::string IP, Username, Password, Fullname, DOB, Email;
     SOCKET socket = INVALID_SOCKET;
 };
 

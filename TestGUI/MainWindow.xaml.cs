@@ -27,21 +27,81 @@ namespace TestGUI
             InitializeComponent();
         }
 
-        private void ClearUsername(object sender, MouseEventArgs e) { username.Text = ""; }
+        private void ClearUsername(object sender, MouseEventArgs e)
+        {
+            if (username.Text == "Username")
+                username.Text = "";
+        }
+        private void FillUsername(object sender, MouseEventArgs e)
+        {
+            if (username.Text == "")
+                username.Text = "Username";
+        }
+        private void ClearPassword(object sender, MouseEventArgs e)
+        {
+            if (password.Password == "Password")
+                password.Password = "";
+        }
+        private void FillPassword(object sender, MouseEventArgs e)
+        {
+            if (password.Password == "")
+                password.Password = "Password";
+        }
 
         private void TakeUsername(object sender, RoutedEventArgs e) { name = username.Text; }
         private void TakeUsernameRegis(object sender, RoutedEventArgs e) { nameregis = username_regis.Text; }
 
-        private void ClearPassword(object sender, MouseEventArgs e) { password.Password = ""; }
-
         private void TakePassword(object sender, RoutedEventArgs e) { pass = password.Password; }
         private void TakePasswordRegis(object sender, RoutedEventArgs e) { passregis = password_regis.Text; }
 
-        private void ClearUsernameRegis(object sender, MouseEventArgs e) { username_regis.Text = ""; }
-        private void ClearPasswordRegis(object sender, MouseEventArgs e) { password_regis.Text = ""; }
-        private void ClearFullnameRegis(object sender, MouseEventArgs e) { fullname_regis.Text = ""; }
-        private void ClearEmailRegis(object sender, MouseEventArgs e) { email_regis.Text = ""; }
-        private void ClearPhoneRegis(object sender, MouseEventArgs e) { phone_regis.Text = ""; }
+        private void ClearUsernameRegis(object sender, MouseEventArgs e) {
+            if (username_regis.Text == "Username")
+                username_regis.Text = ""; 
+        }
+        private void FillUsernameRegis(object sender, MouseEventArgs e) {
+            if (username_regis.Text == "")
+            username_regis.Text = "Username";
+        }
+        private void ClearPasswordRegis(object sender, MouseEventArgs e)
+        {
+            if (password_regis.Text == "Password")
+                password_regis.Text = "";
+        }
+        private void FillPasswordRegis(object sender, MouseEventArgs e)
+        {
+            if (password_regis.Text == "")
+                password_regis.Text = "Password";
+        }
+        private void ClearFullnameRegis(object sender, MouseEventArgs e)
+        {
+            if (fullname_regis.Text == "Full name")
+                fullname_regis.Text = "";
+        }
+        private void FillFullnameRegis(object sender, MouseEventArgs e)
+        {
+            if (fullname_regis.Text == "")
+                fullname_regis.Text = "Full name";
+        }
+        //private void ClearDayofBirthRegis(object sender, MouseEventArgs e)
+        //{
+        //    if (dob_regis.Text == "Birthday")
+        //        dob_regis.Text = "";
+        //}
+        //private void FillDayofBirthRegis(object sender, MouseEventArgs e)
+        //{
+        //    if (dob_regis.Text == "")
+        //        dob_regis.Text = "Birthday";
+        //}
+        private void ClearEmailRegis(object sender, MouseEventArgs e)
+        {
+            if (email_regis.Text == "E-mail")
+                email_regis.Text = "";
+        }
+        private void FillEmailRegis(object sender, MouseEventArgs e)
+        {
+            if (email_regis.Text == "")
+                email_regis.Text = "E-mail";
+        }
 
         private void ExitClick(object sender, RoutedEventArgs e)
         {

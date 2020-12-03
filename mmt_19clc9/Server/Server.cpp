@@ -96,21 +96,25 @@ int main()
             }
 
             if (strcmp(temp, "login") == 0) {
-                send(NewSockid, "OK", DEFAULT_BUFFER_LENGTH, 0);
-                if (Login(NewSockid, client_List) == true) 
-                    my_thread[temp_id] = std::thread(Client_Multiple_Chatting, std::ref(client[temp_id]), std::ref(client), std::ref(my_thread[temp_id]));
+                send(NewSockid, "OK", 3, 0);
+                if (Login(NewSockid, client_List) == true) {
+                    
+                    //my_thread[temp_id] = std::thread(Client_Multiple_Chatting, std::ref(client[temp_id]), std::ref(client), std::ref(my_thread[temp_id]));
+
+                }
                 else {
 
                 }
             }
             
-            //my_thread[temp_id] = std::thread(Client_Multiple_Chatting, std::ref(client[temp_id]), std::ref(client), std::ref(my_thread[temp_id]));
+            msg = "OK";
+            send(NewSockid, msg.c_str(), strlen(msg.c_str()), 0);
+            my_thread[temp_id] = std::thread(Client_Multiple_Chatting, std::ref(client[temp_id]), std::ref(client), std::ref(my_thread[temp_id]));
         }
         else
         {
             msg = "Server is full";
             send(NewSockid, msg.c_str(), strlen(msg.c_str()), 0);
-            //std::cout << msg << std::endl;
         }
     }
 

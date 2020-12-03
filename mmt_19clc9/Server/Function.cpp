@@ -163,3 +163,41 @@ bool Login(SOCKET NewSockid, std::vector<client_type>& User_List) {
     }
     return false;
 }
+
+void Client_Single_Chatting(client_type& first_client, client_type& second_client, std::thread& thread) {
+    std::string msg = "";
+    char tempmsg[DEFAULT_BUFFER_LENGTH] = "";
+
+    while (true) {
+        memset(&tempmsg, NULL, sizeof(tempmsg));
+
+        if (first_client.socket != 0) {
+            int iResult = recv(first_client.socket, tempmsg, DEFAULT_BUFFER_LENGTH, 0);
+            if (iResult != SOCKET_ERROR) {
+
+                msg = first_client.Username + ": " + (tempmsg);
+
+                if (second_client.socket != INVALID_SOCKET)
+                    iResult = send(second_client.socket, msg.c_str(), strlen(msg.c_str()), 0);
+            }
+            else {
+                msg = first_client.Username + " has disconnected";
+
+                std::cout << msg << std::endl;
+
+                closesocket(first_client.socket);
+                first_client.socket = INVALID_SOCKET;
+
+                if (second_client.socket != INVALID_SOCKET) {
+                    iResult = send(second_client.socket, msg.c_str(), strlen(msg.c_str()), 0);
+                    closesocket(second_client.socket);
+                    second_client.socket = INVALID_SOCKET;
+                }
+
+                break;
+            }
+        }
+    }
+
+    thread.detach();
+}

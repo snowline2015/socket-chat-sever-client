@@ -1,4 +1,3 @@
-#define CLIENT_DLL
 #include "Header.h"
 
 bool Login(client_type& client, string id, string password) {

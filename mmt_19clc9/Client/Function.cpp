@@ -1,4 +1,3 @@
-#define CLIENT_DLL
 #include "Header.h"
 
 void ShutDownAndClose(client_type& client) {

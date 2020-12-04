@@ -20,8 +20,9 @@
 #include <iomanip>
 #include <cstdint>
 #include <Windows.h>
-#include<vector>
+#include <vector>
 #include <conio.h>
+#include <fstream>
 #pragma comment( lib, "wsock32.lib" )
 #pragma comment( lib, "Ws2_32.lib")
 #pragma comment( lib, "winmm.lib")
@@ -29,6 +30,7 @@ using namespace std;
 
 #define PORT "5000"
 #define DEFAULT_BUFFER_LENGTH 4096
+#define DEFAULT_TRANSFER_LENGTH 1024
 
 struct client_type {
     SOCKET socket = INVALID_SOCKET;
@@ -43,7 +45,7 @@ bool Register(client_type& client, string id, string password, string fullname, 
 void Client_Thread(client_type& new_client);
 void Client_Group_Chat(client_type& client);
 void Client_Private_Chat(client_type& client);
-void Client_Send_File(client_type& client);
-void Client_Receive_File(client_type& client);
+bool Client_Send_File(client_type& client, std::string& dir);
+bool Client_Receive_File(client_type& client);
 
 #endif

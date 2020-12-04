@@ -137,6 +137,66 @@ void Client_Private_Chat(client_type& client) {
     ShutDownAndClose(client);
 }
 
+bool Client_Send_File(client_type& client, std::string& dir) {
+    std::string fName = "";
+    std::string temp;
+    for (int i = 0; i < dir.length(); i++) {
+        if (dir[i] == '/') dir.replace(i, 1, "\\");
+    }
+
+    for (int32_t i = dir.std::string::length() - 1; i >= 0; i--) {
+        if (dir[i] == '\\') {
+            fName.std::string::append(dir.std::string::substr(i));
+            break;
+        }
+    }
+
+    std::ifstream file(dir, std::ios::in, std::ios::binary);
+    if (file.fail()) {
+        std::cout << "Fail to open file" << std::endl;
+        return;
+    }
+    file.seekg(0, std::ios::end);
+    int size = file.tellg();
+    file.seekg(0, std::ios::beg);
+    temp = std::to_string(size);
+
+    // Send file name and file size
+    send(client.socket, fName.c_str(), strlen(fName.c_str()), 0);
+    int iResult = recv(client.socket, client.RecvMsg, DEFAULT_BUFFER_LENGTH, 0);
+    if (iResult != SOCKET_ERROR) {
+        if (strcmp(client.RecvMsg, "OK") != 0)
+            return false;
+    }
+    else return false;
+    send(client.socket, temp.c_str(), strlen(temp.c_str()), 0);
+    iResult = recv(client.socket, client.RecvMsg, DEFAULT_BUFFER_LENGTH, 0);
+    if (iResult != SOCKET_ERROR) {
+        if (strcmp(client.RecvMsg, "OK") != 0)
+            return false;
+    }
+    else return false;
+
+    //Sending file processing
+    while (file.tellg() != size) {
+        char* buffer = new char[1025];
+        file.read(buffer, DEFAULT_TRANSFER_LENGTH);
+        send(client.socket, buffer, DEFAULT_TRANSFER_LENGTH, 0);
+        iResult = recv(client.socket, client.RecvMsg, DEFAULT_BUFFER_LENGTH, 0);
+        if (iResult != SOCKET_ERROR) {
+            if (strcmp(client.RecvMsg, "OK") != 0)
+                return false;
+        }
+        else return false;
+        delete[] buffer;
+    }
+
+    return true;
+}
+
+bool Client_Receive_File(client_type& client) {
+
+}
 
 
 

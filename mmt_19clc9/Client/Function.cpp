@@ -154,7 +154,7 @@ bool Client_Send_File(client_type& client, std::string& dir) {
     std::ifstream file(dir, std::ios::in, std::ios::binary);
     if (file.fail()) {
         std::cout << "Fail to open file" << std::endl;
-        return;
+        return false;
     }
     file.seekg(0, std::ios::end);
     int size = file.tellg();
@@ -195,7 +195,7 @@ bool Client_Send_File(client_type& client, std::string& dir) {
 }
 
 bool Client_Receive_File(client_type& client) {
-
+    return true;
 }
 
 

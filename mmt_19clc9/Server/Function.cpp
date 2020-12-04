@@ -138,7 +138,7 @@ bool Login(SOCKET NewSockid, std::vector<client_type>& User_List) {
     char temp[DEFAULT_BUFFER_LENGTH] = "";
     int iResult = recv(NewSockid, temp, DEFAULT_BUFFER_LENGTH, 0);
     if (iResult != SOCKET_ERROR) {
-        send(NewSockid, "OK", DEFAULT_BUFFER_LENGTH, 0);
+        send(NewSockid, "OK", 3, 0);
         for (std::vector<client_type>::iterator p = User_List.begin(); p != User_List.end(); p++) {
             if ((*p).Username.compare(std::string(temp)) == 0) {
                 memset(&temp, NULL, sizeof(temp));

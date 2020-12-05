@@ -10,11 +10,10 @@
 #include <stdexcept>
 #include <sstream>
 #include <iomanip>
-#include <cstdint>
 #include <Windows.h>
 #include <vector>
-#include <conio.h>
 #include <fstream>
+#include <tchar.h>
 #pragma comment( lib, "wsock32.lib" )
 #pragma comment( lib, "Ws2_32.lib")
 #pragma comment( lib, "winmm.lib")

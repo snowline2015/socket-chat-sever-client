@@ -14,6 +14,10 @@
 #include <vector>
 #include <fstream>
 #include <tchar.h>
+//#include <stdio.h>
+//#include <stdlib.h>
+//#include <cstdint>
+#include <conio.h>
 #pragma comment( lib, "wsock32.lib" )
 #pragma comment( lib, "Ws2_32.lib")
 #pragma comment( lib, "winmm.lib")
@@ -22,6 +26,7 @@ using namespace std;
 #define PORT "5000"
 #define DEFAULT_BUFFER_LENGTH 4096
 #define DEFAULT_TRANSFER_LENGTH 1024
+
 struct client_type {
     SOCKET socket = INVALID_SOCKET;
     int id = -1;
@@ -30,8 +35,8 @@ struct client_type {
 };
 
 void Init(client_type& client);
-bool Login(client_type& client, string id, string password);
-bool Register(client_type& client, string id, string password, string fullname, string birthday, string email);
+bool Login(client_type& client);
+bool Register(client_type& client);
 void Client_Thread(client_type& new_client);
 void Client_Group_Chat(client_type& client);
 void Client_Private_Chat(client_type& client);

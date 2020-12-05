@@ -4,13 +4,13 @@ int main()
 {
     struct sockaddr_in addrport;
     SOCKET sockid = INVALID_SOCKET;
-    std::string msg = "";
+    std::string msg = "", username;
     std::vector<client_type> client(MAX_CLIENTS), client_List;
     int num_clients = 0;
     int temp_id = -1;
     std::thread my_thread[MAX_CLIENTS];
 
-    std::string str;
+    Read_Account(client_List);
 
     std::cout << "Intializing Winsock..." << std::endl;
 
@@ -20,8 +20,6 @@ int main()
         std::cout << "Can't initialize winsock. Application is now exiting..." << std::endl;
         return 0;
     }
-
-    Read_Account(client_List);
 
     ZeroMemory(&addrport, sizeof(addrport));
     addrport.sin_family = AF_INET;
@@ -80,7 +78,6 @@ int main()
 
             blahblah:
 
-
             int iResult = recv(NewSockid, temp, DEFAULT_BUFFER_LENGTH, 0);
             
 
@@ -91,15 +88,17 @@ int main()
                     goto blahblah;
                 }
                 else {
-
+                    goto blahblah;
                 }
             }
 
             if (strcmp(temp, "login") == 0) {
                 send(NewSockid, "OK", 3, 0);
-                if (Login(NewSockid, client_List) == true) {
-                    
-                    //my_thread[temp_id] = std::thread(Client_Multiple_Chatting, std::ref(client[temp_id]), std::ref(client), std::ref(my_thread[temp_id]));
+                if (Login(NewSockid, client_List, username) == true) {
+                    client[temp_id].Username = username;
+                    msg = "OK";
+                    send(NewSockid, msg.c_str(), strlen(msg.c_str()), 0);
+                    my_thread[temp_id] = std::thread(Client_Multiple_Chatting, std::ref(client[temp_id]), std::ref(client), std::ref(my_thread[temp_id]));
 
                 }
                 else {
@@ -107,9 +106,7 @@ int main()
                 }
             }
             
-            msg = "OK";
-            send(NewSockid, msg.c_str(), strlen(msg.c_str()), 0);
-            my_thread[temp_id] = std::thread(Client_Multiple_Chatting, std::ref(client[temp_id]), std::ref(client), std::ref(my_thread[temp_id]));
+            
         }
         else
         {

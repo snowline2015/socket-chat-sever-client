@@ -38,7 +38,7 @@ void Client_Single_Chatting(client_type& first_client, client_type& second_clien
 void Read_Account(std::vector<client_type>& User_List);
 void Write_Account(std::vector<client_type>& User_List);
 bool Register(SOCKET NewSockid, std::vector<client_type>& User_List);
-bool Login(SOCKET NewSockid, std::vector<client_type>& User_List);
+bool Login(SOCKET NewSockid, std::vector<client_type>& User_List, string& username);
 
 
 #endif

@@ -20,8 +20,7 @@ void Read_Account(std::vector<client_type>& User_List) {
 }
 
 void Write_Account(vector<client_type>& users) {
-    ofstream o;
-    o.open("Data\Account.csv");
+    ofstream o("Data\\Account.csv");
     if (!o.is_open())
         return;
     for (int i = 0; i < users.size(); ++i) {
@@ -29,7 +28,7 @@ void Write_Account(vector<client_type>& users) {
         o << users[i].Password << ',';
         o << users[i].Fullname << ',';
         o << users[i].DOB << ',';
-        o << users[i].Email;
+        o << users[i].Email << std::endl;
     }
     o.close();
 }
@@ -134,13 +133,14 @@ bool Register(SOCKET NewSockid, std::vector<client_type>& User_List) {
     return false;
 }
 
-bool Login(SOCKET NewSockid, std::vector<client_type>& User_List) {
+bool Login(SOCKET NewSockid, std::vector<client_type>& User_List, std::string& username) {
     char temp[DEFAULT_BUFFER_LENGTH] = "";
     int iResult = recv(NewSockid, temp, DEFAULT_BUFFER_LENGTH, 0);
     if (iResult != SOCKET_ERROR) {
         send(NewSockid, "OK", 3, 0);
         for (std::vector<client_type>::iterator p = User_List.begin(); p != User_List.end(); p++) {
             if ((*p).Username.compare(std::string(temp)) == 0) {
+                username = (*p).Username;
                 memset(&temp, NULL, sizeof(temp));
                 iResult = recv(NewSockid, temp, DEFAULT_BUFFER_LENGTH, 0);
                 if (iResult != SOCKET_ERROR) 

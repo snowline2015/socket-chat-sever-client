@@ -1,6 +1,30 @@
 #include "Header.h"
 
-bool Login(client_type& client, string id, string password) {
+bool Login(client_type& client) {
+	string id, password;
+	getline(cin, id);
+	char c;
+	while (true)
+	{
+		c = _getch();
+
+		if (c == 13) break;
+
+		if (c == 8)
+		{
+			if (password.size() == 0);
+			else cout << "\b \b";
+			if (password.size() > 0)
+				password.pop_back();
+		}
+
+		else
+		{
+			password.push_back(c);
+			cout << "*";
+		}
+	}
+
 	char temp[DEFAULT_BUFFER_LENGTH] = "login";
 	send(client.socket, temp, DEFAULT_BUFFER_LENGTH, 0);
 
@@ -32,10 +56,26 @@ bool Login(client_type& client, string id, string password) {
 	}
 
 	std::cout << "Login successfully" << std::endl;
+	cout << "Press any key to continue" << endl;
+
+	_getch();
+
 	return true;
 }
 
-bool Register(client_type& client, string username, string password, string fullname, string birthday, string email) {
+bool Register(client_type& client) {
+	string username, password, fullname, birthday, email;
+	std::cout << "Username: ";
+	std::getline(std::cin, username);
+	std::cout << "Password: ";
+	std::getline(std::cin, password);
+	std::cout << "Fullname: ";
+	std::getline(std::cin, fullname);
+	std::cout << "Birthday: ";
+	std::getline(std::cin, birthday);
+	std::cout << "Email: ";
+	std::getline(std::cin, email);
+
 	char temp[DEFAULT_BUFFER_LENGTH] = "register";
 	send(client.socket, temp, DEFAULT_BUFFER_LENGTH, 0);
 	int iResult = recv(client.socket, client.RecvMsg, DEFAULT_BUFFER_LENGTH, 0);

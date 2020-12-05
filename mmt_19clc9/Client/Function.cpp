@@ -7,9 +7,8 @@ void ShutDownAndClose(client_type& client) {
 }
 
 void Init(client_type& client) {
-    struct sockaddr_in addrport;
     int iResult = 0;
-
+    struct sockaddr_in addrport;
     std::string str;
     std::cout << "Input server ip address: ";
     getline(std::cin, str);
@@ -196,6 +195,4 @@ bool Client_Send_File(client_type& client, std::string& dir) {
 bool Client_Receive_File(client_type& client) {
     return true;
 }
-
-
 

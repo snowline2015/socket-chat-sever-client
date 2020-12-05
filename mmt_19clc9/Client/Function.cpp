@@ -136,38 +136,45 @@ void Client_Private_Chat(client_type& client) {
 }
 
 bool Client_Send_File(client_type& client, std::string& dir) {
+
     std::string fName = "";
     std::string temp;
+    send(client.socket, "send file", DEFAULT_BUFFER_LENGTH, 0);
+    int iResult = recv(client.socket, client.RecvMsg, DEFAULT_BUFFER_LENGTH, 0);
+    if (iResult != SOCKET_ERROR) {
+        if (strcmp(client.RecvMsg, "OK") != 0)
+            return false;
+    }
     for (int i = 0; i < dir.length(); i++) {
         if (dir[i] == '/') dir.replace(i, 1, "\\");
     }
 
     for (int32_t i = dir.std::string::length() - 1; i >= 0; i--) {
         if (dir[i] == '\\') {
-            fName.std::string::append(dir.std::string::substr(i));
+            fName.std::string::append(dir.std::string::substr(i + 1));
             break;
         }
     }
 
-    std::ifstream file(dir, std::ios::in, std::ios::binary);
-    if (file.fail()) {
+    FILE* fp = fopen(dir.c_str(), "rb");
+    if (fp == NULL) {
         std::cout << "Fail to open file" << std::endl;
         return false;
     }
-    file.seekg(0, std::ios::end);
-    int size = file.tellg();
-    file.seekg(0, std::ios::beg);
-    temp = std::to_string(size);
+
+    fseek(fp, 0, SEEK_END);
+    long long int size = ftell(fp);
+    fseek(fp, -size, SEEK_END);
 
     // Send file name and file size
     send(client.socket, fName.c_str(), strlen(fName.c_str()), 0);
-    int iResult = recv(client.socket, client.RecvMsg, DEFAULT_BUFFER_LENGTH, 0);
+    iResult = recv(client.socket, client.RecvMsg, DEFAULT_BUFFER_LENGTH, 0);
     if (iResult != SOCKET_ERROR) {
         if (strcmp(client.RecvMsg, "OK") != 0)
             return false;
     }
     else return false;
-    send(client.socket, temp.c_str(), strlen(temp.c_str()), 0);
+    send(client.socket, std::to_string(size).c_str(), strlen(std::to_string(size).c_str()), 0);
     iResult = recv(client.socket, client.RecvMsg, DEFAULT_BUFFER_LENGTH, 0);
     if (iResult != SOCKET_ERROR) {
         if (strcmp(client.RecvMsg, "OK") != 0)
@@ -176,9 +183,9 @@ bool Client_Send_File(client_type& client, std::string& dir) {
     else return false;
 
     //Sending file processing
-    while (file.tellg() != size) {
+    while (!feof(fp)) {
         char* buffer = new char[1025];
-        file.read(buffer, DEFAULT_TRANSFER_LENGTH);
+        fread(buffer, 1024, 1, fp);
         send(client.socket, buffer, DEFAULT_TRANSFER_LENGTH, 0);
         iResult = recv(client.socket, client.RecvMsg, DEFAULT_BUFFER_LENGTH, 0);
         if (iResult != SOCKET_ERROR) {
@@ -189,6 +196,8 @@ bool Client_Send_File(client_type& client, std::string& dir) {
         delete[] buffer;
     }
 
+    fclose(fp);
+    send(client.socket, "end", DEFAULT_TRANSFER_LENGTH, 0);
     return true;
 }
 

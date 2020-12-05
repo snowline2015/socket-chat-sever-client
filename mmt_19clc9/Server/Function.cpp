@@ -201,3 +201,39 @@ void Client_Single_Chatting(client_type& first_client, client_type& second_clien
 
     thread.detach();
 }
+
+bool Receive_File(SOCKET NewSockid) {
+    string dest_temp = "%UserProfile%\\Desktop";
+    char temp[DEFAULT_BUFFER_LENGTH] = "";
+
+    int iResult = recv(NewSockid, temp, DEFAULT_BUFFER_LENGTH, 0);
+    if (iResult != SOCKET_ERROR) 
+        send(NewSockid, "OK", 3, 0);
+    else return false;
+    dest_temp.append("\\").append(temp);
+
+    memset(&temp, NULL, sizeof(temp));
+    iResult = recv(NewSockid, temp, DEFAULT_BUFFER_LENGTH, 0);
+    if (iResult != SOCKET_ERROR)
+        send(NewSockid, "OK", 3, 0);
+    else return false;
+    //int file_size = stoi(std::string(temp));
+
+    FILE* fs = fopen(dest_temp.c_str(), "wb");
+    
+    while (true) {
+        char* buffer = new char[1025];
+        iResult = recv(NewSockid, buffer, DEFAULT_TRANSFER_LENGTH, 0);
+        if (iResult != SOCKET_ERROR)
+            send(NewSockid, "OK", 3, 0);
+        else return false;
+        if (strcmp(buffer, "end") == 0) {
+            fclose(fs);
+            break;
+        }
+        fwrite(buffer, 1024, 1, fs);
+        delete[] buffer;
+    }
+
+    return true;
+}

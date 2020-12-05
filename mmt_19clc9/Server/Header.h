@@ -21,7 +21,7 @@ using namespace std;
 
 #define PORT "5000"
 #define DEFAULT_BUFFER_LENGTH 4096
-#define DEFAULT_TRANSFER_BUFFER 1024
+#define DEFAULT_TRANSFER_LENGTH 1024
 
 const char OPTION_VALUE = 1;
 const int MAX_CLIENTS = 10;
@@ -39,6 +39,7 @@ void Read_Account(std::vector<client_type>& User_List);
 void Write_Account(std::vector<client_type>& User_List);
 bool Register(SOCKET NewSockid, std::vector<client_type>& User_List);
 bool Login(SOCKET NewSockid, std::vector<client_type>& User_List, string& username);
+bool Receive_File(SOCKET NewSockid);
 
 
 #endif

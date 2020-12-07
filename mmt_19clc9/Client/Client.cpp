@@ -6,12 +6,18 @@ int main() {
 
 	//Register(client);
 	
-	//Login(client);
+	Login(client);
 
 	//Client_Group_Chat(client);
 
-	string temp = "D:\\ASUS\\Videos\\19CLC9.mp4"; // test thu thi de ten file vao day
-	Client_Send_File(client, temp);
+
+	send(client.socket, "private chat", 13, 0);
+	std::string user;
+	std::cout << "Nhap ten user: ";
+	std::getline(std::cin, user);
+	send(client.socket, user.c_str(), strlen(user.c_str()), 0);
+
+	Client_Private_Chat(client);
 
 	return 0;
 }

@@ -4,7 +4,7 @@ int main()
 {
     struct sockaddr_in addrport;
     SOCKET sockid = INVALID_SOCKET;
-    std::string msg = "", username;
+    std::string msg = "", username, tempo;
     std::vector<client_type> client(MAX_CLIENTS), client_List;
     int num_clients = 0;
     int temp_id = -1;
@@ -81,35 +81,36 @@ int main()
             int iResult = recv(NewSockid, temp, DEFAULT_BUFFER_LENGTH, 0);
             
 
-            //if (strcmp(temp, "register") == 0) {        
-            //    send(NewSockid, "OK", 3, 0);
-            //    if (Register(NewSockid, client_List) == true) { // De y dong nay, dong nay khi lam register xong thi lam gi phu thuoc vao UI
-            //        Write_Account(client_List);
-            //        goto blahblah;
-            //    }
-            //    else {
-            //        goto blahblah;
-            //    }
-            //}
-
-            //if (strcmp(temp, "login") == 0) {
-            //    send(NewSockid, "OK", 3, 0);
-            //    if (Login(NewSockid, client_List, username) == true) {
-            //        client[temp_id].Username = username;
-            //        msg = "OK";
-            //        send(NewSockid, msg.c_str(), strlen(msg.c_str()), 0);
-            //        my_thread[temp_id] = std::thread(Client_Multiple_Chatting, std::ref(client[temp_id]), std::ref(client), std::ref(my_thread[temp_id]));
-
-            //    }
-            //    else {
-
-            //    }
-            //}
-            
-            if (strcmp(temp, "send file") == 0) {
+            if (strcmp(temp, "register") == 0) {        
                 send(NewSockid, "OK", 3, 0);
-                Receive_File(NewSockid);
+                if (Register(NewSockid, client_List) == true) { // De y dong nay, dong nay khi lam register xong thi lam gi phu thuoc vao UI
+                    Write_Account(client_List);
+                    goto blahblah;
+                }
+                else {
+                    goto blahblah;
+                }
             }
+
+            if (strcmp(temp, "login") == 0) {
+                send(NewSockid, "OK", 3, 0);
+                if (Login(NewSockid, client_List, username) == true) {
+                    client[temp_id].Username = username;
+
+
+                    memset(&temp, NULL, sizeof(temp));
+                    recv(NewSockid, temp, DEFAULT_BUFFER_LENGTH, 0);
+                    if (strcmp(temp, "private chat") == 0) {
+                        recv(NewSockid, temp, DEFAULT_BUFFER_LENGTH, 0);
+                        tempo = std::string(temp);
+                        my_thread[temp_id] = std::thread(Client_Single_Chatting, std::ref(client[temp_id]), std::ref(client), std::ref(tempo), std::ref(my_thread[temp_id]));
+                    }
+                    else {
+                        my_thread[temp_id] = std::thread(Client_Multiple_Chatting, std::ref(client[temp_id]), std::ref(client), std::ref(my_thread[temp_id]));
+                    }
+                }
+            }
+
         }
         else
         {

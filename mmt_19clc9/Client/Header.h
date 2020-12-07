@@ -25,7 +25,10 @@ using namespace std;
 
 #define PORT "5000"
 #define DEFAULT_BUFFER_LENGTH 4096
-#define DEFAULT_TRANSFER_LENGTH 1024
+#define DEFAULT_SENDER_BUFFER_SIZE 8193
+#define DEFAULT_SENDER_BUFFER_LENGTH 8192
+#define DEFAULT_RECEIVER_BUFFER_SIZE 8193
+#define DEFAULT_RECEIVER_BUFFER_LENGTH 8192
 
 struct client_type {
     SOCKET socket = INVALID_SOCKET;
@@ -38,9 +41,9 @@ void Init(client_type& client);
 bool Login(client_type& client);
 bool Register(client_type& client);
 void Client_Thread(client_type& new_client);
+void Client_Private_Thread(client_type& new_client);
 void Client_Group_Chat(client_type& client);
 void Client_Private_Chat(client_type& client);
-bool Client_Send_File(client_type& client, std::string& dir);
-bool Client_Receive_File(client_type& client);
+
 
 #endif

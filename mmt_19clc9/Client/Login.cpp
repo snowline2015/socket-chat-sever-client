@@ -55,7 +55,7 @@ bool Login(client_type& client) {
 		return false;
 	}
 
-	std::cout << "Login successfully" << std::endl;
+	std::cout << "\nLogin successfully" << std::endl;
 	cout << "Press any key to continue" << endl;
 
 	_getch();

@@ -74,12 +74,12 @@ namespace ConvertedCode
             string str;
             byte[] messageReceived = new byte[4096];
             int byteRecv = client.socket.Receive(messageReceived);
-            string temp = Encoding.ASCII.GetString(messageReceived, 0, byteRecv);
+            str = Encoding.ASCII.GetString(messageReceived, 0, byteRecv);
 
-            if ((String.Compare(temp, "Server is full", comparisonType: StringComparison.OrdinalIgnoreCase) != 0))
+            if (!str.Equals("Server is full"))
             {
 
-                Thread my_thread = new Thread(()=> Client_Thread(ref client));
+                Thread my_thread = new Thread(() => Client_Thread(ref client));
                 my_thread.IsBackground = true;
                 my_thread.Start();
 
@@ -115,13 +115,14 @@ namespace ConvertedCode
 
                     if (str.Equals("send file"))
                     {
-                        string dest_temp = "C:\\Users\\snowl\\Desktop"; // OpenFileDialog
+                        string dest_temp = "%USERPROFILE%\\Desktop"; // OpenFileDialog
+
 
                         //Receive file name and size
                         messageReceived = new byte[4096];
                         byteRecv = new_client.socket.Receive(messageReceived);
                         str = Encoding.ASCII.GetString(messageReceived, 0, byteRecv);
-                        dest_temp += ("\\"  + str);
+                        dest_temp += ("\\" + str);
 
                         messageReceived = new byte[4096];
                         byteRecv = new_client.socket.Receive(messageReceived);
@@ -159,7 +160,7 @@ namespace ConvertedCode
                         }
                         catch (IOException e)
                         {
-                            Console.WriteLine(e.Message + "\n Cannot write to file.");
+                            Console.WriteLine(e.Message);
                             return;
                         }
                     }
@@ -186,79 +187,85 @@ namespace ConvertedCode
 
                 byte[] messageSent = Encoding.ASCII.GetBytes(str);
                 int byteSent = client.socket.Send(messageSent);
+            }
 
-                if (str.compare("send file") == 0)
+            client.socket = null;
+
+            my_thread.Abort();
+        }
+
+        void Send_File(client_type client)
+        {
+            string str = "send file";
+            byte[] messageSent = Encoding.ASCII.GetBytes(str);
+            int byteSent = client.socket.Send(messageSent);
+
+            // Do something to take path file
+
+            // str = path file
+
+            //Path file taken
+
+            string fName = "";
+
+            for (int i = 0; i < str.Length; i++)
+            {
+                if (str[i] == '/') str.Replace('/', '\\');
+            }
+
+            for (int i = str.Length - 1; i >= 0; i--) {
+                if (str[i] == '\\')
                 {
-                    std::cout << "File path: ";
-                    std::getline(std::cin, str);
-
-                    std::string fName = "";
-
-                    for (int i = 0; i < str.length(); i++)
-                    {
-                        if (str[i] == '/') str.replace(i, 1, "\\");
-                    }
-
-                    for (int32_t i = str.std::string::length() - 1; i >= 0; i--) {
-                        if (str[i] == '\\')
-                        {
-                            fName.std::string::append(str.std::string::substr(i + 1));
-                            break;
-                        }
-                    }
-
-                    /*FILE* fp = fopen(str.c_str(), "rb");
-                    if (fp == NULL) {
-                        std::cout << "Fail to open file" << std::endl;
-                        continue;
-                    }
-
-                    fseek(fp, 0, SEEK_END);
-                    long long int size = ftell(fp);
-                    fseek(fp, -size, SEEK_END);*/
-
-
-                    std::ifstream fp(str, ios::in | ios::binary);
-
-                    if (fp.fail())
-                    {
-                        continue;
-                    }
-
-                    fp.seekg(0, ios::end);
-                    long long int size = fp.tellg();
-                    fp.seekg(0, ios::beg);
-
-
-
-                    // Send file name and file size
-                    send(client.socket, fName.c_str(), strlen(fName.c_str()), 0);
-                    send(client.socket, std::to_string(size).c_str(), strlen(std::to_string(size).c_str()), 0);
-
-
-                    //Sending file processing
-                    while (!fp.eof())
-                    {
-                        char* buffer = new char[DEFAULT_SENDER_BUFFER_SIZE];
-                        fp.read(buffer, DEFAULT_SENDER_BUFFER_LENGTH);
-                        send(client.socket, buffer, DEFAULT_SENDER_BUFFER_LENGTH, 0);
-                        delete[] buffer;
-                    }
-                    fp.close();
-                    send(client.socket, "end", 4, 0);
+                    fName += (str.Substring(i + 1));
+                    break;
                 }
             }
 
-            client.socket = INVALID_SOCKET;
+            if (!File.Exists(fName))
+            {
+                // Warn cannot open file
 
-            my_thread.detach();
 
-            std::cout << "Shutting down socket..." << std::endl;
+                return;
+            }
 
-            ShutDownAndClose(client);
 
+            // Send file name and file size
+
+            long length = new System.IO.FileInfo(fName).Length;
+
+            Array.Clear(messageSent, 0, messageSent.Length);
+            messageSent = Encoding.ASCII.GetBytes(fName);
+            byteSent = client.socket.Send(messageSent);
+
+            Array.Clear(messageSent, 0, messageSent.Length);
+            messageSent = BitConverter.GetBytes(length);
+            byteSent = client.socket.Send(messageSent);
+
+
+            BinaryReader br;
+            try
+            {
+                br = new BinaryReader(new FileStream(str, FileMode.Open, FileAccess.Read));
+                while (br.BaseStream.Position != br.BaseStream.Length) {
+                    byte[] fileSent = new byte[8196];
+                    fileSent = br.ReadBytes(8196);
+                    int fileByteSent = client.socket.Send(messageSent);
+                }
+
+                br.Close();
+                string temp = "end";
+                messageSent = Encoding.ASCII.GetBytes(temp);
+                byteSent = client.socket.Send(messageSent); 
+            }
+            catch (IOException e)
+            {
+                Console.WriteLine(e.Message);
+                return;
+            }
         }
 
+    }
     class Program
     {
         static void Main()

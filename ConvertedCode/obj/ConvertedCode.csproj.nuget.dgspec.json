@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\LENOVO\\source\\repos\\ConvertedCode\\ConvertedCode.csproj": {}
+    "C:\\Users\\snowl\\Documents\\GitHub\\mmt_19clc9\\ConvertedCode\\ConvertedCode.csproj": {}
   },
   "projects": {
-    "C:\\Users\\LENOVO\\source\\repos\\ConvertedCode\\ConvertedCode.csproj": {
+    "C:\\Users\\snowl\\Documents\\GitHub\\mmt_19clc9\\ConvertedCode\\ConvertedCode.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\LENOVO\\source\\repos\\ConvertedCode\\ConvertedCode.csproj",
+        "projectUniqueName": "C:\\Users\\snowl\\Documents\\GitHub\\mmt_19clc9\\ConvertedCode\\ConvertedCode.csproj",
         "projectName": "ConvertedCode",
-        "projectPath": "C:\\Users\\LENOVO\\source\\repos\\ConvertedCode\\ConvertedCode.csproj",
-        "packagesPath": "C:\\Users\\LENOVO\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\LENOVO\\source\\repos\\ConvertedCode\\obj\\",
+        "projectPath": "C:\\Users\\snowl\\Documents\\GitHub\\mmt_19clc9\\ConvertedCode\\ConvertedCode.csproj",
+        "packagesPath": "C:\\Users\\snowl\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\snowl\\Documents\\GitHub\\mmt_19clc9\\ConvertedCode\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\LENOVO\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\snowl\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [

@@ -1,4 +1,4 @@
-#include "Header.h"
+﻿#include "Header.h"
 
 void ShutDownAndClose(client_type& client) {
     shutdown(client.socket, SD_SEND);
@@ -117,7 +117,7 @@ void Client_Private_Thread(client_type& new_client) {
             if (iResult != SOCKET_ERROR)
                 if (strcmp(new_client.RecvMsg, "send file") == 0) {
                     
-                    string dest_temp = "C:\\Users\\snowl\\Desktop";
+                    string dest_temp = "‪C:\\Users\\LENOVO\\Desktop";
 
 
                     //Receive file name and size

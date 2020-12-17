@@ -1,0 +1,465 @@
+﻿<Window x:Class="ChatGUI.WorkingWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ChatGUI"
+        mc:Ignorable="d"
+        Title="WorkingWindow" Height="720" Width="930" Background="{x:Null}" Foreground="{x:Null}" AllowsTransparency="True" WindowStyle="None" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <Style x:Key="MyButton" TargetType="{x:Type Button}">
+            <Setter Property="OverridesDefaultStyle" Value="True"/>
+            <Setter Property="Cursor" Value="Arrow"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="border" BorderThickness="0" BorderBrush="Gray" Background="{TemplateBinding Background}"/>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Opacity" Value=".6"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="MainButton" TargetType="{x:Type Button}">
+            <Setter Property="OverridesDefaultStyle" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="bdrButton" BorderThickness="0" BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}"/>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Opacity" Value=".6"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <SolidColorBrush x:Key="TextBox.Static.Border" Color="#FFABAdB3"/>
+        <SolidColorBrush x:Key="TextBox.MouseOver.Border" Color="#FF7EB4EA"/>
+        <SolidColorBrush x:Key="TextBox.Focus.Border" Color="#FF569DE5"/>
+
+        <Style x:Key="IPAddTemplate" TargetType="{x:Type TextBox}">
+            <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource TextBox.Static.Border}"/>
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="KeyboardNavigation.TabNavigation" Value="None"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="AllowDrop" Value="true"/>
+            <Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst"/>
+            <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBox}">
+                        <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True" CornerRadius="3">
+                            <ScrollViewer x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Opacity" TargetName="border" Value="0.56"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource TextBox.MouseOver.Border}"/>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource TextBox.Focus.Border}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsInactiveSelectionHighlightEnabled" Value="true"/>
+                        <Condition Property="IsSelectionActive" Value="false"/>
+                    </MultiTrigger.Conditions>
+                    <Setter Property="SelectionBrush" Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}"/>
+                </MultiTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="FocusVisual">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Rectangle Margin="2" SnapsToDevicePixels="true" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" StrokeThickness="1" StrokeDashArray="1 2"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <SolidColorBrush x:Key="RadioButton.Static.Background" Color="#FFFFFFFF"/>
+        <SolidColorBrush x:Key="RadioButton.Static.Border" Color="#FF707070"/>
+        <Style x:Key="OptionMarkFocusVisual">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Rectangle Margin="14,0,0,0" SnapsToDevicePixels="true" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" StrokeThickness="1" StrokeDashArray="1 2"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <SolidColorBrush x:Key="RadioButton.MouseOver.Background" Color="#FFF3F9FF"/>
+        <SolidColorBrush x:Key="RadioButton.MouseOver.Border" Color="#FF5593FF"/>
+        <SolidColorBrush x:Key="RadioButton.MouseOver.Glyph" Color="#FF212121"/>
+        <SolidColorBrush x:Key="RadioButton.Disabled.Background" Color="#FFE6E6E6"/>
+        <SolidColorBrush x:Key="RadioButton.Disabled.Border" Color="#FFBCBCBC"/>
+        <SolidColorBrush x:Key="RadioButton.Disabled.Glyph" Color="#FF707070"/>
+        <SolidColorBrush x:Key="RadioButton.Pressed.Background" Color="#FFD9ECFF"/>
+        <SolidColorBrush x:Key="RadioButton.Pressed.Border" Color="#FF3C77DD"/>
+        <SolidColorBrush x:Key="RadioButton.Pressed.Glyph" Color="#FF212121"/>
+        <SolidColorBrush x:Key="RadioButton.Static.Glyph" Color="#FF212121"/>
+        <Style x:Key="Encr_yes" TargetType="{x:Type RadioButton}">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+            <Setter Property="Background" Value="{StaticResource RadioButton.Static.Background}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource RadioButton.Static.Border}"/>
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type RadioButton}">
+                        <Grid x:Name="templateRoot" Background="Transparent" SnapsToDevicePixels="True" Margin="2.667,-0.333,-6.8,-4.466" Width="Auto" Height="Auto">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Border x:Name="radioButtonBorder" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" CornerRadius="100" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="0" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Width="20" Height="20">
+                                <Grid x:Name="markGrid" Margin="2" Width="8" Height="8">
+                                    <Ellipse x:Name="optionMark" Fill="{StaticResource RadioButton.Static.Glyph}" MinWidth="6" MinHeight="6" Opacity="0"/>
+                                </Grid>
+                            </Border>
+                            <ContentPresenter x:Name="contentPresenter" Grid.Column="1" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="HasContent" Value="true">
+                                <Setter Property="FocusVisualStyle" Value="{StaticResource OptionMarkFocusVisual}"/>
+                                <Setter Property="Padding" Value="4,-1,0,0"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Background" TargetName="radioButtonBorder" Value="{StaticResource RadioButton.MouseOver.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="radioButtonBorder" Value="{StaticResource RadioButton.MouseOver.Border}"/>
+                                <Setter Property="Fill" TargetName="optionMark" Value="{StaticResource RadioButton.MouseOver.Glyph}"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Background" TargetName="radioButtonBorder" Value="{StaticResource RadioButton.Disabled.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="radioButtonBorder" Value="{StaticResource RadioButton.Disabled.Border}"/>
+                                <Setter Property="Fill" TargetName="optionMark" Value="{StaticResource RadioButton.Disabled.Glyph}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="true">
+                                <Setter Property="Background" TargetName="radioButtonBorder" Value="{StaticResource RadioButton.Pressed.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="radioButtonBorder" Value="{StaticResource RadioButton.Pressed.Border}"/>
+                                <Setter Property="Fill" TargetName="optionMark" Value="{StaticResource RadioButton.Pressed.Glyph}"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="true">
+                                <Setter Property="Opacity" TargetName="optionMark" Value="1"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="{x:Null}">
+                                <Setter Property="Opacity" TargetName="optionMark" Value="0.56"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="ChatBoxTemplate" TargetType="{x:Type TextBox}">
+            <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource TextBox.Static.Border}"/>
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="KeyboardNavigation.TabNavigation" Value="None"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="AllowDrop" Value="true"/>
+            <Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst"/>
+            <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBox}">
+                        <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True" CornerRadius="5">
+                            <ScrollViewer x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Opacity" TargetName="border" Value="0.56"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource TextBox.MouseOver.Border}"/>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource TextBox.Focus.Border}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsInactiveSelectionHighlightEnabled" Value="true"/>
+                        <Condition Property="IsSelectionActive" Value="false"/>
+                    </MultiTrigger.Conditions>
+                    <Setter Property="SelectionBrush" Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}"/>
+                </MultiTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="SearchStyle1" TargetType="{x:Type TextBox}">
+            <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource TextBox.Static.Border}"/>
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="KeyboardNavigation.TabNavigation" Value="None"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="AllowDrop" Value="true"/>
+            <Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst"/>
+            <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBox}">
+                        <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True" CornerRadius="5">
+                            <ScrollViewer x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Opacity" TargetName="border" Value="0.56"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource TextBox.MouseOver.Border}"/>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource TextBox.Focus.Border}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsInactiveSelectionHighlightEnabled" Value="true"/>
+                        <Condition Property="IsSelectionActive" Value="false"/>
+                    </MultiTrigger.Conditions>
+                    <Setter Property="SelectionBrush" Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}"/>
+                </MultiTrigger>
+            </Style.Triggers>
+        </Style>
+        <SolidColorBrush x:Key="Button.Static.Background" Color="#FFDDDDDD"/>
+        <SolidColorBrush x:Key="Button.Static.Border" Color="#FF707070"/>
+        <SolidColorBrush x:Key="Button.MouseOver.Background" Color="#FFBEE6FD"/>
+        <SolidColorBrush x:Key="Button.MouseOver.Border" Color="#FF3C7FB1"/>
+        <SolidColorBrush x:Key="Button.Pressed.Background" Color="#FFC4E5F6"/>
+        <SolidColorBrush x:Key="Button.Pressed.Border" Color="#FF2C628B"/>
+        <SolidColorBrush x:Key="Button.Disabled.Background" Color="#FFF4F4F4"/>
+        <SolidColorBrush x:Key="Button.Disabled.Border" Color="#FFADB2B5"/>
+        <SolidColorBrush x:Key="Button.Disabled.Foreground" Color="#FF838383"/>
+        <Style x:Key="MoreOpt_Button_Template" TargetType="{x:Type Button}">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+            <Setter Property="Background" Value="{StaticResource Button.Static.Background}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource Button.Static.Border}"/>
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="true" CornerRadius="5">
+                            <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsDefaulted" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource Button.MouseOver.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.MouseOver.Border}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="true">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Pressed.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Pressed.Border}"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Disabled.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Disabled.Border}"/>
+                                <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource Button.Disabled.Foreground}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <StackPanel x:Name="MainWorkingPanel" HorizontalAlignment="Left" Height="720" VerticalAlignment="Top" Width="930" Margin="0,0,-130,-270">
+        <StackPanel.Background>
+            <LinearGradientBrush EndPoint="0.253,-0.026" StartPoint="0.461,1.088">
+                <GradientStop Color="#FF215EB7"/>
+                <GradientStop Color="#FF6599E4" Offset="0.865"/>
+                <GradientStop Color="#FF93BAF3" Offset="0.292"/>
+            </LinearGradientBrush>
+        </StackPanel.Background>
+        <Grid x:Name="WorkingGrid" Height="78.4">
+            <Button x:Name="ExitButton2" Style="{StaticResource MyButton}" HorizontalAlignment="Left" Height="30" Margin="882.5,22,0,0" VerticalAlignment="Top" Width="30" FontWeight="Bold" FontSize="16" Foreground="#FF121111" BorderBrush="{x:Null}" 
+                Click="CloseButton_Click">
+                <Button.Background>
+                    <ImageBrush ImageSource="Assets/close2.png" Stretch="Uniform"/>
+                </Button.Background>
+            </Button>
+            <TextBlock x:Name="ProfileName" HorizontalAlignment="Left" Height="30" Margin="81.4,13,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="182.4" FontSize="18" Padding="0,7,0,0" Foreground="Black"><Run Text="Name"/></TextBlock>
+            <Label x:Name="Login_time" Content="{Binding CurrentTime}" HorizontalAlignment="Left" Height="25" Margin="81.4,43,0,0" VerticalAlignment="Top" Width="284" Background="{x:Null}" Padding="0,0,5,5" FontSize="14" FontWeight="Normal" Foreground="Black"/>
+            <Image x:Name="Profile_photo" HorizontalAlignment="Left" Height="43.6" VerticalAlignment="Top" Width="43.6" Margin="23.8,13,0,0" Source="5.jpg" Stretch="UniformToFill"/>
+        </Grid>
+        <Path x:Name="LineSeperator" Data="M10,75.3 L930,75.3" Fill="#FF0F0FA8" HorizontalAlignment="Left" Height="1" Margin="10,0,-1,0" Stretch="Fill" Stroke="#FF0F0FA8" Width="900"/>
+        <StackPanel x:Name="PreChatPanel" HorizontalAlignment="Left" Height="642.1" VerticalAlignment="Top" Width="930">
+            <Grid x:Name="PreChatGrid" Height="642.1">
+                <Button x:Name="PrivateChatBtn" Content="Button" HorizontalAlignment="Left" Height="49.2" Margin="342.5,151.8,0,0" VerticalAlignment="Top" Width="205.2" BorderBrush="#FF050505" Style="{StaticResource MainButton}">
+                    <Button.Background>
+                        <ImageBrush ImageSource="Assets/image2.png" Stretch="Uniform"/>
+                    </Button.Background>
+                </Button>
+
+                <Button x:Name="GroupChatBtn" Content="Button" HorizontalAlignment="Left" Height="49.2" Margin="342.5,257.4,0,0" VerticalAlignment="Top" Width="205.2" BorderBrush="#FF737373" Style="{StaticResource MainButton}">
+                    <Button.Background>
+                        <ImageBrush ImageSource="Assets/grchat-img.png" Stretch="Uniform"/>
+                    </Button.Background>
+                </Button>
+
+                <Button x:Name="OptionsBtn" Content="Button" HorizontalAlignment="Left" Height="49.2" Margin="342.5,366.6,0,0" VerticalAlignment="Top" Width="205.2" BorderBrush="#FFB7B7B7" Style="{StaticResource MainButton}">
+                    <Button.Background>
+                        <ImageBrush ImageSource="Assets/opt-img.png" Stretch="Uniform"/>
+                    </Button.Background>
+                </Button>
+
+                <Label x:Name="label1" Content="Welcome Back" HorizontalAlignment="Left" Height="44.7" Margin="353.2,22,0,0" VerticalAlignment="Top" Width="188.5" Background="{x:Null}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="24" FontWeight="Bold"/>
+                <Button x:Name="LogoutBtn" Content="Button" HorizontalAlignment="Left" Height="49.2" Margin="342.5,487.8,0,0" VerticalAlignment="Top" Width="205.2" BorderBrush="#FFF9F7F7" Style="{StaticResource MainButton}">
+                    <Button.Background>
+                        <ImageBrush ImageSource="Assets/logout-img.png" Stretch="Uniform"/>
+                    </Button.Background>
+                </Button>
+                <Label x:Name="label2" Content="Please choose an option" HorizontalAlignment="Left" Height="44.7" Margin="271.6,66.7,0,0" VerticalAlignment="Top" Width="351.7" Background="{x:Null}" HorizontalContentAlignment="Center" FontSize="20"/>
+            </Grid>
+        </StackPanel>
+        <StackPanel x:Name="PrivateChatPanel" HorizontalAlignment="Left" Height="642.1" Width="930" Visibility="Collapsed">
+            <Grid x:Name="PrivateChatInfoGrid" Height="642.1" Visibility="Collapsed">
+                <TextBox x:Name="IPAddress_server_pr" HorizontalAlignment="Left" Height="32" Margin="336.8,114.1,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="309.6" FontSize="14" VerticalContentAlignment="Center" BorderBrush="#FF253CE2" Background="{x:Null}" SelectionBrush="{x:Null}" SelectionTextBrush="{x:Null}" Style="{DynamicResource IPAddTemplate}"/>
+                <RadioButton x:Name="Encr_No" Content="RadioButton" HorizontalAlignment="Left" Height="19.934" Margin="518.8,350.634,0,0" VerticalAlignment="Top" Width="25.134" Style="{DynamicResource Encr_yes}"/>
+                <RadioButton x:Name="Encr_Yes" Content="RadioButton" HorizontalAlignment="Left" Height="19.934" Margin="395.8,350.634,0,0" VerticalAlignment="Top" Width="25.134" Style="{DynamicResource Encr_yes}"/>
+                <TextBlock HorizontalAlignment="Left" Height="19.934" Margin="548.934,350.634,0,0" TextWrapping="Wrap" Text="No" VerticalAlignment="Top" Width="44.8" FontWeight="SemiBold"/>
+                <TextBlock HorizontalAlignment="Left" Height="19.934" Margin="425.934,350.634,0,0" TextWrapping="Wrap" Text="Yes" VerticalAlignment="Top" Width="56" FontWeight="SemiBold"/>
+                <TextBlock HorizontalAlignment="Left" Margin="226.8,123.1,0,503.04" TextWrapping="Wrap" Text="Server IP Address:" Width="105" FontWeight="Bold" VerticalAlignment="Center"/>
+                <TextBlock HorizontalAlignment="Left" Margin="212.4,193.52,0,416.66" TextWrapping="Wrap" Text="Friend's Username:" Width="119.4" FontWeight="Bold" VerticalAlignment="Center"/>
+                <TextBlock HorizontalAlignment="Left" Margin="226.8,280.7,0,345.44" TextWrapping="Wrap" Text="Port:" Width="105" FontWeight="Bold" VerticalAlignment="Center" TextAlignment="Center"/>
+                <TextBox x:Name="IPAddress_Private" HorizontalAlignment="Left" Height="32" Margin="336.8,193.5,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="309.6" FontSize="14" VerticalContentAlignment="Center" BorderBrush="#FF253CE2" Background="{x:Null}" SelectionBrush="{x:Null}" SelectionTextBrush="{x:Null}" Style="{DynamicResource IPAddTemplate}"/>
+                <TextBox x:Name="Port_pr" HorizontalAlignment="Left" Height="32" Margin="336.8,271.7,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="309.6" FontSize="14" VerticalContentAlignment="Center" BorderBrush="#FF253CE2" Background="{x:Null}" SelectionBrush="{x:Null}" SelectionTextBrush="{x:Null}" Style="{DynamicResource IPAddTemplate}"/>
+                <TextBlock HorizontalAlignment="Left" Margin="226.8,349.301,0,276.839" TextWrapping="Wrap" Text="Encrypt Message:" Width="105" FontWeight="Bold" VerticalAlignment="Center" TextAlignment="Center"/>
+                <Button Content="Connect To Chat" HorizontalAlignment="Left" Height="35.2" Margin="484.934,493,0,0" VerticalAlignment="Top" Width="148.134" BorderBrush="{x:Null}" FontWeight="SemiBold" FontSize="14" 
+                    Style="{StaticResource MyButton}">
+                    <Button.Background>
+                        <ImageBrush ImageSource="next2.png" Stretch="Uniform"/>
+                    </Button.Background>
+                </Button>
+                <Button x:Name="returnPage_pr" Content="Connect To Chat" HorizontalAlignment="Left" Height="35.2" Margin="336.8,493,0,0" VerticalAlignment="Top" Width="148.134" BorderBrush="{x:Null}" FontWeight="SemiBold" FontSize="14" 
+                    Style="{StaticResource MyButton}" Panel.ZIndex="2">
+                    <Button.Background>
+                        <ImageBrush ImageSource="next-reverse.png" Stretch="Uniform"/>
+                    </Button.Background>
+                </Button>
+            </Grid>
+            <Grid x:Name="PrivateChatMain" Height="641.1" Visibility="Collapsed">
+                <Grid x:Name="MainGrid_pr" HorizontalAlignment="Left" Height="631.1" VerticalAlignment="Top" Width="930" Margin="0,10,0,0">
+                    <Path Data="M290.9,10 L290.9,621.1" Fill="#FF218CBC" HorizontalAlignment="Left" Height="592.9" Margin="290.9,14.5,0,0" Stretch="Fill" Stroke="#FF218CBC" VerticalAlignment="Top" Width="1"/>
+                    <TextBox x:Name="ChatBox_pr" HorizontalAlignment="Left" Height="36.3" Margin="299.4,571.1,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="545.17" Style="{DynamicResource ChatBoxTemplate}" BorderBrush="#FF1C3D9A" Background="{x:Null}" VerticalContentAlignment="Center" FontSize="14"/>
+                    <Button x:Name="AttachFile" Content="Button" HorizontalAlignment="Left" Height="27" Margin="849.57,575.136,0,0" VerticalAlignment="Top" Width="27" Style="{StaticResource MyButton}" Click="OnOpenDialog">
+                        <Button.Background>
+                            <ImageBrush ImageSource="attach-icon.png" Stretch="Uniform"/>
+                        </Button.Background>
+
+                    </Button>
+                    <Button x:Name="Send" Content="Button" HorizontalAlignment="Left" Height="24" Margin="885.236,578.133,0,0" VerticalAlignment="Top" Width="24" Style="{StaticResource MyButton}">
+                        <Button.Background>
+                            <ImageBrush ImageSource="Assets/send-icon.png" Stretch="Uniform"/>
+                        </Button.Background>
+                    </Button>
+                    <ListBox x:Name="PrivateChat" HorizontalAlignment="Left" Height="551.6" Margin="299.4,14.5,0,0" VerticalAlignment="Top" Width="620.6" Background="{x:Null}" BorderBrush="{x:Null}" FontSize="14"/>
+                    <TextBox x:Name="Search_pr" HorizontalAlignment="Left" Height="27.2" Margin="10,23.3,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="222.4" FontSize="14" Style="{DynamicResource SearchStyle1}" Background="{x:Null}" SelectionBrush="{x:Null}" SelectionTextBrush="{x:Null}" BorderBrush="#FF1C3D9A"/>
+                    <Image HorizontalAlignment="Left" Height="27.2" Margin="242.733,23.3,0,0" VerticalAlignment="Top" Width="27.133" Source="search-icon.png"/>
+                    <ListBox x:Name="ListAttendance" HorizontalAlignment="Left" Height="551.9" Margin="10,55.5,0,0" VerticalAlignment="Top" Width="275.9" Background="{x:Null}" BorderBrush="{x:Null}" FontSize="14"/>
+                </Grid>
+            </Grid>
+        </StackPanel>
+        <StackPanel x:Name="GroupChatPanel" HorizontalAlignment="Left" Height="642.1" Width="930" Visibility="Collapsed">
+            <Grid x:Name="GroupChatInfoGrid" Height="642.1" Visibility="Collapsed">
+                <TextBox x:Name="IPAddress_server_gr" HorizontalAlignment="Left" Height="32" Margin="336.8,154.1,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="309.6" FontSize="14" VerticalContentAlignment="Center" BorderBrush="#FF253CE2" Background="{x:Null}" SelectionBrush="{x:Null}" SelectionTextBrush="{x:Null}" Style="{DynamicResource IPAddTemplate}"/>
+                <RadioButton x:Name="Encr_No2" Content="RadioButton" HorizontalAlignment="Left" Height="19.934" Margin="518.8,350.634,0,0" VerticalAlignment="Top" Width="25.134" Style="{DynamicResource Encr_yes}"/>
+                <RadioButton x:Name="Encr_Yes2" Content="RadioButton" HorizontalAlignment="Left" Height="19.934" Margin="395.8,350.634,0,0" VerticalAlignment="Top" Width="25.134" Style="{DynamicResource Encr_yes}"/>
+                <TextBlock HorizontalAlignment="Left" Height="19.934" Margin="548.934,350.634,0,0" TextWrapping="Wrap" Text="No" VerticalAlignment="Top" Width="44.8" FontWeight="SemiBold"/>
+                <TextBlock HorizontalAlignment="Left" Height="19.934" Margin="425.934,350.634,0,0" TextWrapping="Wrap" Text="Yes" VerticalAlignment="Top" Width="56" FontWeight="SemiBold"/>
+                <TextBlock HorizontalAlignment="Left" Margin="226.8,163.1,0,463.04" TextWrapping="Wrap" Text="Server IP Address:" Width="105" FontWeight="Bold" VerticalAlignment="Center"/>
+                <TextBlock HorizontalAlignment="Left" Margin="226.8,260.7,0,365.44" TextWrapping="Wrap" Text="Port:" Width="105" FontWeight="Bold" VerticalAlignment="Center" TextAlignment="Center"/>
+                <TextBox x:Name="Port_gr" HorizontalAlignment="Left" Height="32" Margin="336.8,251.7,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="309.6" FontSize="14" VerticalContentAlignment="Center" BorderBrush="#FF253CE2" Background="{x:Null}" SelectionBrush="{x:Null}" SelectionTextBrush="{x:Null}" Style="{DynamicResource IPAddTemplate}"/>
+                <TextBlock HorizontalAlignment="Left" Margin="226.8,349.301,0,276.839" TextWrapping="Wrap" Text="Encrypt Message:" Width="105" FontWeight="Bold" VerticalAlignment="Center" TextAlignment="Center"/>
+                <Button Content="Connect To Chat" HorizontalAlignment="Left" Height="35.2" Margin="484.934,493,0,0" VerticalAlignment="Top" Width="148.134" BorderBrush="{x:Null}" FontWeight="SemiBold" FontSize="14" 
+                    Style="{StaticResource MyButton}">
+                    <Button.Background>
+                        <ImageBrush ImageSource="next2.png" Stretch="Uniform"/>
+                    </Button.Background>
+                </Button>
+                <Button x:Name="returnPage_gr" Content="Connect To Chat" HorizontalAlignment="Left" Height="35.2" Margin="336.8,493,-484.934,0" VerticalAlignment="Top" Width="148.134" BorderBrush="{x:Null}" FontWeight="SemiBold" FontSize="14" 
+                    Style="{StaticResource MyButton}" Panel.ZIndex="2">
+                    <Button.Background>
+                        <ImageBrush ImageSource="next-reverse.png" Stretch="Uniform"/>
+                    </Button.Background>
+                </Button>
+            </Grid>
+            <Grid x:Name="GroupChatMain" HorizontalAlignment="Left" Height="642.1" VerticalAlignment="Top" Width="930" Visibility="Collapsed">
+                <Grid x:Name="MainGrid_gr" HorizontalAlignment="Left" Height="631.1" VerticalAlignment="Top" Width="930" Margin="0,10,0,0">
+                    <Path Data="M290.9,10 L290.9,621.1" Fill="#FF218CBC" HorizontalAlignment="Left" Height="592.9" Margin="290.9,14.5,0,0" Stretch="Fill" Stroke="#FF218CBC" VerticalAlignment="Top" Width="1"/>
+                    <TextBox x:Name="ChatBox_gr" HorizontalAlignment="Left" Height="36.3" Margin="299.4,571.1,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="545.17" Style="{DynamicResource ChatBoxTemplate}" BorderBrush="#FF1C3D9A" Background="{x:Null}" VerticalContentAlignment="Center" FontSize="14"/>
+                    <Button x:Name="AttachFile1" Content="Button" HorizontalAlignment="Left" Height="27" Margin="849.57,575.136,0,0" VerticalAlignment="Top" Width="27" Style="{StaticResource MyButton}">
+                        <Button.Background>
+                            <ImageBrush ImageSource="attach-icon.png" Stretch="Uniform"/>
+                        </Button.Background>
+
+                    </Button>
+                    <Button x:Name="Send1" Content="Button" HorizontalAlignment="Left" Height="24" Margin="885.236,578.133,0,0" VerticalAlignment="Top" Width="24" Style="{StaticResource MyButton}">
+                        <Button.Background>
+                            <ImageBrush ImageSource="Assets/send-icon.png" Stretch="Uniform"/>
+                        </Button.Background>
+                    </Button>
+                    <ListBox x:Name="GroupChat" HorizontalAlignment="Left" Height="551.6" Margin="299.4,14.5,0,0" VerticalAlignment="Top" Width="620.6" Background="{x:Null}" BorderBrush="{x:Null}" FontSize="14"/>
+                    <TextBox x:Name="Search_gr" HorizontalAlignment="Left" Height="27.2" Margin="10,23.3,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="222.4" FontSize="14" Style="{DynamicResource SearchStyle1}" Background="{x:Null}" SelectionBrush="{x:Null}" SelectionTextBrush="{x:Null}" BorderBrush="#FF1C3D9A"/>
+                    <Image HorizontalAlignment="Left" Height="27.2" Margin="242.733,23.3,0,0" VerticalAlignment="Top" Width="27.133" Source="search-icon.png"/>
+                    <ListBox x:Name="ListAttendances" HorizontalAlignment="Left" Height="551.9" Margin="10,55.5,0,0" VerticalAlignment="Top" Width="275.9" Background="{x:Null}" BorderBrush="{x:Null}" FontSize="14"/>
+                </Grid>
+            </Grid>
+        </StackPanel>
+        <StackPanel x:Name="MoreOptPanel" HorizontalAlignment="Left" Height="642.1" Width="930" Visibility="Collapsed">
+            <Grid x:Name="MoreOptGrid" Height="640.1">
+                <Button x:Name="Change_Pass" Content="Change Password" HorizontalAlignment="Left" Height="50.4" Margin="361.4,129.7,0,0" VerticalAlignment="Top" Width="241.2" Style="{DynamicResource MoreOpt_Button_Template}" Background="{x:Null}" BorderBrush="#FF1B51BD" FontSize="16"/>
+                <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Height="42" Margin="361.4,43.3,0,0" TextWrapping="Wrap" Text="More Options" VerticalAlignment="Top" Width="241.2" FontWeight="Bold" FontSize="24" TextAlignment="Center"/>
+                <Button x:Name="CheckUsr" Content="Check User Status" HorizontalAlignment="Left" Height="50.4" Margin="361.4,237.7,0,0" VerticalAlignment="Top" Width="241.2" Style="{DynamicResource MoreOpt_Button_Template}" Background="{x:Null}" BorderBrush="#FF1B51BD" FontSize="16"/>
+                <Button x:Name="Change_Info" Content="Change Information" HorizontalAlignment="Left" Height="50.4" Margin="361.4,342.1,0,0" VerticalAlignment="Top" Width="241.2" Style="{DynamicResource MoreOpt_Button_Template}" Background="{x:Null}" BorderBrush="#FF1B51BD" FontSize="16"/>
+                <Button x:Name="returnPage_MoreOpt" Content="Connect To Chat" HorizontalAlignment="Left" Height="35.2" Margin="405.8,451,0,0" VerticalAlignment="Top" Width="148.134" BorderBrush="{x:Null}" FontWeight="SemiBold" FontSize="14" 
+                    Style="{StaticResource MyButton}" Panel.ZIndex="2">
+                    <Button.Background>
+                        <ImageBrush ImageSource="next-reverse.png" Stretch="Uniform"/>
+                    </Button.Background>
+                </Button>
+            </Grid>
+            <Grid x:Name="ChangePassGrid" Height="642.1" Visibility="Collapsed">
+                <PasswordBox x:Name="CurrPass" HorizontalAlignment="Left" Height="52.8" Margin="347.9,128.8,0,0" VerticalAlignment="Top" Width="315.6" Background="{x:Null}" BorderBrush="#FF1F43AD" SelectionBrush="{x:Null}" SelectionTextBrush="{x:Null}" VerticalContentAlignment="Center" FontSize="16"/>
+                <PasswordBox x:Name="NewPass" HorizontalAlignment="Left" Height="52.8" Margin="347.9,276.4,0,0" VerticalAlignment="Top" Width="315.6" Background="{x:Null}" SelectionBrush="{x:Null}" SelectionTextBrush="{x:Null}" BorderBrush="#FF1F43AD" VerticalContentAlignment="Center" FontSize="16"/>
+                <Label Content="Current Password:" HorizontalAlignment="Left" Height="38.4" Margin="199.1,138.7,0,0" VerticalAlignment="Top" Width="139.2" FontSize="14" VerticalContentAlignment="Center" FontWeight="SemiBold" HorizontalContentAlignment="Center"/>
+                <Label Content="New Password:" HorizontalAlignment="Left" Height="38.4" Margin="199.1,286.3,0,0" VerticalAlignment="Top" Width="139.2" FontSize="14" FontWeight="SemiBold" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                <Button Content="Finish" HorizontalAlignment="Left" Height="45.6" Margin="392.9,430.9,0,0" VerticalAlignment="Top" Width="231.6" Background="{x:Null}" BorderBrush="#FF1A56E4" FontSize="16" FontWeight="Bold"/>
+            </Grid>
+        </StackPanel>
+    </StackPanel>
+</Window>

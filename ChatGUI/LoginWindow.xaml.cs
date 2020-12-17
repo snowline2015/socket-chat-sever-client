@@ -31,37 +31,37 @@ namespace ChatGUI
 
         private void CloseButton_Click(object sender, RoutedEventArgs e) => Close();
 
-        private void RemoveText(object sender, MouseEventArgs e)
+        private void RemoveText(object sender, RoutedEventArgs e)
         {
             if (Username.Text != "")
                 Username.Text = "";
         }
 
-        public void RemoveTextPassword(object sender, MouseEventArgs e)
+        public void RemoveTextPassword(object sender, RoutedEventArgs e)
         {
             if (Password.Password == "Password")
                 Password.Password = "";
         }
 
-        public void ReturnTextUsr_Regis(object sender, MouseEventArgs e)
+        public void ReturnTextUsr_Regis(object sender, RoutedEventArgs e)
         {
             if (UsrName_reg.Text == "")
                 UsrName_reg.Text = "Name";
         }
 
-        public void ReturnTextPass_Regis(object sender, MouseEventArgs e)
+        public void ReturnTextPass_Regis(object sender, RoutedEventArgs e)
         {
             if (Pass_reg.Text == "")
                 Pass_reg.Text = "Password";
         }
 
-        public void ReturnTextName_Regis(object sender, MouseEventArgs e)
+        public void ReturnTextName_Regis(object sender, RoutedEventArgs e)
         {
             if (Name.Text == "")
                 Name.Text = "Name";
         }
 
-        public void ReturnTextEmail_Regis(object sender, MouseEventArgs e)
+        public void ReturnTextEmail_Regis(object sender, RoutedEventArgs e)
         {
             if (Mail_reg.Text == "")
                 Mail_reg.Text = "E-mail";

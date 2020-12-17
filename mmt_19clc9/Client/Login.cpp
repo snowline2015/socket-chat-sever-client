@@ -25,10 +25,10 @@ bool Login(client_type& client) {
 		}
 	}
 
-	char temp[DEFAULT_BUFFER_LENGTH] = "login";
-	send(client.socket, temp, DEFAULT_BUFFER_LENGTH, 0);
+	char temp[DEFAULT_MSG_LENGTH] = "login";
+	send(client.socket, temp, DEFAULT_MSG_LENGTH, 0);
 
-	int iResult = recv(client.socket, client.RecvMsg, DEFAULT_BUFFER_LENGTH, 0);
+	int iResult = recv(client.socket, client.RecvMsg, DEFAULT_MSG_LENGTH, 0);
 	if (iResult != SOCKET_ERROR) {
 		if (strcmp(client.RecvMsg, "OK") != 0)
 			return false;
@@ -36,7 +36,7 @@ bool Login(client_type& client) {
 
 	send(client.socket, id.c_str(), strlen(id.c_str()), 0);
 
-	iResult = recv(client.socket, client.RecvMsg, DEFAULT_BUFFER_LENGTH, 0);
+	iResult = recv(client.socket, client.RecvMsg, DEFAULT_MSG_LENGTH, 0);
 	if (iResult != SOCKET_ERROR) {
 		if (strcmp(client.RecvMsg, "OK") != 0)
 			return false;
@@ -45,7 +45,7 @@ bool Login(client_type& client) {
 	send(client.socket, password.c_str(), strlen(password.c_str()), 0);
 
 	while (true) {
-		iResult = recv(client.socket, client.RecvMsg, DEFAULT_BUFFER_LENGTH, 0);
+		iResult = recv(client.socket, client.RecvMsg, DEFAULT_MSG_LENGTH, 0);
 		if (iResult <= 0) continue;
 		else break;
 	}
@@ -76,16 +76,16 @@ bool Register(client_type& client) {
 	std::cout << "Email: ";
 	std::getline(std::cin, email);
 
-	char temp[DEFAULT_BUFFER_LENGTH] = "register";
-	send(client.socket, temp, DEFAULT_BUFFER_LENGTH, 0);
-	int iResult = recv(client.socket, client.RecvMsg, DEFAULT_BUFFER_LENGTH, 0);
+	char temp[DEFAULT_MSG_LENGTH] = "register";
+	send(client.socket, temp, DEFAULT_MSG_LENGTH, 0);
+	int iResult = recv(client.socket, client.RecvMsg, DEFAULT_MSG_LENGTH, 0);
 	if (iResult != SOCKET_ERROR) {
 		if (strcmp(client.RecvMsg, "OK") != 0)
 			return false;
 	}
 
 	send(client.socket, username.c_str(), strlen(username.c_str()), 0);
-	iResult = recv(client.socket, client.RecvMsg, DEFAULT_BUFFER_LENGTH, 0);
+	iResult = recv(client.socket, client.RecvMsg, DEFAULT_MSG_LENGTH, 0);
 	if (iResult != SOCKET_ERROR) {
 		if (strcmp(client.RecvMsg, "Username already taken") == 0) {
 			std::cout << client.RecvMsg << std::endl;
@@ -95,7 +95,7 @@ bool Register(client_type& client) {
 	else return false;
 
 	send(client.socket, password.c_str(), strlen(password.c_str()), 0);
-	iResult = recv(client.socket, client.RecvMsg, DEFAULT_BUFFER_LENGTH, 0);
+	iResult = recv(client.socket, client.RecvMsg, DEFAULT_MSG_LENGTH, 0);
 	if (iResult != SOCKET_ERROR) {
 		if (strcmp(client.RecvMsg, "OK") != 0)
 			return false;
@@ -103,7 +103,7 @@ bool Register(client_type& client) {
 	else return false;
 
 	send(client.socket, fullname.c_str(), strlen(fullname.c_str()), 0);
-	iResult = recv(client.socket, client.RecvMsg, DEFAULT_BUFFER_LENGTH, 0);
+	iResult = recv(client.socket, client.RecvMsg, DEFAULT_MSG_LENGTH, 0);
 	if (iResult != SOCKET_ERROR) {
 		if (strcmp(client.RecvMsg, "OK") != 0)
 			return false;
@@ -111,7 +111,7 @@ bool Register(client_type& client) {
 	else return false;
 
 	send(client.socket, birthday.c_str(), strlen(birthday.c_str()), 0);
-	iResult = recv(client.socket, client.RecvMsg, DEFAULT_BUFFER_LENGTH, 0);
+	iResult = recv(client.socket, client.RecvMsg, DEFAULT_MSG_LENGTH, 0);
 	if (iResult != SOCKET_ERROR) {
 		if (strcmp(client.RecvMsg, "OK") != 0)
 			return false;
@@ -119,7 +119,7 @@ bool Register(client_type& client) {
 	else return false;
 
 	send(client.socket, email.c_str(), strlen(email.c_str()), 0);
-	iResult = recv(client.socket, client.RecvMsg, DEFAULT_BUFFER_LENGTH, 0);
+	iResult = recv(client.socket, client.RecvMsg, DEFAULT_MSG_LENGTH, 0);
 	if (strcmp(client.RecvMsg, "Register successfully") == 0)
 		std::cout << client.RecvMsg << std::endl;
 	return true;

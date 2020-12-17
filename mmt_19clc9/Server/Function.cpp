@@ -35,42 +35,42 @@ void Write_Account(vector<client_type>& users) {
 
 bool Register(SOCKET NewSockid, std::vector<client_type>& User_List) {
     client_type new_user;
-    char temp[DEFAULT_BUFFER_LENGTH] = "";
-    int iResult = recv(NewSockid, temp, DEFAULT_BUFFER_LENGTH, 0);
+    char temp[DEFAULT_MSG_LENGTH] = "";
+    int iResult = recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
     if (iResult != SOCKET_ERROR) {
         for (std::vector<client_type>::iterator p = User_List.begin(); p != User_List.end(); p++) {
             if ((*p).Username.compare(std::string(temp)) == 0) {
                 memset(&temp, NULL, sizeof(temp));
-                strncpy(temp, "Username already taken", DEFAULT_BUFFER_LENGTH);
-                send(NewSockid, temp, DEFAULT_BUFFER_LENGTH, 0);
+                strncpy(temp, "Username already taken", DEFAULT_MSG_LENGTH);
+                send(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
                 return false;
             }
         }
         send(NewSockid, "OK", 3, 0);
         new_user.Username = std::string(temp);
         memset(&temp, NULL, sizeof(temp));
-        iResult = recv(NewSockid, temp, DEFAULT_BUFFER_LENGTH, 0);
+        iResult = recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
         if (iResult != SOCKET_ERROR) {
             send(NewSockid, "OK", 3, 0);
             new_user.Password = std::string(temp);
             memset(&temp, NULL, sizeof(temp));
-            iResult = recv(NewSockid, temp, DEFAULT_BUFFER_LENGTH, 0);
+            iResult = recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
             if (iResult != SOCKET_ERROR) {
                 send(NewSockid, "OK", 3, 0);
                 new_user.Fullname = std::string(temp);
                 memset(&temp, NULL, sizeof(temp));
-                iResult = recv(NewSockid, temp, DEFAULT_BUFFER_LENGTH, 0);
+                iResult = recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
                 if (iResult != SOCKET_ERROR) {
                     send(NewSockid, "OK", 3, 0);
                     new_user.DOB = std::string(temp);
                     memset(&temp, NULL, sizeof(temp));
-                    iResult = recv(NewSockid, temp, DEFAULT_BUFFER_LENGTH, 0);
+                    iResult = recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
                     if (iResult != SOCKET_ERROR) {
                         new_user.Email = std::string(temp);
                         User_List.push_back(new_user);
                         memset(&temp, NULL, sizeof(temp));
-                        strncpy(temp, "Register successfully", DEFAULT_BUFFER_LENGTH);
-                        send(NewSockid, temp, DEFAULT_BUFFER_LENGTH, 0);
+                        strncpy(temp, "Register successfully", DEFAULT_MSG_LENGTH);
+                        send(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
                         return true;
                     }
                     return false;
@@ -85,26 +85,26 @@ bool Register(SOCKET NewSockid, std::vector<client_type>& User_List) {
 }
 
 bool Login(SOCKET NewSockid, std::vector<client_type>& User_List, std::string& username) {
-    char temp[DEFAULT_BUFFER_LENGTH] = "";
-    int iResult = recv(NewSockid, temp, DEFAULT_BUFFER_LENGTH, 0);
+    char temp[DEFAULT_MSG_LENGTH] = "";
+    int iResult = recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
     if (iResult != SOCKET_ERROR) {
         send(NewSockid, "OK", 3, 0);
         for (std::vector<client_type>::iterator p = User_List.begin(); p != User_List.end(); p++) {
             if ((*p).Username.compare(std::string(temp)) == 0) {
                 username = (*p).Username;
                 memset(&temp, NULL, sizeof(temp));
-                iResult = recv(NewSockid, temp, DEFAULT_BUFFER_LENGTH, 0);
+                iResult = recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
                 if (iResult != SOCKET_ERROR) 
                     if ((*p).Password.compare(std::string(temp)) == 0) {
                         memset(&temp, NULL, sizeof(temp));
-                        strncpy(temp, "Login successfully", DEFAULT_BUFFER_LENGTH);
-                        send(NewSockid, temp, DEFAULT_BUFFER_LENGTH, 0);
+                        strncpy(temp, "Login successfully", DEFAULT_MSG_LENGTH);
+                        send(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
                         return true;
                     }
                     else {
                         memset(&temp, NULL, sizeof(temp));
-                        strncpy(temp, "ID or Password is incorrect", DEFAULT_BUFFER_LENGTH);
-                        send(NewSockid, temp, DEFAULT_BUFFER_LENGTH, 0);
+                        strncpy(temp, "ID or Password is incorrect", DEFAULT_MSG_LENGTH);
+                        send(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
                         return false;
                     }
                 return false;
@@ -117,13 +117,13 @@ bool Login(SOCKET NewSockid, std::vector<client_type>& User_List, std::string& u
 
 void Client_Multiple_Chatting(client_type& new_client, std::vector<client_type>& client_array, std::thread& thread) {
     std::string msg = "";
-    char tempmsg[DEFAULT_BUFFER_LENGTH] = "";
+    char tempmsg[DEFAULT_MSG_LENGTH] = "";
 
     while (true) {
         memset(&tempmsg, NULL, sizeof(tempmsg));
 
         if (new_client.socket != 0) {
-            int iResult = recv(new_client.socket, tempmsg, DEFAULT_BUFFER_LENGTH, 0);
+            int iResult = recv(new_client.socket, tempmsg, DEFAULT_MSG_LENGTH, 0);
             //tempmsg[strlen(tempmsg)] = '\0';
             if (iResult != SOCKET_ERROR) {
                 //if (strcmp("", tempmsg) == 0)
@@ -166,14 +166,14 @@ void Client_Multiple_Chatting(client_type& new_client, std::vector<client_type>&
 
 void Client_Single_Chatting(client_type& first_client, std::vector<client_type>& client_array, std::string second_username, std::thread& thread) {
     std::string msg = "";
-    char tempmsg[DEFAULT_BUFFER_LENGTH] = "";
+    char tempmsg[DEFAULT_MSG_LENGTH] = "";
     int pos = 0;
 
     while (true) {
         memset(&tempmsg, NULL, sizeof(tempmsg));
 
         if (first_client.socket != 0) {
-            int iResult = recv(first_client.socket, tempmsg, DEFAULT_BUFFER_LENGTH, 0);
+            int iResult = recv(first_client.socket, tempmsg, DEFAULT_MSG_LENGTH, 0);
             if (iResult != SOCKET_ERROR) {
                 
 
@@ -190,42 +190,39 @@ void Client_Single_Chatting(client_type& first_client, std::vector<client_type>&
                             memset(&tempmsg, NULL, sizeof(tempmsg));
 
                             
-
                             //Receive file name and size from first client and send to second client
-                            recv(first_client.socket, tempmsg, DEFAULT_BUFFER_LENGTH, 0);
-                            send(client_array[i].socket, tempmsg, DEFAULT_BUFFER_LENGTH, 0);
+                            recv(first_client.socket, tempmsg, DEFAULT_MSG_LENGTH, 0);
+                            send(client_array[i].socket, tempmsg, DEFAULT_MSG_LENGTH, 0);
                             memset(&tempmsg, NULL, sizeof(tempmsg));
 
-                            recv(first_client.socket, tempmsg, DEFAULT_BUFFER_LENGTH, 0);
-                            send(client_array[i].socket, tempmsg, DEFAULT_BUFFER_LENGTH, 0);
+                            recv(first_client.socket, tempmsg, DEFAULT_MSG_LENGTH, 0);
+                            send(client_array[i].socket, tempmsg, DEFAULT_MSG_LENGTH, 0);
                             memset(&tempmsg, NULL, sizeof(tempmsg));
 
 
                             //Receive file buffer from first client and send to second client
                             while (true) {
-                                /*memset(&tempmsg, NULL, sizeof(tempmsg));
-                                iResult = recv(first_client.socket, tempmsg, DEFAULT_BUFFER_LENGTH, 0);
-
-                                int buffersize = stoi(std::string(tempmsg));*/
-
-                                char* buffer = new char[DEFAULT_RECEIVE_BUFFER_SIZE];
-                                iResult = recv(first_client.socket, buffer, DEFAULT_RECEIVE_BUFFER_LENGTH, 0);
+                                char* buffer = new char[DEFAULT_TRANSFER_BUFFER_SIZE];
+                                iResult = recv(first_client.socket, buffer, DEFAULT_TRANSFER_BUFFER_SIZE, 0);
                                 if (iResult == SOCKET_ERROR)
                                     break;
-                                if (strcmp(buffer, "end") == 0) {
+                                else if (strcmp(buffer, "end") == 0) {
                                     send(client_array[i].socket, "end", 4, 0);
                                     break;
                                 }
-
-                                /*if (strlen(buffer) == buffersize)
-                                    send(first_client.socket, "yes", 4, 0);
-                                while (strlen(buffer) != buffersize) {
-                                    memset(&buffer, NULL, sizeof(buffer));
-                                    send(first_client.socket, "no", 3, 0);
-                                    iResult = recv(first_client.socket, buffer, DEFAULT_RECEIVE_BUFFER_LENGTH, 0);
-                                }*/
-                                
-                                iResult = send(client_array[i].socket, buffer, DEFAULT_SEND_BUFFER_LENGTH, 0);
+                                else if (iResult < DEFAULT_TRANSFER_BUFFER_SIZE) {
+                                    char* buffer2 = new char[iResult];
+                                    strncpy(buffer2, buffer, iResult);
+                                    int byteSend = send(client_array[i].socket, buffer2, iResult, 0);
+                                    while (byteSend == SOCKET_ERROR || byteSend != iResult)
+                                        byteSend = send(client_array[i].socket, buffer2, iResult, 0);
+                                    delete[] buffer2;
+                                }
+                                else {
+                                    iResult = send(client_array[i].socket, buffer, DEFAULT_TRANSFER_BUFFER_SIZE, 0);
+                                    while (iResult == SOCKET_ERROR || iResult != DEFAULT_TRANSFER_BUFFER_SIZE)
+                                        iResult = send(client_array[i].socket, buffer, DEFAULT_TRANSFER_BUFFER_SIZE, 0);
+                                }
                                 delete[] buffer;
                             }
                         }

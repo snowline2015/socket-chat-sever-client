@@ -19,12 +19,9 @@
 #pragma comment( lib, "Winmm.lib")
 using namespace std;
 
-#define PORT "5000"
-#define DEFAULT_BUFFER_LENGTH 4096
-#define DEFAULT_RECEIVE_BUFFER_SIZE 8193
-#define DEFAULT_RECEIVE_BUFFER_LENGTH 8192
-#define DEFAULT_SEND_BUFFER_SIZE 8193
-#define DEFAULT_SEND_BUFFER_LENGTH 8192
+#define PORT "50000"
+#define DEFAULT_MSG_LENGTH 4096
+#define DEFAULT_TRANSFER_BUFFER_SIZE 512
 
 const char OPTION_VALUE = 1;
 const int MAX_CLIENTS = 10;

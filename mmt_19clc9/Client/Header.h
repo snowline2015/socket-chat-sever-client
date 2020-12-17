@@ -14,27 +14,23 @@
 #include <vector>
 #include <fstream>
 #include <tchar.h>
-//#include <stdio.h>
-//#include <stdlib.h>
-//#include <cstdint>
+#include <direct.h>
+#include <shlobj.h>
 #include <conio.h>
 #pragma comment( lib, "wsock32.lib" )
 #pragma comment( lib, "Ws2_32.lib")
 #pragma comment( lib, "winmm.lib")
 using namespace std;
 
-#define PORT "5000"
-#define DEFAULT_BUFFER_LENGTH 4096
-#define DEFAULT_SENDER_BUFFER_SIZE 8193
-#define DEFAULT_SENDER_BUFFER_LENGTH 8192
-#define DEFAULT_RECEIVER_BUFFER_SIZE 8193
-#define DEFAULT_RECEIVER_BUFFER_LENGTH 8192
+#define PORT "50000"
+#define DEFAULT_MSG_LENGTH 4096
+#define DEFAULT_BUFFER_SIZE 512
 
 struct client_type {
     SOCKET socket = INVALID_SOCKET;
     int id = -1;
     std::string IP, Username, Password, DOB, Email;
-    char RecvMsg[DEFAULT_BUFFER_LENGTH];
+    char RecvMsg[DEFAULT_MSG_LENGTH];
 };
 
 void Init(client_type& client);

@@ -183,46 +183,40 @@ void Client_Single_Chatting(client_type& first_client, std::vector<client_type>&
                     if (client_array[i].socket != INVALID_SOCKET)
                         if (client_array[i].socket == SOCKET_ERROR) continue;
                     if (first_client.id != i && client_array[i].Username.compare(second_username) == 0) {
-                        if (strcmp(tempmsg, "send file") == 0) {
-
-                            //send "send file" command
-                            send(client_array[i].socket, tempmsg, 10, 0); 
-                            memset(&tempmsg, NULL, sizeof(tempmsg));
-
+                        if (strcmp(tempmsg, "upload file") == 0) {
                             
-                            //Receive file name and size from first client and send to second client
+                            //Receive file name and size from first client 
                             recv(first_client.socket, tempmsg, DEFAULT_MSG_LENGTH, 0);
-                            send(client_array[i].socket, tempmsg, DEFAULT_MSG_LENGTH, 0);
+                            string fName = string(tempmsg);
                             memset(&tempmsg, NULL, sizeof(tempmsg));
 
                             recv(first_client.socket, tempmsg, DEFAULT_MSG_LENGTH, 0);
-                            send(client_array[i].socket, tempmsg, DEFAULT_MSG_LENGTH, 0);
+                            long long int fSize = stoll(string(tempmsg));
                             memset(&tempmsg, NULL, sizeof(tempmsg));
 
 
-                            //Receive file buffer from first client and send to second client
+                            //Receive file buffer from first client and save to temp folder
+                            ofstream fs;
+                            fs.open("Temp\\" + fName, ios::binary | ios::trunc);
+
+
                             while (true) {
                                 char* buffer = new char[DEFAULT_TRANSFER_BUFFER_SIZE];
                                 iResult = recv(first_client.socket, buffer, DEFAULT_TRANSFER_BUFFER_SIZE, 0);
                                 if (iResult == SOCKET_ERROR)
                                     break;
                                 else if (strcmp(buffer, "end") == 0) {
-                                    send(client_array[i].socket, "end", 4, 0);
+                                    fs.close();
                                     break;
                                 }
                                 else if (iResult < DEFAULT_TRANSFER_BUFFER_SIZE) {
                                     char* buffer2 = new char[iResult];
-                                    strncpy(buffer2, buffer, iResult);
-                                    int byteSend = send(client_array[i].socket, buffer2, iResult, 0);
-                                    while (byteSend == SOCKET_ERROR || byteSend != iResult)
-                                        byteSend = send(client_array[i].socket, buffer2, iResult, 0);
+                                    memcpy(buffer2, buffer, iResult);
+                                    fs.write(buffer2, iResult);
                                     delete[] buffer2;
                                 }
-                                else {
-                                    iResult = send(client_array[i].socket, buffer, DEFAULT_TRANSFER_BUFFER_SIZE, 0);
-                                    while (iResult == SOCKET_ERROR || iResult != DEFAULT_TRANSFER_BUFFER_SIZE)
-                                        iResult = send(client_array[i].socket, buffer, DEFAULT_TRANSFER_BUFFER_SIZE, 0);
-                                }
+                                else 
+                                    fs.write(buffer, DEFAULT_TRANSFER_BUFFER_SIZE);
                                 delete[] buffer;
                             }
                         }

@@ -1,4 +1,4 @@
-﻿#include "Header.h"
+#include "Header.h"
 
 void ShutDownAndClose(client_type& client) {
     shutdown(client.socket, SD_SEND);
@@ -55,7 +55,7 @@ void Client_Thread(client_type& new_client) {
         memset(new_client.RecvMsg, NULL, sizeof(new_client.RecvMsg));
 
         if (new_client.socket != 0) {
-            int iResult = recv(new_client.socket, new_client.RecvMsg, DEFAULT_BUFFER_LENGTH, 0);
+            int iResult = recv(new_client.socket, new_client.RecvMsg, DEFAULT_MSG_LENGTH, 0);
 
             if (iResult != SOCKET_ERROR)
                 std::cout << new_client.RecvMsg << std::endl;
@@ -71,7 +71,7 @@ void Client_Thread(client_type& new_client) {
 
 void Client_Group_Chat(client_type& client) {
     std::string str;
-    recv(client.socket, client.RecvMsg, DEFAULT_BUFFER_LENGTH, 0);
+    recv(client.socket, client.RecvMsg, DEFAULT_MSG_LENGTH, 0);
 
     if (strcmp(client.RecvMsg, "Server is full") != 0)
     {
@@ -112,25 +112,31 @@ void Client_Private_Thread(client_type& new_client) {
         memset(new_client.RecvMsg, NULL, sizeof(new_client.RecvMsg));
 
         if (new_client.socket != 0) {
-            int iResult = recv(new_client.socket, new_client.RecvMsg, DEFAULT_BUFFER_LENGTH, 0);
+            int iResult = recv(new_client.socket, new_client.RecvMsg, DEFAULT_MSG_LENGTH, 0);
 
-            if (iResult != SOCKET_ERROR)
+            if (iResult != SOCKET_ERROR) {
                 if (strcmp(new_client.RecvMsg, "send file") == 0) {
-                    
-                    string dest_temp = "‪C:\\Users\\LENOVO\\Desktop";
 
+                    string dest_temp;
+                    TCHAR appData[MAX_PATH];
+                    if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_DESKTOPDIRECTORY | CSIDL_FLAG_CREATE, NULL, SHGFP_TYPE_CURRENT, appData))) {
+                        wstring test(&appData[0]);
+                        string test2(test.begin(), test.end());
+                        dest_temp = test2;
+                    }
 
                     //Receive file name and size
-                    iResult = recv(new_client.socket, new_client.RecvMsg, DEFAULT_BUFFER_LENGTH, 0);
+                    iResult = recv(new_client.socket, new_client.RecvMsg, DEFAULT_MSG_LENGTH, 0);
                     if (iResult == SOCKET_ERROR)
                         continue;
                     dest_temp.append("\\").append(new_client.RecvMsg);
-
                     memset(new_client.RecvMsg, NULL, sizeof(new_client.RecvMsg));
-                    iResult = recv(new_client.socket, new_client.RecvMsg, DEFAULT_BUFFER_LENGTH, 0);
+
+                    iResult = recv(new_client.socket, new_client.RecvMsg, DEFAULT_MSG_LENGTH, 0);
                     if (iResult == SOCKET_ERROR)
                         return;
                     long long int file_size = stoll(std::string(new_client.RecvMsg));
+                    memset(new_client.RecvMsg, NULL, sizeof(new_client.RecvMsg));
 
 
 
@@ -143,34 +149,36 @@ void Client_Private_Thread(client_type& new_client) {
 
 
                     //Receive buffer processing
+                    ofstream fs;
+                    fs.open(dest_temp, ios::binary | ios::trunc);
 
-                    /*FILE* fs = fopen(dest_temp.c_str(), "wb");
-                    if (fs == NULL) {
-                        continue;
-                    }*/
-
-                    ofstream fs(dest_temp, ios::out | ios::binary);
                     if (fs.fail()) {
                         continue;
                     }
 
                     while (true) {
-                        char* buffer = new char[DEFAULT_RECEIVER_BUFFER_SIZE];
-                        iResult = recv(new_client.socket, buffer, DEFAULT_RECEIVER_BUFFER_LENGTH, 0);
+                        char* buffer = new char[DEFAULT_BUFFER_SIZE];
+                        iResult = recv(new_client.socket, buffer, DEFAULT_BUFFER_SIZE, 0);
                         if (iResult == SOCKET_ERROR)
                             break;
-                        if (strcmp(buffer, "end") == 0) {
-                            //fclose(fs);
+                        else if (strcmp(buffer, "end") == 0) {
                             fs.close();
+                            std::cout << "Completed" << std::endl;
                             break;
                         }
-                        fs.write(buffer, DEFAULT_RECEIVER_BUFFER_LENGTH);
+                        else if (iResult < DEFAULT_BUFFER_SIZE) {
+                            char* buffer2 = new char[iResult];
+                            strncpy(buffer2, buffer, iResult);
+                            fs.write(buffer2, iResult);
+                            delete[] buffer2;
+                        }
+                        else 
+                            fs.write(buffer, DEFAULT_BUFFER_SIZE);
                         delete[] buffer;
                     }
-
                 }
                 else std::cout << new_client.RecvMsg << std::endl;
-
+            }
             else break;
         }
     }
@@ -197,7 +205,7 @@ void Client_Private_Chat(client_type& client) {
 
         if (iResult <= 0) break;
 
-        if (str.compare("send file") == 0) {
+        if (str.compare("upload file") == 0) {
             std::cout << "File path: ";
             std::getline(std::cin, str);    
 
@@ -214,43 +222,52 @@ void Client_Private_Chat(client_type& client) {
                 }
             }
 
-            /*FILE* fp = fopen(str.c_str(), "rb");
-            if (fp == NULL) {
-                std::cout << "Fail to open file" << std::endl;
-                continue;
-            }
-
-            fseek(fp, 0, SEEK_END);
-            long long int size = ftell(fp);
-            fseek(fp, -size, SEEK_END);*/
-
-
-            std::ifstream fp(str, ios::in | ios::binary);
+            std::ifstream fp;
+            fp.open(str, ios::binary);
 
             if (fp.fail()) {
                 continue;
             }
 
+            // Send file name and file size
             fp.seekg(0, ios::end);
             long long int size = fp.tellg();
             fp.seekg(0, ios::beg);
 
-
-
-            // Send file name and file size
             send(client.socket, fName.c_str(), strlen(fName.c_str()), 0);
+            sleep_for(nanoseconds(10));
             send(client.socket, std::to_string(size).c_str(), strlen(std::to_string(size).c_str()), 0);
+            sleep_for(nanoseconds(10));
 
 
             //Sending file processing
-            while (!fp.eof()) {
-                char* buffer = new char[DEFAULT_SENDER_BUFFER_SIZE];
-                fp.read(buffer, DEFAULT_SENDER_BUFFER_LENGTH);
-                send(client.socket, buffer, DEFAULT_SENDER_BUFFER_LENGTH, 0);
-                delete[] buffer;
+            long long int sizetemp = size;
+            while (sizetemp > 0) {
+                if (sizetemp < DEFAULT_BUFFER_SIZE) {
+                    char* buffer = new char[sizetemp];
+                    fp.read(buffer, sizetemp);
+                    iResult = send(client.socket, buffer, sizetemp, 0);
+                    sleep_for(nanoseconds(10));
+                    while (iResult == SOCKET_ERROR || iResult != sizetemp) 
+                        iResult = send(client.socket, buffer, sizetemp, 0);
+                    delete[] buffer;
+                    sizetemp = 0;
+                }
+                else {
+                    char* buffer = new char[DEFAULT_BUFFER_SIZE];
+                    fp.read(buffer, DEFAULT_BUFFER_SIZE);
+                    iResult = send(client.socket, buffer, DEFAULT_BUFFER_SIZE, 0);
+                    sleep_for(nanoseconds(10));
+                    while (iResult == SOCKET_ERROR || iResult != DEFAULT_BUFFER_SIZE)
+                        iResult = send(client.socket, buffer, DEFAULT_BUFFER_SIZE, 0);
+                    delete[] buffer;
+                    sizetemp -= DEFAULT_BUFFER_SIZE;
+                }
             }
             fp.close();
-            send(client.socket, "end", 4, 0);
+            sleep_for(nanoseconds(10));
+            std::cout << "Upload completed" << std::endl;
+            iResult = send(client.socket, "end", 4, 0);
         }
     }
 

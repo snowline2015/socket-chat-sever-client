@@ -17,10 +17,15 @@
 #include <direct.h>
 #include <shlobj.h>
 #include <conio.h>
+#include <stdio.h>
+#include <chrono>
+#include <thread>
 #pragma comment( lib, "wsock32.lib" )
 #pragma comment( lib, "Ws2_32.lib")
 #pragma comment( lib, "winmm.lib")
 using namespace std;
+using namespace std::this_thread; 
+using namespace std::chrono; 
 
 #define PORT "50000"
 #define DEFAULT_MSG_LENGTH 4096

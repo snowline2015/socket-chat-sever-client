@@ -29,15 +29,20 @@ namespace ChatGUI
         }
 
         //readonly LoginWindow login = new LoginWindow();
-        string path = "";
+        string[] pathArr = new string[10];
 
         public void OnOpenDialog(object sender, RoutedEventArgs e)
         {
             OpenFileDialog open = new OpenFileDialog();
+            open.Multiselect = true;
             open.Filter = "All files (*.*)|*.*";
             open.FilterIndex = 1;
             open.ShowDialog();
-            path = open.FileName;
+            int index = 0;
+            foreach( string str in open.FileNames)
+            {
+                pathArr[index] = str;
+            }
         }
 
         public void LogoutButton_Click(object sender, RoutedEventArgs e)

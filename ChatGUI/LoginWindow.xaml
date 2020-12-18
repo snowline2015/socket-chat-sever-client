@@ -414,7 +414,7 @@
                 </Button.Background>
             </Button>
             <TextBlock x:Name="txt_SignIn" HorizontalAlignment="Left" Height="40.8" Margin="56.4,136.4,0,0" TextWrapping="Wrap" Text="Sign In" VerticalAlignment="Top" Width="453.6" FontSize="26" TextAlignment="Center" FontWeight="Bold" Foreground="Black"/>
-            <Button x:Name="reg" Content="SignUp Now" HorizontalAlignment="Left" Height="28.8" Margin="286.8,634.8,0,0" VerticalAlignment="Top" Width="115.2" FontWeight="Bold" FontSize="16" Background="{x:Null}" Foreground="#FFDA2121" BorderBrush="{x:Null}"/>
+            <Button x:Name="reg" Content="SignUp Now" HorizontalAlignment="Left" Height="28.8" Margin="286.8,634.8,0,0" VerticalAlignment="Top" Width="115.2" FontWeight="Bold" FontSize="16" Background="{x:Null}" Foreground="#FFDA2121" BorderBrush="{x:Null}" Click="EnterRegister"/>
             <Label x:Name="label" Content="Haven't got account?" HorizontalAlignment="Left" Height="28.8" Margin="140,634.8,0,0" VerticalAlignment="Top" Width="141.8" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="14" Foreground="Black" Background="{x:Null}"/>
         </Grid>
         <Grid x:Name="RegisterGrid" Height="667.9" Visibility="Collapsed">
@@ -437,10 +437,11 @@
                     <ImageBrush ImageSource="Assets/close2.png" Stretch="Uniform"/>
                 </Button.Background>
             </Button>
-            <Button x:Name="FinishRegister" Content="Finish" HorizontalAlignment="Left" Height="32.4" Margin="165,584.666,0,0" VerticalAlignment="Top" Width="225.8" FontWeight="Bold" FontSize="18" Background="{x:Null}" Foreground="#FF1624C0" BorderBrush="{x:Null}"/>
+            <Button x:Name="FinishRegister" Content="Finish" HorizontalAlignment="Left" Height="32.4" Margin="279.2,584.666,0,0" VerticalAlignment="Top" Width="225.8" FontWeight="Bold" FontSize="18" Background="{x:Null}" Foreground="#FF1624C0" BorderBrush="{x:Null}" Click="Register_Click"/>
             <Rectangle x:Name="birthday_regt" HorizontalAlignment="Left" Height="27.602" Margin="165,499.334,0,0" Stroke="Black" VerticalAlignment="Top" Width="299.501" RadiusY="4.601" RadiusX="4.601"/>
             <Path Data="M374.7,497.267 L374.7,531.4" Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="18" Margin="428.833,504.334,0,0" Stretch="Fill" Stroke="Black" VerticalAlignment="Top" Width="1" StrokeThickness="2"/>
             <TextBlock HorizontalAlignment="Left" Height="27.602" Margin="65.6,499.334,0,0" TextWrapping="Wrap" Text="Birthday" VerticalAlignment="Top" Width="94.4" FontSize="16" UseLayoutRounding="False" Padding="2,4,0,0" Foreground="Black"/>
+            <Button x:Name="CancelReg" Content="Cancel" HorizontalAlignment="Left" Height="32.4" Margin="53.4,584.666,0,0" VerticalAlignment="Top" Width="225.8" FontWeight="Bold" FontSize="18" Background="{x:Null}" Foreground="#FF1624C0" BorderBrush="{x:Null}" Click="ReturnLogin"/>
         </Grid>
     </StackPanel>
 </Window>

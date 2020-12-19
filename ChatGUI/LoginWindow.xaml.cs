@@ -1,18 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using System.Data.SqlClient;
 using System.Data;
+using System.Data.SqlClient;
+using System.Windows;
 
 namespace ChatGUI
 {
@@ -26,6 +15,7 @@ namespace ChatGUI
             InitializeComponent();
         }
 
+        //Doi vi tri cuar AttachDbFilename thanh cho luu folder ChatGUI
         String db = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\LENOVO\source\repos\ChatGUI\LoginData.mdf;Integrated Security=True";
         private readonly WorkingWindow work = new WorkingWindow();
 
@@ -69,7 +59,7 @@ namespace ChatGUI
 
         private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
-            if(Username.Text.Length == 0 || Password.Password.Length == 0)
+            if (Username.Text.Length == 0 || Password.Password.Length == 0)
             {
                 MessageBox.Show("Empty Username or Password!!!");
                 return;
@@ -93,18 +83,20 @@ namespace ChatGUI
                 myCommand.Connection.Open();
                 SqlDataReader myReader = myCommand.ExecuteReader(CommandBehavior.CloseConnection);
 
-                if(myReader.Read() == true)
+                if (myReader.Read() == true)
                 {
-                    this.Close();
+                    if (warning.Text.Length != 0)
+                        warning.Text = "";
                     work.Show();
+                    this.Close();
                 }
                 else
                 {
-                    MessageBox.Show("Incorrect Username or Password!!!");
+                    warning.Text = "Incorrect username or password";
                     Username.Focus();
                 }
 
-                if(myConnection.State == ConnectionState.Open)
+                if (myConnection.State == ConnectionState.Open)
                 {
                     myConnection.Dispose();
                 }
@@ -131,7 +123,7 @@ namespace ChatGUI
 
         private void Register_Click(object sender, RoutedEventArgs e)
         {
-            if(Name.Text.Length == 0 || UsrName_reg.Text.Length == 0 || Pass_reg.Text.Length == 0 || Mail_reg.Text.Length == 0)
+            if (Name.Text.Length == 0 || UsrName_reg.Text.Length == 0 || Pass_reg.Text.Length == 0 || Mail_reg.Text.Length == 0)
             {
                 MessageBox.Show("Please fill all information");
                 return;
@@ -156,7 +148,7 @@ namespace ChatGUI
                 MessageBox.Show("Success");
                 connection.Close();
 
-                if(connection.State == ConnectionState.Open)
+                if (connection.State == ConnectionState.Open)
                 {
                     connection.Dispose();
                 }

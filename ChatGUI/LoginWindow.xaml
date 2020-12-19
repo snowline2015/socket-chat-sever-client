@@ -161,7 +161,7 @@
                     </Grid.RowDefinitions>
                     <Rectangle Grid.ColumnSpan="4" HorizontalAlignment="Left" Height="18" Grid.RowSpan="4" StrokeThickness="0" VerticalAlignment="Top" Width="19">
                         <Rectangle.Fill>
-                            <ImageBrush ImageSource="calendar-icon.png" Stretch="UniformToFill"/>
+                            <ImageBrush ImageSource="Assets/calendar-icon.png" Stretch="UniformToFill"/>
                         </Rectangle.Fill>
                     </Rectangle>
                 </Grid>
@@ -385,7 +385,7 @@
         </Style>
     </Window.Resources>
     <Window.Background>
-        <ImageBrush ImageSource="background3.jpg"/>
+        <ImageBrush ImageSource="Assets/background3.jpg"/>
     </Window.Background>
     <StackPanel x:Name="Login_Panel" HorizontalAlignment="Left" Height="667" Margin="184.5,19,0,0" VerticalAlignment="Top" Width="561.6">
         <StackPanel.Background>
@@ -416,6 +416,7 @@
             <TextBlock x:Name="txt_SignIn" HorizontalAlignment="Left" Height="40.8" Margin="56.4,136.4,0,0" TextWrapping="Wrap" Text="Sign In" VerticalAlignment="Top" Width="453.6" FontSize="26" TextAlignment="Center" FontWeight="Bold" Foreground="Black"/>
             <Button x:Name="reg" Content="SignUp Now" HorizontalAlignment="Left" Height="28.8" Margin="286.8,634.8,0,0" VerticalAlignment="Top" Width="115.2" FontWeight="Bold" FontSize="16" Background="{x:Null}" Foreground="#FFDA2121" BorderBrush="{x:Null}" Click="EnterRegister"/>
             <Label x:Name="label" Content="Haven't got account?" HorizontalAlignment="Left" Height="28.8" Margin="140,634.8,0,0" VerticalAlignment="Top" Width="141.8" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="14" Foreground="Black" Background="{x:Null}"/>
+            <TextBlock x:Name="warning" HorizontalAlignment="Left" Height="39.6" Margin="56.4,533.6,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="453.6" Foreground="#FFF00F0F" FontSize="15" FontWeight="SemiBold" TextAlignment="Center"/>
         </Grid>
         <Grid x:Name="RegisterGrid" Height="667.9" Visibility="Collapsed">
             <TextBox x:Name="Name" HorizontalAlignment="Left" Height="44.4" Margin="65.6,99.5,0,0" TextWrapping="Wrap" Text="Name" VerticalAlignment="Top" Width="416.4" BorderBrush="{x:Null}" SelectionBrush="{x:Null}" FontSize="16" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}"

@@ -8,44 +8,44 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-//#define DEFAULT_BUFFER_LENGTH 4096
-//#define DEFAULT_SENDER_BUFFER_SIZE 8193
-//#define DEFAULT_SENDER_BUFFER_LENGTH 8192
-//#define DEFAULT_RECEIVER_BUFFER_SIZE 8193
-//#define DEFAULT_RECEIVER_BUFFER_LENGTH 8192
 
 namespace ConvertedCode
 {
-    class client_type
+    public class client_type
     {
         public Socket socket = null;
         public string Username, Password, DOB, Email;
     }
 
-    class Client
+    public class Client
     {
-        void ShutDownAndClose(ref client_type client)
+        public void ShutDownAndClose(ref client_type client)
         {
             client.socket.Shutdown(SocketShutdown.Both);
             client.socket.Close();
         }
 
-        void Init(ref client_type client)
+        public void Init(ref client_type client)
         {
             Console.WriteLine("Input server ip address: ");
             string input = Console.ReadLine();
 
             IPAddress ip = IPAddress.Parse(input);
-            IPEndPoint end = new IPEndPoint(ip, 5000);
-            client.socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
+            IPEndPoint end = new IPEndPoint(ip, 50000);
+            client.socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
-            try
+            bool isConnected = false;
+            while (!isConnected)
             {
-                client.socket.Connect(end);
-            }
-            catch
-            {
-                return;
+                try
+                {
+                    client.socket.Connect(end);
+                    isConnected = true;
+                }
+                catch (Exception e1)
+                {
+                    System.Threading.Thread.Sleep(2000);
+                }
             }
         }
 
@@ -69,7 +69,7 @@ namespace ConvertedCode
             }
         }
 
-        void Client_Group_Chat(client_type client)
+        public void Client_Group_Chat(client_type client)
         {
             string str;
             byte[] messageReceived = new byte[4096];
@@ -102,7 +102,7 @@ namespace ConvertedCode
             }
         }
 
-        void Client_Private_Thread(client_type new_client)
+        public void Client_Private_Thread(client_type new_client)
         {
             //try { }
             while (true)
@@ -112,63 +112,12 @@ namespace ConvertedCode
                     byte[] messageReceived = new byte[4096];
                     int byteRecv = new_client.socket.Receive(messageReceived);
                     string str = Encoding.ASCII.GetString(messageReceived, 0, byteRecv);
-
-                    if (str.Equals("send file"))
-                    {
-                        string dest_temp = "%USERPROFILE%\\Desktop"; // OpenFileDialog
-
-
-                        //Receive file name and size
-                        messageReceived = new byte[4096];
-                        byteRecv = new_client.socket.Receive(messageReceived);
-                        str = Encoding.ASCII.GetString(messageReceived, 0, byteRecv);
-                        dest_temp += ("\\" + str);
-
-                        messageReceived = new byte[4096];
-                        byteRecv = new_client.socket.Receive(messageReceived);
-                        str = Encoding.ASCII.GetString(messageReceived, 0, byteRecv);
-                        ulong size = ulong.Parse(str);
-
-
-                        /*cout << "Do you want download file? (Y/N): ";
-                        char c = _getch();
-                        if (c == 'y' || c == 'Y') {
-                            fflush(stdin);
-                        }
-                        else return false;*/
-
-
-                        //Receive buffer processing
-
-                        BinaryWriter bw;
-                        try
-                        {
-                            bw = new BinaryWriter(new FileStream(dest_temp, FileMode.OpenOrCreate, FileAccess.ReadWrite));
-
-                            while (true)
-                            {
-                                byte[] FileReceived = new byte[8192];
-                                byteRecv = new_client.socket.Receive(FileReceived);
-                                str = Encoding.ASCII.GetString(FileReceived, 0, byteRecv);
-                                if (str.Equals("end"))
-                                {
-                                    bw.Close();
-                                    break;
-                                }
-                                bw.Write(FileReceived);
-                            }
-                        }
-                        catch (IOException e)
-                        {
-                            Console.WriteLine(e.Message);
-                            return;
-                        }
-                    }
+                    Console.WriteLine(str);
                 }
             }
         }
 
-        void Client_Private_Chat(client_type client)
+        public void Client_Private_Chat(client_type client)
         {
             string str;
 
@@ -194,76 +143,76 @@ namespace ConvertedCode
             my_thread.Abort();
         }
 
-        void Send_File(client_type client)
-        {
-            string str = "send file";
-            byte[] messageSent = Encoding.ASCII.GetBytes(str);
-            int byteSent = client.socket.Send(messageSent);
+        //void Send_File(client_type client)
+        //{
+        //    string str = "send file";
+        //    byte[] messageSent = Encoding.ASCII.GetBytes(str);
+        //    int byteSent = client.socket.Send(messageSent);
 
-            // Do something to take path file
+        //    // Do something to take path file
 
-            // str = path file
+        //    // str = path file
 
-            //Path file taken
+        //    //Path file taken
 
-            string fName = "";
+        //    string fName = "";
 
-            for (int i = 0; i < str.Length; i++)
-            {
-                if (str[i] == '/') str.Replace('/', '\\');
-            }
+        //    for (int i = 0; i < str.Length; i++)
+        //    {
+        //        if (str[i] == '/') str.Replace('/', '\\');
+        //    }
 
-            for (int i = str.Length - 1; i >= 0; i--) {
-                if (str[i] == '\\')
-                {
-                    fName += (str.Substring(i + 1));
-                    break;
-                }
-            }
+        //    for (int i = str.Length - 1; i >= 0; i--) {
+        //        if (str[i] == '\\')
+        //        {
+        //            fName += (str.Substring(i + 1));
+        //            break;
+        //        }
+        //    }
 
-            if (!File.Exists(fName))
-            {
-                // Warn cannot open file
-
-
-                return;
-            }
+        //    if (!File.Exists(fName))
+        //    {
+        //        // Warn cannot open file
 
 
-            // Send file name and file size
-
-            long length = new System.IO.FileInfo(fName).Length;
-
-            Array.Clear(messageSent, 0, messageSent.Length);
-            messageSent = Encoding.ASCII.GetBytes(fName);
-            byteSent = client.socket.Send(messageSent);
-
-            Array.Clear(messageSent, 0, messageSent.Length);
-            messageSent = BitConverter.GetBytes(length);
-            byteSent = client.socket.Send(messageSent);
+        //        return;
+        //    }
 
 
-            BinaryReader br;
-            try
-            {
-                br = new BinaryReader(new FileStream(str, FileMode.Open, FileAccess.Read));
-                while (br.BaseStream.Position != br.BaseStream.Length) {
-                    byte[] fileSent = new byte[8196];
-                    fileSent = br.ReadBytes(8196);
-                    int fileByteSent = client.socket.Send(messageSent);
-                }
+        //    // Send file name and file size
 
-                br.Close();
-                string temp = "end";
-                messageSent = Encoding.ASCII.GetBytes(temp);
-                byteSent = client.socket.Send(messageSent); 
-            }
-            catch (IOException e)
-            {
-                Console.WriteLine(e.Message);
-                return;
-            }
-        }
+        //    long length = new System.IO.FileInfo(fName).Length;
+
+        //    Array.Clear(messageSent, 0, messageSent.Length);
+        //    messageSent = Encoding.ASCII.GetBytes(fName);
+        //    byteSent = client.socket.Send(messageSent);
+
+        //    Array.Clear(messageSent, 0, messageSent.Length);
+        //    messageSent = BitConverter.GetBytes(length);
+        //    byteSent = client.socket.Send(messageSent);
+
+
+        //    BinaryReader br;
+        //    try
+        //    {
+        //        br = new BinaryReader(new FileStream(str, FileMode.Open, FileAccess.Read));
+        //        while (br.BaseStream.Position != br.BaseStream.Length) {
+        //            byte[] fileSent = new byte[8196];
+        //            fileSent = br.ReadBytes(8196);
+        //            int fileByteSent = client.socket.Send(messageSent);
+        //        }
+
+        //        br.Close();
+        //        string temp = "end";
+        //        messageSent = Encoding.ASCII.GetBytes(temp);
+        //        byteSent = client.socket.Send(messageSent); 
+        //    }
+        //    catch (IOException e)
+        //    {
+        //        Console.WriteLine(e.Message);
+        //        return;
+        //    }
+        //}
 
     }
     class Program
@@ -271,6 +220,9 @@ namespace ConvertedCode
         static void Main()
         {
             //Co gi cu code het vao day xong khi nao xong cai ui se dua vao MainWindow.xaml.cs
+            client_type cl = new client_type();
+            Client client = new Client();
+            client.Init(ref cl);
         }
     }
 }

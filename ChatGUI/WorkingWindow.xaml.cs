@@ -1,19 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.Win32;
+using System;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using Microsoft.Win32;
 
 namespace ChatGUI
 {
@@ -28,7 +17,7 @@ namespace ChatGUI
             DataContext = new CurrentTimeViewModel();
         }
 
-        //readonly LoginWindow login = new LoginWindow();
+        //private readonly LoginWindow login = new LoginWindow();
         string[] pathArr = new string[10];
 
         public void OnOpenDialog(object sender, RoutedEventArgs e)
@@ -39,22 +28,80 @@ namespace ChatGUI
             open.FilterIndex = 1;
             open.ShowDialog();
             int index = 0;
-            foreach( string str in open.FileNames)
+            foreach (string str in open.FileNames)
             {
                 pathArr[index] = str;
             }
         }
 
+        #region Some Button
         public void LogoutButton_Click(object sender, RoutedEventArgs e)
         {
+            LoginWindow login = new LoginWindow();
+            login.Show();
             this.Close();
-            //login.Show();
+        }
+
+        private void EnterPrivateChat(object sender, RoutedEventArgs e)
+        {
+            if (PreChatPanel.Visibility == Visibility.Visible)
+                PreChatPanel.Visibility = Visibility.Collapsed;
+            PrivateChatPanel.Visibility = Visibility.Visible;
+            PrivateChatInfoGrid.Visibility = Visibility.Visible;
+        }
+
+        private void EnterGroupChat(object sender, RoutedEventArgs e)
+        {
+            if (PreChatPanel.Visibility == Visibility.Visible)
+                PreChatPanel.Visibility = Visibility.Collapsed;
+            GroupChatPanel.Visibility = Visibility.Visible;
+            GroupChatInfoGrid.Visibility = Visibility.Visible;
+        }
+
+        private void EnterMoreOpts(object sender, RoutedEventArgs e)
+        {
+            if (PreChatPanel.Visibility == Visibility.Visible)
+                PreChatPanel.Visibility = Visibility.Collapsed;
+            MoreOptPanel.Visibility = Visibility.Visible;
         }
 
         public void CloseButton_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
+
+        private void ConnectPrivateChat(object sender, RoutedEventArgs e)
+        {
+            if (PrivateChatInfoGrid.Visibility == Visibility.Visible)
+                PrivateChatInfoGrid.Visibility = Visibility.Collapsed;
+            PrivateChatMain.Visibility = Visibility.Visible;
+        }
+
+        private void ReturnOptions(object sender, RoutedEventArgs e)
+        {
+            if (PrivateChatInfoGrid.Visibility == Visibility.Visible)
+                PrivateChatInfoGrid.Visibility = Visibility.Collapsed;
+            PrivateChatPanel.Visibility = Visibility.Collapsed;
+            PreChatPanel.Visibility = Visibility.Visible;
+        }
+
+        private void _ReturnOptions(object sender, RoutedEventArgs e)
+        {
+            if (GroupChatInfoGrid.Visibility == Visibility.Visible)
+                GroupChatInfoGrid.Visibility = Visibility.Collapsed;
+            GroupChatPanel.Visibility = Visibility.Collapsed;
+            PreChatPanel.Visibility = Visibility.Visible;
+        }
+
+        private void ConnectGroupChat(object sender, RoutedEventArgs e)
+        {
+            if (GroupChatInfoGrid.Visibility == Visibility.Visible)
+                GroupChatInfoGrid.Visibility = Visibility.Collapsed;
+            GroupChatMain.Visibility = Visibility.Visible;
+        }
+        #endregion
+
+
     }
 
     public class CurrentTimeViewModel : INotifyPropertyChanged

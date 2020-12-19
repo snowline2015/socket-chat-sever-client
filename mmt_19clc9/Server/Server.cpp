@@ -23,7 +23,7 @@ int main()
 
     ZeroMemory(&addrport, sizeof(addrport));
     addrport.sin_family = AF_INET;
-    addrport.sin_port = htons(5000);
+    addrport.sin_port = htons(50000);
     addrport.sin_addr.s_addr = htonl(INADDR_ANY);// inet_addr(c);
 
     /*std::cout << "Setting up server..." << std::endl;

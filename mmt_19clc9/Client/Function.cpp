@@ -1,4 +1,5 @@
 #include "Header.h"
+std::atomic<bool> stop_flag = false;
 
 void ShutDownAndClose(client_type& client) {
     shutdown(client.socket, SD_SEND);
@@ -23,7 +24,7 @@ void Init(client_type& client) {
 
     ZeroMemory(&addrport, sizeof(addrport));
     addrport.sin_family = AF_INET;
-    addrport.sin_port = htons(5000);
+    addrport.sin_port = htons(50000);
     addrport.sin_addr.s_addr = inet_addr(c);
 
 
@@ -109,87 +110,22 @@ void Client_Group_Chat(client_type& client) {
 
 void Client_Private_Thread(client_type& new_client) {
     while (true) {
-        memset(new_client.RecvMsg, NULL, sizeof(new_client.RecvMsg));
-
-        if (new_client.socket != 0) {
+        if (new_client.socket != 0 && stop_flag != true) {
+            memset(new_client.RecvMsg, NULL, sizeof(new_client.RecvMsg));
             int iResult = recv(new_client.socket, new_client.RecvMsg, DEFAULT_MSG_LENGTH, 0);
-
             if (iResult != SOCKET_ERROR) {
-                if (strcmp(new_client.RecvMsg, "send file") == 0) {
 
-                    string dest_temp;
-                    TCHAR appData[MAX_PATH];
-                    if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_DESKTOPDIRECTORY | CSIDL_FLAG_CREATE, NULL, SHGFP_TYPE_CURRENT, appData))) {
-                        wstring test(&appData[0]);
-                        string test2(test.begin(), test.end());
-                        dest_temp = test2;
-                    }
+                if (stop_flag != true) 
+                     std::cout << new_client.RecvMsg << std::endl;
 
-                    //Receive file name and size
-                    iResult = recv(new_client.socket, new_client.RecvMsg, DEFAULT_MSG_LENGTH, 0);
-                    if (iResult == SOCKET_ERROR)
-                        continue;
-                    dest_temp.append("\\").append(new_client.RecvMsg);
-                    memset(new_client.RecvMsg, NULL, sizeof(new_client.RecvMsg));
-
-                    iResult = recv(new_client.socket, new_client.RecvMsg, DEFAULT_MSG_LENGTH, 0);
-                    if (iResult == SOCKET_ERROR)
-                        return;
-                    long long int file_size = stoll(std::string(new_client.RecvMsg));
-                    memset(new_client.RecvMsg, NULL, sizeof(new_client.RecvMsg));
-
-
-
-                    /*cout << "Do you want download file? (Y/N): ";
-                    char c = _getch();
-                    if (c == 'y' || c == 'Y') {
-                        fflush(stdin);
-                    }
-                    else return false;*/
-
-
-                    //Receive buffer processing
-                    ofstream fs;
-                    fs.open(dest_temp, ios::binary | ios::trunc);
-
-                    if (fs.fail()) {
-                        continue;
-                    }
-
-                    while (true) {
-                        char* buffer = new char[DEFAULT_BUFFER_SIZE];
-                        iResult = recv(new_client.socket, buffer, DEFAULT_BUFFER_SIZE, 0);
-                        if (iResult == SOCKET_ERROR)
-                            break;
-                        else if (strcmp(buffer, "end") == 0) {
-                            fs.close();
-                            std::cout << "Completed" << std::endl;
-                            break;
-                        }
-                        else if (iResult < DEFAULT_BUFFER_SIZE) {
-                            char* buffer2 = new char[iResult];
-                            strncpy(buffer2, buffer, iResult);
-                            fs.write(buffer2, iResult);
-                            delete[] buffer2;
-                        }
-                        else 
-                            fs.write(buffer, DEFAULT_BUFFER_SIZE);
-                        delete[] buffer;
-                    }
-                }
-                else std::cout << new_client.RecvMsg << std::endl;
             }
             else break;
         }
     }
-
-    if (WSAGetLastError() == WSAECONNRESET)
-        std::cout << "The server has disconnected" << std::endl;
 }
 
 void Client_Private_Chat(client_type& client) {
     std::string str;
-
     std::thread my_thread(Client_Private_Thread, std::ref(client));
 
     while (true)
@@ -240,34 +176,58 @@ void Client_Private_Chat(client_type& client) {
             sleep_for(nanoseconds(10));
 
 
+            //Stop thread
+            stop_flag = true;
+
+
             //Sending file processing
             long long int sizetemp = size;
+
             while (sizetemp > 0) {
                 if (sizetemp < DEFAULT_BUFFER_SIZE) {
                     char* buffer = new char[sizetemp];
                     fp.read(buffer, sizetemp);
-                    iResult = send(client.socket, buffer, sizetemp, 0);
-                    sleep_for(nanoseconds(10));
-                    while (iResult == SOCKET_ERROR || iResult != sizetemp) 
+                    do {
+                        memset(&client.RecvMsg, NULL, sizeof(client.RecvMsg));
+                        iResult = send(client.socket, std::to_string(sizetemp).c_str(), strlen(std::to_string(sizetemp).c_str()), 0);
+                        while (iResult == SOCKET_ERROR)
+                            iResult = send(client.socket, std::to_string(sizetemp).c_str(), strlen(std::to_string(sizetemp).c_str()), 0);
+                        recv(client.socket, client.RecvMsg, DEFAULT_MSG_LENGTH, 0);
+                        memset(&client.RecvMsg, NULL, sizeof(client.RecvMsg));
                         iResult = send(client.socket, buffer, sizetemp, 0);
+                        while (iResult == SOCKET_ERROR)
+                            iResult = send(client.socket, buffer, sizetemp, 0);
+                        recv(client.socket, client.RecvMsg, DEFAULT_MSG_LENGTH, 0);
+                    } while (strcmp(client.RecvMsg, "no") == 0);
                     delete[] buffer;
                     sizetemp = 0;
                 }
                 else {
                     char* buffer = new char[DEFAULT_BUFFER_SIZE];
                     fp.read(buffer, DEFAULT_BUFFER_SIZE);
-                    iResult = send(client.socket, buffer, DEFAULT_BUFFER_SIZE, 0);
-                    sleep_for(nanoseconds(10));
-                    while (iResult == SOCKET_ERROR || iResult != DEFAULT_BUFFER_SIZE)
+                    do {
+                        memset(&client.RecvMsg, NULL, sizeof(client.RecvMsg));
+                        iResult = send(client.socket, std::to_string(DEFAULT_BUFFER_SIZE).c_str(), strlen(std::to_string(DEFAULT_BUFFER_SIZE).c_str()), 0);
+                        while (iResult == SOCKET_ERROR)
+                            iResult = send(client.socket, std::to_string(DEFAULT_BUFFER_SIZE).c_str(), strlen(std::to_string(DEFAULT_BUFFER_SIZE).c_str()), 0);
+                        recv(client.socket, client.RecvMsg, DEFAULT_MSG_LENGTH, 0);
+                        memset(&client.RecvMsg, NULL, sizeof(client.RecvMsg));
                         iResult = send(client.socket, buffer, DEFAULT_BUFFER_SIZE, 0);
+                        while (iResult == SOCKET_ERROR)
+                            iResult = send(client.socket, buffer, DEFAULT_BUFFER_SIZE, 0);
+                        recv(client.socket, client.RecvMsg, DEFAULT_MSG_LENGTH, 0);
+                    } while (strcmp(client.RecvMsg, "no") == 0);
                     delete[] buffer;
                     sizetemp -= DEFAULT_BUFFER_SIZE;
                 }
             }
             fp.close();
-            sleep_for(nanoseconds(10));
             std::cout << "Upload completed" << std::endl;
             iResult = send(client.socket, "end", 4, 0);
+            
+
+            // restart thread
+            stop_flag = false;
         }
     }
 

@@ -182,7 +182,7 @@ void Client_Single_Chatting(client_type& first_client, std::vector<client_type>&
                 for (int i = 0; i < MAX_CLIENTS; i++) {
                     if (client_array[i].socket != INVALID_SOCKET)
                         if (client_array[i].socket == SOCKET_ERROR) continue;
-                    if (first_client.id != i && client_array[i].Username.compare(second_username) == 0) {
+                    if (first_client.id != i && client_array[i].Username.compare(second_username) == 0 && client_array[i].socket != INVALID_SOCKET) {
                         if (strcmp(tempmsg, "upload file") == 0) {
                             
                             //Receive file name and size from first client 
@@ -199,26 +199,54 @@ void Client_Single_Chatting(client_type& first_client, std::vector<client_type>&
                             ofstream fs;
                             fs.open("Temp\\" + fName, ios::binary | ios::trunc);
 
-
+                            bool check = false;
+                            
                             while (true) {
+                                memset(&tempmsg, NULL, sizeof(tempmsg));
                                 char* buffer = new char[DEFAULT_TRANSFER_BUFFER_SIZE];
+
+                                recv(first_client.socket, tempmsg, DEFAULT_MSG_LENGTH, 0);
+
+                                if (strcmp(tempmsg, "end") == 0) {
+                                    fs.close();
+                                    delete[] buffer;
+                                    break;
+                                }
+
+                                int buffersize = stoi(string(tempmsg));
+                                send(first_client.socket, "OK", 3, 0);
+
+                                // Use for stopping client thread
+                                if (check == false) {
+                                    memset(&tempmsg, NULL, sizeof(tempmsg));
+                                    sleep_for(nanoseconds(10));
+                                    send(first_client.socket, "OK", 3, 0);
+                                    check = true;
+                                }
+                                //
+                                
                                 iResult = recv(first_client.socket, buffer, DEFAULT_TRANSFER_BUFFER_SIZE, 0);
                                 if (iResult == SOCKET_ERROR)
                                     break;
-                                else if (strcmp(buffer, "end") == 0) {
-                                    fs.close();
-                                    break;
-                                }
+
+                                else if (iResult != buffersize) 
+                                    send(first_client.socket, "no", 3, 0);
+                                
                                 else if (iResult < DEFAULT_TRANSFER_BUFFER_SIZE) {
+                                    send(first_client.socket, "OK", 3, 0);
                                     char* buffer2 = new char[iResult];
                                     memcpy(buffer2, buffer, iResult);
                                     fs.write(buffer2, iResult);
                                     delete[] buffer2;
                                 }
-                                else 
+
+                                else {
+                                    send(first_client.socket, "OK", 3, 0);
                                     fs.write(buffer, DEFAULT_TRANSFER_BUFFER_SIZE);
+                                }
                                 delete[] buffer;
                             }
+                            break;
                         }
                         else {
                             pos = i;

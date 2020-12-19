@@ -14,12 +14,15 @@
 #include <cstdint>
 #include <fstream>
 #include <Windows.h>
+#include <chrono>
+#include <thread>
 #pragma comment( lib, "wsock32.lib" )
 #pragma comment( lib, "Ws2_32.lib")
 #pragma comment( lib, "Winmm.lib")
 using namespace std;
+using namespace std::this_thread;
+using namespace std::chrono;
 
-#define PORT "50000"
 #define DEFAULT_MSG_LENGTH 4096
 #define DEFAULT_TRANSFER_BUFFER_SIZE 512
 

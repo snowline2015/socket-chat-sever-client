@@ -27,9 +27,10 @@ using namespace std;
 using namespace std::this_thread; 
 using namespace std::chrono; 
 
-#define PORT "50000"
 #define DEFAULT_MSG_LENGTH 4096
 #define DEFAULT_BUFFER_SIZE 512
+
+extern std::atomic<bool> stop_flag;
 
 struct client_type {
     SOCKET socket = INVALID_SOCKET;

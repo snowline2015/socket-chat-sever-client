@@ -1,5 +1,5 @@
 #include "Header.h"
-std::atomic<bool> stop_flag = false;
+std::atomic<bool> stop_flag(false);
 
 void ShutDownAndClose(client_type& client) {
     shutdown(client.socket, SD_SEND);
@@ -110,17 +110,23 @@ void Client_Group_Chat(client_type& client) {
 
 void Client_Private_Thread(client_type& new_client) {
     while (true) {
-        if (new_client.socket != 0 && stop_flag != true) {
+        if (stop_flag.load()) {
+            sleep_for(milliseconds(500));
+            continue;
+        }
+        else if (new_client.socket != 0) {
             memset(new_client.RecvMsg, NULL, sizeof(new_client.RecvMsg));
             int iResult = recv(new_client.socket, new_client.RecvMsg, DEFAULT_MSG_LENGTH, 0);
             if (iResult != SOCKET_ERROR) {
-
-                if (stop_flag != true) 
-                     std::cout << new_client.RecvMsg << std::endl;
-
+                sleep_for(milliseconds(150));
+                if (stop_flag.load() == false)
+                    std::cout << new_client.RecvMsg << std::endl;
+                else
+                    send(new_client.socket, "resend", 7, 0);
             }
             else break;
         }
+        else break;
     }
 }
 
@@ -142,96 +148,16 @@ void Client_Private_Chat(client_type& client) {
         if (iResult <= 0) break;
 
         if (str.compare("upload file") == 0) {
-            std::cout << "File path: ";
-            std::getline(std::cin, str);    
-
-            std::string fName = "";
-
-            for (int i = 0; i < str.length(); i++) {
-                if (str[i] == '/') str.replace(i, 1, "\\");
-            }
-
-            for (int32_t i = str.std::string::length() - 1; i >= 0; i--) {
-                if (str[i] == '\\') {
-                    fName.std::string::append(str.std::string::substr(i + 1));
-                    break;
-                }
-            }
-
-            std::ifstream fp;
-            fp.open(str, ios::binary);
-
-            if (fp.fail()) {
-                continue;
-            }
-
-            // Send file name and file size
-            fp.seekg(0, ios::end);
-            long long int size = fp.tellg();
-            fp.seekg(0, ios::beg);
-
-            send(client.socket, fName.c_str(), strlen(fName.c_str()), 0);
-            sleep_for(nanoseconds(10));
-            send(client.socket, std::to_string(size).c_str(), strlen(std::to_string(size).c_str()), 0);
-            sleep_for(nanoseconds(10));
-
 
             //Stop thread
-            stop_flag = true;
+            stop_flag.store(true);
 
-
-            //Sending file processing
-            long long int sizetemp = size;
-
-            while (sizetemp > 0) {
-                if (sizetemp < DEFAULT_BUFFER_SIZE) {
-                    char* buffer = new char[sizetemp];
-                    fp.read(buffer, sizetemp);
-                    do {
-                        memset(&client.RecvMsg, NULL, sizeof(client.RecvMsg));
-                        iResult = send(client.socket, std::to_string(sizetemp).c_str(), strlen(std::to_string(sizetemp).c_str()), 0);
-                        while (iResult == SOCKET_ERROR)
-                            iResult = send(client.socket, std::to_string(sizetemp).c_str(), strlen(std::to_string(sizetemp).c_str()), 0);
-                        recv(client.socket, client.RecvMsg, DEFAULT_MSG_LENGTH, 0);
-                        memset(&client.RecvMsg, NULL, sizeof(client.RecvMsg));
-                        iResult = send(client.socket, buffer, sizetemp, 0);
-                        while (iResult == SOCKET_ERROR)
-                            iResult = send(client.socket, buffer, sizetemp, 0);
-                        recv(client.socket, client.RecvMsg, DEFAULT_MSG_LENGTH, 0);
-                    } while (strcmp(client.RecvMsg, "no") == 0);
-                    delete[] buffer;
-                    sizetemp = 0;
-                }
-                else {
-                    char* buffer = new char[DEFAULT_BUFFER_SIZE];
-                    fp.read(buffer, DEFAULT_BUFFER_SIZE);
-                    do {
-                        memset(&client.RecvMsg, NULL, sizeof(client.RecvMsg));
-                        iResult = send(client.socket, std::to_string(DEFAULT_BUFFER_SIZE).c_str(), strlen(std::to_string(DEFAULT_BUFFER_SIZE).c_str()), 0);
-                        while (iResult == SOCKET_ERROR)
-                            iResult = send(client.socket, std::to_string(DEFAULT_BUFFER_SIZE).c_str(), strlen(std::to_string(DEFAULT_BUFFER_SIZE).c_str()), 0);
-                        recv(client.socket, client.RecvMsg, DEFAULT_MSG_LENGTH, 0);
-                        memset(&client.RecvMsg, NULL, sizeof(client.RecvMsg));
-                        iResult = send(client.socket, buffer, DEFAULT_BUFFER_SIZE, 0);
-                        while (iResult == SOCKET_ERROR)
-                            iResult = send(client.socket, buffer, DEFAULT_BUFFER_SIZE, 0);
-                        recv(client.socket, client.RecvMsg, DEFAULT_MSG_LENGTH, 0);
-                    } while (strcmp(client.RecvMsg, "no") == 0);
-                    delete[] buffer;
-                    sizetemp -= DEFAULT_BUFFER_SIZE;
-                }
-            }
-            fp.close();
-            std::cout << "Upload completed" << std::endl;
-            iResult = send(client.socket, "end", 4, 0);
-            
+            Upload_File(client);
 
             // restart thread
-            stop_flag = false;
+            stop_flag.store(false);
         }
     }
-
-    client.socket = INVALID_SOCKET;
 
     my_thread.detach();
 
@@ -240,4 +166,94 @@ void Client_Private_Chat(client_type& client) {
     ShutDownAndClose(client);
 }
 
+void Upload_File(client_type& client) {
+    std::string str;
+    int iResult;
+    std::cout << "File path: ";
+    std::getline(std::cin, str);
 
+    std::string fName = "";
+
+    for (int i = 0; i < str.length(); i++) {
+        if (str[i] == '/') str.replace(i, 1, "\\");
+    }
+
+    for (int32_t i = str.std::string::length() - 1; i >= 0; i--) {
+        if (str[i] == '\\') {
+            fName.std::string::append(str.std::string::substr(i + 1));
+            break;
+        }
+    }
+
+    std::ifstream fp;
+    fp.open(str, ios::binary);
+
+    if (fp.fail()) {
+        return;
+    }
+
+    // Send file name and file size
+    fp.seekg(0, ios::end);
+    long long int size = fp.tellg();
+    fp.seekg(0, ios::beg);
+
+    send(client.socket, fName.c_str(), strlen(fName.c_str()), 0);
+    recv(client.socket, client.RecvMsg, DEFAULT_MSG_LENGTH, 0);
+    send(client.socket, std::to_string(size).c_str(), strlen(std::to_string(size).c_str()), 0);
+    recv(client.socket, client.RecvMsg, DEFAULT_MSG_LENGTH, 0);
+
+
+    //Sending file processing
+    long long int sizetemp = size;
+
+    while (sizetemp > 0) {
+        if (sizetemp < DEFAULT_BUFFER_SIZE) {
+            char* buffer = new char[sizetemp];
+            fp.read(buffer, sizetemp);
+            do {
+                memset(&client.RecvMsg, NULL, sizeof(client.RecvMsg));
+                iResult = send(client.socket, std::to_string(sizetemp).c_str(), strlen(std::to_string(sizetemp).c_str()), 0);
+                while (iResult == SOCKET_ERROR) {
+                    sleep_for(milliseconds(5));
+                    iResult = send(client.socket, std::to_string(sizetemp).c_str(), strlen(std::to_string(sizetemp).c_str()), 0);
+                }
+                recv(client.socket, client.RecvMsg, DEFAULT_MSG_LENGTH, 0);
+                memset(&client.RecvMsg, NULL, sizeof(client.RecvMsg));
+                iResult = send(client.socket, buffer, sizetemp, 0);
+                while (iResult == SOCKET_ERROR) {
+                    sleep_for(milliseconds(5));
+                    iResult = send(client.socket, buffer, sizetemp, 0);
+                }
+                recv(client.socket, client.RecvMsg, DEFAULT_MSG_LENGTH, 0);
+            } while (strcmp(client.RecvMsg, "no") == 0);
+            delete[] buffer;
+            sizetemp = 0;
+        }
+        else {
+            char* buffer = new char[DEFAULT_BUFFER_SIZE];
+            fp.read(buffer, DEFAULT_BUFFER_SIZE);
+            do {
+                memset(&client.RecvMsg, NULL, sizeof(client.RecvMsg));
+                iResult = send(client.socket, std::to_string(DEFAULT_BUFFER_SIZE).c_str(), strlen(std::to_string(DEFAULT_BUFFER_SIZE).c_str()), 0);
+                while (iResult == SOCKET_ERROR) {
+                    sleep_for(milliseconds(5));
+                    iResult = send(client.socket, std::to_string(DEFAULT_BUFFER_SIZE).c_str(), strlen(std::to_string(DEFAULT_BUFFER_SIZE).c_str()), 0);
+                }
+                recv(client.socket, client.RecvMsg, DEFAULT_MSG_LENGTH, 0);
+                memset(&client.RecvMsg, NULL, sizeof(client.RecvMsg));
+                iResult = send(client.socket, buffer, DEFAULT_BUFFER_SIZE, 0);
+                while (iResult == SOCKET_ERROR) {
+                    sleep_for(milliseconds(5));
+                    iResult = send(client.socket, buffer, DEFAULT_BUFFER_SIZE, 0);
+                }
+                recv(client.socket, client.RecvMsg, DEFAULT_MSG_LENGTH, 0);
+            } while (strcmp(client.RecvMsg, "no") == 0);
+            delete[] buffer;
+            sizetemp -= DEFAULT_BUFFER_SIZE;
+        }
+    }
+    fp.close();
+    std::cout << "Upload completed" << std::endl;
+    iResult = send(client.socket, "end", 4, 0);
+    recv(client.socket, client.RecvMsg, DEFAULT_MSG_LENGTH, 0);
+}

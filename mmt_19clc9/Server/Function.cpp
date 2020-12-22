@@ -142,8 +142,6 @@ void Client_Multiple_Chatting(client_type& new_client, std::vector<client_type>&
             else {
                 msg = new_client.Username + " has disconnected";
 
-                PlaySound(TEXT("Sound\\Summoner.wav"), NULL, SND_ASYNC);
-
                 std::cout << msg << std::endl;
 
                 closesocket(new_client.socket);
@@ -171,85 +169,27 @@ void Client_Single_Chatting(client_type& first_client, std::vector<client_type>&
 
     while (true) {
         memset(&tempmsg, NULL, sizeof(tempmsg));
-
-        if (first_client.socket != 0) {
+        if (first_client.socket != INVALID_SOCKET) {
             int iResult = recv(first_client.socket, tempmsg, DEFAULT_MSG_LENGTH, 0);
             if (iResult != SOCKET_ERROR) {
-                
-
-                msg = first_client.Username + ": " + (tempmsg);
 
                 for (int i = 0; i < MAX_CLIENTS; i++) {
-                    if (client_array[i].socket != INVALID_SOCKET)
-                        if (client_array[i].socket == SOCKET_ERROR) continue;
-                    if (first_client.id != i && client_array[i].Username.compare(second_username) == 0 && client_array[i].socket != INVALID_SOCKET) {
+                    if (client_array[i].socket == INVALID_SOCKET) continue;
+                    else if (first_client.id != i && client_array[i].Username.compare(second_username) == 0) {
+
                         if (strcmp(tempmsg, "upload file") == 0) {
-                            
-                            //Receive file name and size from first client 
-                            recv(first_client.socket, tempmsg, DEFAULT_MSG_LENGTH, 0);
-                            string fName = string(tempmsg);
-                            memset(&tempmsg, NULL, sizeof(tempmsg));
-
-                            recv(first_client.socket, tempmsg, DEFAULT_MSG_LENGTH, 0);
-                            long long int fSize = stoll(string(tempmsg));
-                            memset(&tempmsg, NULL, sizeof(tempmsg));
-
-
-                            //Receive file buffer from first client and save to temp folder
-                            ofstream fs;
-                            fs.open("Temp\\" + fName, ios::binary | ios::trunc);
-
-                            bool check = false;
-                            
-                            while (true) {
-                                memset(&tempmsg, NULL, sizeof(tempmsg));
-                                char* buffer = new char[DEFAULT_TRANSFER_BUFFER_SIZE];
-
-                                recv(first_client.socket, tempmsg, DEFAULT_MSG_LENGTH, 0);
-
-                                if (strcmp(tempmsg, "end") == 0) {
-                                    fs.close();
-                                    delete[] buffer;
-                                    break;
-                                }
-
-                                int buffersize = stoi(string(tempmsg));
-                                send(first_client.socket, "OK", 3, 0);
-
-                                // Use for stopping client thread
-                                if (check == false) {
-                                    memset(&tempmsg, NULL, sizeof(tempmsg));
-                                    sleep_for(nanoseconds(10));
-                                    send(first_client.socket, "OK", 3, 0);
-                                    check = true;
-                                }
-                                //
-                                
-                                iResult = recv(first_client.socket, buffer, DEFAULT_TRANSFER_BUFFER_SIZE, 0);
-                                if (iResult == SOCKET_ERROR)
-                                    break;
-
-                                else if (iResult != buffersize) 
-                                    send(first_client.socket, "no", 3, 0);
-                                
-                                else if (iResult < DEFAULT_TRANSFER_BUFFER_SIZE) {
-                                    send(first_client.socket, "OK", 3, 0);
-                                    char* buffer2 = new char[iResult];
-                                    memcpy(buffer2, buffer, iResult);
-                                    fs.write(buffer2, iResult);
-                                    delete[] buffer2;
-                                }
-
-                                else {
-                                    send(first_client.socket, "OK", 3, 0);
-                                    fs.write(buffer, DEFAULT_TRANSFER_BUFFER_SIZE);
-                                }
-                                delete[] buffer;
-                            }
+                            Upload_File(first_client);
                             break;
                         }
+
+                        else if (strcmp(tempmsg, "download file") == 0) {
+                            Download_File(first_client);
+                            break;
+                        }
+
                         else {
                             pos = i;
+                            msg = first_client.Username + ": " + (tempmsg);
                             iResult = send(client_array[i].socket, msg.c_str(), strlen(msg.c_str()), 0);
                             break;
                         }
@@ -273,4 +213,87 @@ void Client_Single_Chatting(client_type& first_client, std::vector<client_type>&
     }
 
     thread.detach();
+}
+
+void Upload_File(client_type& first_client) {
+    char tempmsg[DEFAULT_MSG_LENGTH] = "";
+
+    //Receive file name and size from first client 
+    memset(&tempmsg, NULL, sizeof(tempmsg));
+    recv(first_client.socket, tempmsg, DEFAULT_MSG_LENGTH, 0);
+    send(first_client.socket, "OK", 3, 0);
+    string fName = string(tempmsg);
+
+    // Use for stopping client thread
+    memset(&tempmsg, NULL, sizeof(tempmsg));
+    recv(first_client.socket, tempmsg, DEFAULT_MSG_LENGTH, 0);
+    if (strcmp(tempmsg, "resend") == 0) {
+        send(first_client.socket, "OK", 3, 0);
+    }
+    //
+
+    memset(&tempmsg, NULL, sizeof(tempmsg));
+    recv(first_client.socket, tempmsg, DEFAULT_MSG_LENGTH, 0);
+    send(first_client.socket, "OK", 3, 0);
+    long long int fSize = stoll(string(tempmsg));
+
+
+    //Receive file buffer from first client and save to temp folder
+    ofstream fs;
+    fs.open("Temp\\" + fName, ios::binary | ios::trunc);
+
+    //bool check = false;
+
+    while (true) {
+        memset(&tempmsg, NULL, sizeof(tempmsg));
+        char* buffer = new char[DEFAULT_TRANSFER_BUFFER_SIZE];
+
+        recv(first_client.socket, tempmsg, DEFAULT_MSG_LENGTH, 0);
+
+        if (strcmp(tempmsg, "end") == 0) {
+            fs.close();
+            delete[] buffer;
+            send(first_client.socket, "OK", 3, 0);
+            break;
+        }
+
+        int buffersize = stoi(string(tempmsg));
+        send(first_client.socket, "OK", 3, 0);
+
+        // Use for stopping client thread
+        /*if (check == false) {
+            memset(&tempmsg, NULL, sizeof(tempmsg));
+            recv(first_client.socket, tempmsg, DEFAULT_MSG_LENGTH, 0);
+            if (strcmp(tempmsg, "resend") == 0) {
+                send(first_client.socket, "OK", 3, 0);
+                check = true;
+            }
+        }*/
+        //
+
+        int iResult = recv(first_client.socket, buffer, DEFAULT_TRANSFER_BUFFER_SIZE, 0);
+        if (iResult == SOCKET_ERROR)
+            break;
+
+        else if (iResult != buffersize)
+            send(first_client.socket, "no", 3, 0);
+
+        else if (iResult < DEFAULT_TRANSFER_BUFFER_SIZE) {
+            send(first_client.socket, "OK", 3, 0);
+            char* buffer2 = new char[iResult];
+            memcpy(buffer2, buffer, iResult);
+            fs.write(buffer2, iResult);
+            delete[] buffer2;
+        }
+
+        else {
+            send(first_client.socket, "OK", 3, 0);
+            fs.write(buffer, DEFAULT_TRANSFER_BUFFER_SIZE);
+        }
+        delete[] buffer;
+    }
+}
+
+void Download_File(client_type& client) {
+
 }

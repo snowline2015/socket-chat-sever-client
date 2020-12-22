@@ -30,11 +30,8 @@ using namespace std::chrono;
 #define DEFAULT_MSG_LENGTH 4096
 #define DEFAULT_BUFFER_SIZE 512
 
-extern std::atomic<bool> stop_flag;
-
 struct client_type {
     SOCKET socket = INVALID_SOCKET;
-    int id = -1;
     std::string IP, Username, Password, DOB, Email;
     char RecvMsg[DEFAULT_MSG_LENGTH];
 };
@@ -46,6 +43,9 @@ void Client_Thread(client_type& new_client);
 void Client_Private_Thread(client_type& new_client);
 void Client_Group_Chat(client_type& client);
 void Client_Private_Chat(client_type& client);
+
+void Upload_File(client_type& client);
+void Download_File(client_type& client);
 
 
 #endif

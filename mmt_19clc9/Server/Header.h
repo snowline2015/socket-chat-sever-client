@@ -14,14 +14,12 @@
 #include <cstdint>
 #include <fstream>
 #include <Windows.h>
-#include <chrono>
 #include <thread>
+#include <chrono>
 #pragma comment( lib, "wsock32.lib" )
 #pragma comment( lib, "Ws2_32.lib")
 #pragma comment( lib, "Winmm.lib")
 using namespace std;
-using namespace std::this_thread;
-using namespace std::chrono;
 
 #define DEFAULT_MSG_LENGTH 4096
 #define DEFAULT_TRANSFER_BUFFER_SIZE 512
@@ -42,5 +40,8 @@ void Read_Account(std::vector<client_type>& User_List);
 void Write_Account(std::vector<client_type>& User_List);
 bool Register(SOCKET NewSockid, std::vector<client_type>& User_List);
 bool Login(SOCKET NewSockid, std::vector<client_type>& User_List, string& username);
+
+void Upload_File(client_type& client);
+void Download_File(client_type& client);
 
 #endif

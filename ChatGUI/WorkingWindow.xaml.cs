@@ -3,6 +3,9 @@ using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using ConvertedCode;
+using AESEncryption;
+using System.Text;
 
 namespace ChatGUI
 {
@@ -74,7 +77,11 @@ namespace ChatGUI
         {
             if (PrivateChatInfoGrid.Visibility == Visibility.Visible)
                 PrivateChatInfoGrid.Visibility = Visibility.Collapsed;
+
+            byte[] messageSent = Encoding.ASCII.GetBytes("private chat");
+            int byteSent = LoginWindow.client.socket.Send(messageSent);
             PrivateChatMain.Visibility = Visibility.Visible;
+
         }
 
         private void ReturnOptions(object sender, RoutedEventArgs e)
@@ -101,7 +108,17 @@ namespace ChatGUI
         }
         #endregion
 
-
+        private void Send_Click(object sender, RoutedEventArgs e)
+        {
+            PrivateChat.Focusable = false;
+            if (ChatBox_pr.Text.Length != 0)
+            {
+                PrivateChat.Items.Add("[" + DateTime.Now.ToString("HH:mm") +"] Me: " + ChatBox_pr.Text + "\n");
+                PrivateChat.SelectedIndex = PrivateChat.Items.Count - 1;
+                ChatBox_pr.Text = "";
+                PrivateChat.Focusable = false;
+            }
+        }
     }
 
     public class CurrentTimeViewModel : INotifyPropertyChanged

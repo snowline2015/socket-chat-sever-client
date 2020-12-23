@@ -158,5 +158,34 @@ namespace ChatGUI
                 MessageBox.Show(ex.Message, "Error occurred", MessageBoxButton.OK);
             }
         }
+
+        public static ConvertedCode.client_type client
+        {
+            set;
+            get;
+        }
+        public ConvertedCode.Client CPP = new ConvertedCode.Client();
+        bool success;
+
+        private void ConnectServer_Click(object sender, RoutedEventArgs e)
+        {
+            ConvertedCode.client_type temp = new ConvertedCode.client_type(); ;
+            CPP.Init(ref temp, ServerIP.Text, ref success);
+
+            if (success == true)
+            {
+                client = temp;
+                ServerIP.Visibility = Visibility.Collapsed;
+                ConnectServer.Visibility = Visibility.Collapsed;
+
+                Username.Visibility = Visibility.Visible;
+                Password.Visibility = Visibility.Visible;
+                LoginButton.Visibility = Visibility.Visible;
+            }
+            else
+                warning.Text = "Connection Error";
+        }
+        
+        
     }
 }

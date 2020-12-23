@@ -385,13 +385,16 @@
                         </Button.Background>
 
                     </Button>
-                    <Button x:Name="Send" Content="Button" HorizontalAlignment="Left" Height="24" Margin="885.236,578.133,0,0" VerticalAlignment="Top" Width="24" Style="{StaticResource MyButton}">
+                    <Button x:Name="Send" Content="Button" HorizontalAlignment="Left" Height="24" Margin="885.236,578.133,0,0" VerticalAlignment="Top" Width="24" Style="{StaticResource MyButton}" Click="Send_Click">
                         <Button.Background>
                             <ImageBrush ImageSource="Assets/send-icon.png" Stretch="Uniform"/>
                         </Button.Background>
                     </Button>
-                    <ListBox x:Name="PrivateChat" HorizontalAlignment="Left" Height="551.6" Margin="299.4,14.5,0,0" VerticalAlignment="Top" Width="620.6" Background="{x:Null}" BorderBrush="{x:Null}" FontSize="14"/>
-                    <TextBox x:Name="Search_pr" HorizontalAlignment="Left" Height="27.2" Margin="10,23.3,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="222.4" FontSize="14" Style="{DynamicResource SearchStyle1}" Background="{x:Null}" SelectionBrush="{x:Null}" SelectionTextBrush="{x:Null}" BorderBrush="#FF1C3D9A"/>
+                    <ListBox x:Name="PrivateChat" HorizontalAlignment="Left" Height="551.6" Margin="299.4,14.5,0,0" VerticalAlignment="Top" Width="620.6" Background="{x:Null}" BorderBrush="{x:Null}" FontSize="14">
+                        
+                    </ListBox>
+
+                        <TextBox x:Name="Search_pr" HorizontalAlignment="Left" Height="27.2" Margin="10,23.3,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="222.4" FontSize="14" Style="{DynamicResource SearchStyle1}" Background="{x:Null}" SelectionBrush="{x:Null}" SelectionTextBrush="{x:Null}" BorderBrush="#FF1C3D9A"/>
                     <Image HorizontalAlignment="Left" Height="27.2" Margin="242.733,23.3,0,0" VerticalAlignment="Top" Width="27.133" Source="Assets/search-icon.png"/>
                     <ListBox x:Name="ListAttendance" HorizontalAlignment="Left" Height="551.9" Margin="10,55.5,0,0" VerticalAlignment="Top" Width="275.9" Background="{x:Null}" BorderBrush="{x:Null}" FontSize="14"/>
                 </Grid>
@@ -404,7 +407,7 @@
                 <RadioButton x:Name="Encr_Yes2" Content="RadioButton" HorizontalAlignment="Left" Height="19.934" Margin="395.8,350.634,0,0" VerticalAlignment="Top" Width="25.134" Style="{DynamicResource Encr_yes}"/>
                 <TextBlock HorizontalAlignment="Left" Height="19.934" Margin="548.934,350.634,0,0" TextWrapping="Wrap" Text="No" VerticalAlignment="Top" Width="44.8" FontWeight="SemiBold" Foreground="Black"/>
                 <TextBlock HorizontalAlignment="Left" Height="19.934" Margin="425.934,350.634,0,0" TextWrapping="Wrap" Text="Yes" VerticalAlignment="Top" Width="56" FontWeight="SemiBold" Foreground="Black"/>
-                <TextBlock HorizontalAlignment="Left" Margin="226.8,163.1,0,463.04" TextWrapping="Wrap" Text="Server IP Address:" Width="105" FontWeight="Bold" VerticalAlignment="Center" Foreground="Black"/>
+                <TextBlock HorizontalAlignment="Left" Margin="226.8,163.1,0,463.04" TextWrapping="Wrap" Text="Room ID" Width="105" FontWeight="Bold" VerticalAlignment="Center" Foreground="Black" TextAlignment="Center"/>
                 <TextBlock HorizontalAlignment="Left" Margin="226.8,260.7,0,365.44" TextWrapping="Wrap" Text="Port:" Width="105" FontWeight="Bold" VerticalAlignment="Center" TextAlignment="Center" Foreground="Black"/>
                 <TextBox x:Name="Port_gr" HorizontalAlignment="Left" Height="32" Margin="336.8,251.7,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="309.6" FontSize="14" VerticalContentAlignment="Center" BorderBrush="#FF253CE2" Background="{x:Null}" SelectionBrush="{x:Null}" SelectionTextBrush="{x:Null}" Style="{DynamicResource IPAddTemplate}"/>
                 <TextBlock HorizontalAlignment="Left" Margin="226.8,349.301,0,276.839" TextWrapping="Wrap" Text="Encrypt Message:" Width="105" FontWeight="Bold" VerticalAlignment="Center" TextAlignment="Center" Foreground="Black"/>

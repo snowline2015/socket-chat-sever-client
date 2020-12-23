@@ -103,7 +103,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Button}">
-                        <Border x:Name="border" BorderThickness="1.5" BorderBrush="#FF1A5AC5" Background="{TemplateBinding Background}" CornerRadius="5"/>
+                        <Border x:Name="border" BorderThickness="1.5" BorderBrush="{x:Null}" Background="{TemplateBinding Background}" CornerRadius="5"/>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter Property="Opacity" Value=".6"/>
@@ -398,10 +398,10 @@
         <Grid x:Name="LoginGrid" Height="667.6">
             <TextBlock x:Name="txt_Welcome" HorizontalAlignment="Left" Height="40.8" Margin="56.4,95.6,0,0" TextWrapping="Wrap" Text="Welcome To Chat App" VerticalAlignment="Top" Width="453.6" FontSize="26" TextAlignment="Center" Foreground="Black"/>
             <TextBox x:Name="Username" HorizontalAlignment="Left" Height="43" Margin="56.4,237.501,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="453.6" Background="#FFBCD2ED" BorderBrush="{x:Null}" BorderThickness="1.5" SelectionBrush="{x:Null}" SelectionTextBrush="{x:Null}" 
-                VerticalContentAlignment="Center" FontSize="18" Text="Username" GotFocus="RemoveText" Style="{DynamicResource UsrName_Login}" Padding="5,0,0,0"/>
+                VerticalContentAlignment="Center" FontSize="18" Text="Username" GotFocus="RemoveText" Style="{DynamicResource UsrName_Login}" Padding="5,0,0,0" Visibility="Collapsed"/>
             <PasswordBox x:Name="Password" HorizontalAlignment="Left" Height="43" Margin="56.4,342.225,0,0" VerticalAlignment="Top" Width="453.6" SelectionBrush="{x:Null}" Background="#FFBCD2ED" 
-                VerticalContentAlignment="Center" FontSize="18" SelectionTextBrush="{x:Null}" BorderBrush="{x:Null}" BorderThickness="1.5" Password="Password" GotFocus="RemoveTextPassword" Style="{DynamicResource Pass_Login}" Padding="5,0,0,0"/>
-            <Button x:Name="LoginButton" HorizontalAlignment="Left" Height="38.4" Margin="194.4,443.7,0,0" VerticalAlignment="Top" Width="177.6" FontSize="18" Style="{StaticResource MyNextButton}" Click="LoginButton_Click">
+                VerticalContentAlignment="Center" FontSize="18" SelectionTextBrush="{x:Null}" BorderBrush="{x:Null}" BorderThickness="1.5" Password="Password" GotFocus="RemoveTextPassword" Style="{DynamicResource Pass_Login}" Padding="5,0,0,0" Visibility="Collapsed"/>
+            <Button x:Name="LoginButton" HorizontalAlignment="Left" Height="38.4" Margin="194.4,443.7,0,0" VerticalAlignment="Top" Width="177.6" FontSize="18" Style="{StaticResource MyNextButton}" Click="LoginButton_Click" Visibility="Collapsed">
                 <Button.Background>
                     <ImageBrush ImageSource="Assets/next2.png" Stretch="Uniform"/>
                 </Button.Background>
@@ -417,6 +417,13 @@
             <Button x:Name="reg" Content="SignUp Now" HorizontalAlignment="Left" Height="28.8" Margin="286.8,634.8,0,0" VerticalAlignment="Top" Width="115.2" FontWeight="Bold" FontSize="16" Background="{x:Null}" Foreground="#FFDA2121" BorderBrush="{x:Null}" Click="EnterRegister"/>
             <Label x:Name="label" Content="Haven't got account?" HorizontalAlignment="Left" Height="28.8" Margin="140,634.8,0,0" VerticalAlignment="Top" Width="141.8" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="14" Foreground="Black" Background="{x:Null}"/>
             <TextBlock x:Name="warning" HorizontalAlignment="Left" Height="39.6" Margin="56.4,533.6,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="453.6" Foreground="#FFF00F0F" FontSize="15" FontWeight="SemiBold" TextAlignment="Center"/>
+            <TextBox x:Name="ServerIP" HorizontalAlignment="Left" Height="43" Margin="56.4,317.501,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="453.6" Background="#FFBCD2ED" BorderBrush="{x:Null}" BorderThickness="1.5" SelectionBrush="{x:Null}" SelectionTextBrush="{x:Null}" 
+                VerticalContentAlignment="Center" FontSize="18" Text="Server IP Address" GotFocus="RemoveText" Style="{DynamicResource UsrName_Login}" Padding="5,0,0,0"/>
+            <Button x:Name="ConnectServer" HorizontalAlignment="Left" Height="38.4" Margin="194.4,403.7,0,0" VerticalAlignment="Top" Width="177.6" FontSize="18" Style="{StaticResource MyNextButton}" Click="ConnectServer_Click">
+                <Button.Background>
+                    <ImageBrush ImageSource="Assets/next2.png" Stretch="Uniform"/>
+                </Button.Background>
+            </Button>
         </Grid>
         <Grid x:Name="RegisterGrid" Height="667.9" Visibility="Collapsed">
             <TextBox x:Name="Name" HorizontalAlignment="Left" Height="44.4" Margin="65.6,99.5,0,0" TextWrapping="Wrap" Text="Name" VerticalAlignment="Top" Width="416.4" BorderBrush="{x:Null}" SelectionBrush="{x:Null}" FontSize="16" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}"

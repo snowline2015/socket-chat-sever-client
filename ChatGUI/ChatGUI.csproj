@@ -70,9 +70,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AesEncryption.cs" />
     <Compile Include="LoginWindow.xaml.cs">
       <DependentUpon>LoginWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Program.cs" />
     <Compile Include="WorkingWindow.xaml.cs">
       <DependentUpon>WorkingWindow.xaml</DependentUpon>
     </Compile>
@@ -148,6 +150,8 @@
   <ItemGroup>
     <Resource Include="Assets\next-reverse.png" />
     <Resource Include="Assets\attach-icon.png" />
+    <Resource Include="Assets\calendar-icon.png" />
+    <Resource Include="calendar-icon.png" />
     <Content Include="Database1.mdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -299,14 +299,10 @@
     </Window.Resources>
     <StackPanel x:Name="MainWorkingPanel" HorizontalAlignment="Left" Height="720" VerticalAlignment="Top" Width="930" Margin="0,0,-130,-270">
         <StackPanel.Background>
-            <LinearGradientBrush EndPoint="0.253,-0.026" StartPoint="0.461,1.088">
-                <GradientStop Color="#FF215EB7"/>
-                <GradientStop Color="#FF6599E4" Offset="0.865"/>
-                <GradientStop Color="#FF93BAF3" Offset="0.292"/>
-            </LinearGradientBrush>
+            <ImageBrush ImageSource="Assets/background4.png" Stretch="UniformToFill"/>
         </StackPanel.Background>
         <Grid x:Name="WorkingGrid" Height="78.4">
-            <Button x:Name="ExitButton2" Style="{StaticResource MyButton}" HorizontalAlignment="Left" Height="30" Margin="882.5,22,0,0" VerticalAlignment="Top" Width="30" FontWeight="Bold" FontSize="16" Foreground="#FF121111" BorderBrush="{x:Null}" 
+            <Button x:Name="ExitButton2" Style="{StaticResource MyButton}" HorizontalAlignment="Left" Height="30" Margin="848.798,22,0,0" VerticalAlignment="Top" Width="30" FontWeight="Bold" FontSize="16" Foreground="#FF121111" BorderBrush="{x:Null}" 
                 Click="CloseButton_Click">
                 <Button.Background>
                     <ImageBrush ImageSource="Assets/close2.png" Stretch="Uniform"/>
@@ -315,38 +311,38 @@
             <TextBlock x:Name="ProfileName" HorizontalAlignment="Left" Height="30" Margin="81.4,13,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="182.4" FontSize="18" Padding="0,7,0,0" Foreground="Black"><Run Text="Name"/></TextBlock>
             <Label x:Name="Login_time" Content="{Binding CurrentTime}" HorizontalAlignment="Left" Height="25" Margin="81.4,43,0,0" VerticalAlignment="Top" Width="284" Background="{x:Null}" Padding="0,0,5,5" FontSize="14" FontWeight="Normal" Foreground="Black"/>
             <Image x:Name="Profile_photo" HorizontalAlignment="Left" Height="43.6" VerticalAlignment="Top" Width="43.6" Margin="23.8,13,0,0" Source="Assets/5.jpg" Stretch="UniformToFill"/>
+            <Button x:Name="LogoutBtn" Content="Button" HorizontalAlignment="Left" Height="38.415" Margin="741.537,18.185,0,0" VerticalAlignment="Top" Width="73.626" BorderBrush="#FFF9F7F7" Style="{StaticResource MainButton}" Click="LogoutButton_Click">
+                <Button.Background>
+                    <ImageBrush ImageSource="Assets/sign-out.png" Stretch="Uniform"/>
+                </Button.Background>
+            </Button>
         </Grid>
         <Path x:Name="LineSeperator" Data="M10,75.3 L930,75.3" Fill="#FF0F0FA8" HorizontalAlignment="Left" Height="1" Margin="10,0,-1,0" Stretch="Fill" Stroke="#FF0F0FA8" Width="900"/>
         <StackPanel x:Name="PreChatPanel" HorizontalAlignment="Left" Height="642.1" VerticalAlignment="Top" Width="930">
             <Grid x:Name="PreChatGrid" Height="642.1">
-                <Button x:Name="PrivateChatBtn" Content="Button" HorizontalAlignment="Left" Height="49.2" Margin="342.5,151.8,0,0" VerticalAlignment="Top" Width="205.2" BorderBrush="#FF050505" Style="{StaticResource MainButton}"
+                <Button x:Name="PrivateChatBtn" Content="Button" HorizontalAlignment="Left" Height="62.142" Margin="342.5,178.762,0,0" VerticalAlignment="Top" Width="223.534" BorderBrush="#FF050505" Style="{StaticResource MainButton}"
                         Click="EnterPrivateChat">
                     <Button.Background>
                         <ImageBrush ImageSource="Assets/image2.png" Stretch="Uniform"/>
                     </Button.Background>
                 </Button>
 
-                <Button x:Name="GroupChatBtn" Content="Button" HorizontalAlignment="Left" Height="49.2" Margin="342.5,257.4,0,0" VerticalAlignment="Top" Width="205.2" BorderBrush="#FF737373" Style="{StaticResource MainButton}"
+                <Button x:Name="GroupChatBtn" Content="Button" HorizontalAlignment="Left" Height="55.671" Margin="342.5,284.362,0,0" VerticalAlignment="Top" Width="223.534" BorderBrush="#FF737373" Style="{StaticResource MainButton}"
                         Click="EnterGroupChat">
                     <Button.Background>
                         <ImageBrush ImageSource="Assets/grchat-img.png" Stretch="Uniform"/>
                     </Button.Background>
                 </Button>
 
-                <Button x:Name="OptionsBtn" Content="Button" HorizontalAlignment="Left" Height="49.2" Margin="342.5,366.6,0,0" VerticalAlignment="Top" Width="205.2" BorderBrush="#FFB7B7B7" Style="{StaticResource MainButton}"
+                <Button x:Name="OptionsBtn" Content="Button" HorizontalAlignment="Left" Height="56.749" Margin="342.5,393.562,0,0" VerticalAlignment="Top" Width="223.534" BorderBrush="#FFB7B7B7" Style="{StaticResource MainButton}"
                         Click="EnterMoreOpts">
                     <Button.Background>
                         <ImageBrush ImageSource="Assets/opt-img.png" Stretch="Uniform"/>
                     </Button.Background>
                 </Button>
 
-                <Label x:Name="label1" Content="Welcome Back" HorizontalAlignment="Left" Height="44.7" Margin="353.2,22,0,0" VerticalAlignment="Top" Width="188.5" Background="{x:Null}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="24" FontWeight="Bold"/>
-                <Button x:Name="LogoutBtn" Content="Button" HorizontalAlignment="Left" Height="49.2" Margin="342.5,487.8,0,0" VerticalAlignment="Top" Width="205.2" BorderBrush="#FFF9F7F7" Style="{StaticResource MainButton}" Click="LogoutButton_Click">
-                    <Button.Background>
-                        <ImageBrush ImageSource="Assets/logout-img.png" Stretch="Uniform"/>
-                    </Button.Background>
-                </Button>
-                <Label x:Name="label2" Content="Please choose an option" HorizontalAlignment="Left" Height="44.7" Margin="271.6,66.7,0,0" VerticalAlignment="Top" Width="351.7" Background="{x:Null}" HorizontalContentAlignment="Center" FontSize="20"/>
+                <Label x:Name="label1" Content="Welcome !" HorizontalAlignment="Left" Height="44.7" Margin="353.2,48.962,0,0" VerticalAlignment="Top" Width="188.5" Background="{x:Null}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="24" FontWeight="Bold"/>
+                <Label x:Name="label2" Content="Please choose an option" HorizontalAlignment="Left" Height="44.7" Margin="271.6,93.662,0,0" VerticalAlignment="Top" Width="351.7" Background="{x:Null}" HorizontalContentAlignment="Center" FontSize="20"/>
             </Grid>
         </StackPanel>
         <StackPanel x:Name="PrivateChatPanel" HorizontalAlignment="Left" Height="642.1" Width="930" Visibility="Collapsed">
@@ -391,10 +387,10 @@
                         </Button.Background>
                     </Button>
                     <ListBox x:Name="PrivateChat" HorizontalAlignment="Left" Height="551.6" Margin="299.4,14.5,0,0" VerticalAlignment="Top" Width="620.6" Background="{x:Null}" BorderBrush="{x:Null}" FontSize="14">
-                        
+
                     </ListBox>
 
-                        <TextBox x:Name="Search_pr" HorizontalAlignment="Left" Height="27.2" Margin="10,23.3,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="222.4" FontSize="14" Style="{DynamicResource SearchStyle1}" Background="{x:Null}" SelectionBrush="{x:Null}" SelectionTextBrush="{x:Null}" BorderBrush="#FF1C3D9A"/>
+                    <TextBox x:Name="Search_pr" HorizontalAlignment="Left" Height="27.2" Margin="10,23.3,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="222.4" FontSize="14" Style="{DynamicResource SearchStyle1}" Background="{x:Null}" SelectionBrush="{x:Null}" SelectionTextBrush="{x:Null}" BorderBrush="#FF1C3D9A"/>
                     <Image HorizontalAlignment="Left" Height="27.2" Margin="242.733,23.3,0,0" VerticalAlignment="Top" Width="27.133" Source="Assets/search-icon.png"/>
                     <ListBox x:Name="ListAttendance" HorizontalAlignment="Left" Height="551.9" Margin="10,55.5,0,0" VerticalAlignment="Top" Width="275.9" Background="{x:Null}" BorderBrush="{x:Null}" FontSize="14"/>
                 </Grid>
@@ -453,7 +449,7 @@
                 <Button x:Name="CheckUsr" Content="Check User Status" HorizontalAlignment="Left" Height="50.4" Margin="361.4,237.7,0,0" VerticalAlignment="Top" Width="241.2" Style="{DynamicResource MoreOpt_Button_Template}" Background="{x:Null}" BorderBrush="#FF1B51BD" FontSize="16"/>
                 <Button x:Name="Change_Info" Content="Change Information" HorizontalAlignment="Left" Height="50.4" Margin="361.4,342.1,0,0" VerticalAlignment="Top" Width="241.2" Style="{DynamicResource MoreOpt_Button_Template}" Background="{x:Null}" BorderBrush="#FF1B51BD" FontSize="16"/>
                 <Button x:Name="returnPage_MoreOpt" Content="Connect To Chat" HorizontalAlignment="Left" Height="35.2" Margin="405.8,451,0,0" VerticalAlignment="Top" Width="148.134" BorderBrush="{x:Null}" FontWeight="SemiBold" FontSize="14" 
-                    Style="{StaticResource MyButton}" Panel.ZIndex="2">
+                    Style="{StaticResource MyButton}" Panel.ZIndex="2" Click="ReturnMainOptions">
                     <Button.Background>
                         <ImageBrush ImageSource="Assets/next-reverse.png" Stretch="Uniform"/>
                     </Button.Background>

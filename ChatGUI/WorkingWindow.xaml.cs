@@ -78,7 +78,7 @@ namespace ChatGUI
             if (PrivateChatInfoGrid.Visibility == Visibility.Visible)
                 PrivateChatInfoGrid.Visibility = Visibility.Collapsed;
 
-            byte[] messageSent = Encoding.ASCII.GetBytes("private chat");
+            byte[] messageSent = Encoding.ASCII.GetBytes("private chat\0");
             int byteSent = LoginWindow.client.socket.Send(messageSent);
             PrivateChatMain.Visibility = Visibility.Visible;
 
@@ -106,18 +106,30 @@ namespace ChatGUI
                 GroupChatInfoGrid.Visibility = Visibility.Collapsed;
             GroupChatMain.Visibility = Visibility.Visible;
         }
+
+        private void ReturnMainOptions(object sender, RoutedEventArgs e)
+        {
+            if (MoreOptPanel.Visibility == Visibility.Visible)
+                MoreOptPanel.Visibility = Visibility.Collapsed;
+            PreChatPanel.Visibility = Visibility.Visible;
+        }
         #endregion
 
         private void Send_Click(object sender, RoutedEventArgs e)
         {
-            PrivateChat.Focusable = false;
             if (ChatBox_pr.Text.Length != 0)
             {
                 PrivateChat.Items.Add("[" + DateTime.Now.ToString("HH:mm") +"] Me: " + ChatBox_pr.Text + "\n");
                 PrivateChat.SelectedIndex = PrivateChat.Items.Count - 1;
                 ChatBox_pr.Text = "";
-                PrivateChat.Focusable = false;
             }
+        }
+
+        public static void AddListboxItems(string item)
+        {
+            WorkingWindow win = new WorkingWindow();
+            win.PrivateChat.Items.Add("[" + DateTime.Now.ToString("HH:mm") + "]" + item);
+            win.PrivateChat.SelectedIndex = win.PrivateChat.Items.Count - 1;
         }
     }
 

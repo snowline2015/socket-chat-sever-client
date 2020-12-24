@@ -2,6 +2,7 @@
 using System.Data;
 using System.Data.SqlClient;
 using System.Windows;
+using ConvertedCode;
 
 namespace ChatGUI
 {
@@ -15,6 +16,14 @@ namespace ChatGUI
             InitializeComponent();
         }
 
+        public ConvertedCode.Client CPP = new ConvertedCode.Client();
+        public static ConvertedCode.client_type client
+        {
+            set;
+            get;
+        }
+        bool success;
+       
         //Doi vi tri cuar AttachDbFilename thanh cho luu folder ChatGUI
         String db = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\LENOVO\source\repos\ChatGUI\LoginData.mdf;Integrated Security=True";
         private readonly WorkingWindow work = new WorkingWindow();
@@ -65,45 +74,58 @@ namespace ChatGUI
                 return;
             }
 
-            try
+            //try
+            //{
+            //    SqlConnection myConnection = default(SqlConnection);
+            //    myConnection = new SqlConnection(db);
+            //    SqlCommand myCommand = default(SqlCommand);
+            //    myCommand = new SqlCommand("SELECT Username,Password FROM Users WHERE Username = @Username AND Password = @Password", myConnection);
+            //    SqlParameter usrName = new SqlParameter("@Username", SqlDbType.VarChar);
+            //    SqlParameter usrPass = new SqlParameter("@Password", SqlDbType.VarChar);
+
+            //    usrName.Value = Username.Text;
+            //    usrPass.Value = Password.Password;
+
+            //    myCommand.Parameters.Add(usrName);
+            //    myCommand.Parameters.Add(usrPass);
+
+            //    myCommand.Connection.Open();
+            //    SqlDataReader myReader = myCommand.ExecuteReader(CommandBehavior.CloseConnection);
+
+            //    if (myReader.Read() == true)
+            //    {
+            //        if (warning.Text.Length != 0)
+            //            warning.Text = "";
+            //        work.Show();
+            //        this.Close();
+            //    }
+            //    else
+            //    {
+            //        warning.Text = "Incorrect username or password";
+            //        Username.Focus();
+            //    }
+
+            //    if (myConnection.State == ConnectionState.Open)
+            //    {
+            //        myConnection.Dispose();
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show(ex.Message, "Error occurred", MessageBoxButton.OK);
+            //}
+
+            if(CPP.Login(client, Username.Text, Password.Password) == true)
             {
-                SqlConnection myConnection = default(SqlConnection);
-                myConnection = new SqlConnection(db);
-                SqlCommand myCommand = default(SqlCommand);
-                myCommand = new SqlCommand("SELECT Username,Password FROM Users WHERE Username = @Username AND Password = @Password", myConnection);
-                SqlParameter usrName = new SqlParameter("@Username", SqlDbType.VarChar);
-                SqlParameter usrPass = new SqlParameter("@Password", SqlDbType.VarChar);
-
-                usrName.Value = Username.Text;
-                usrPass.Value = Password.Password;
-
-                myCommand.Parameters.Add(usrName);
-                myCommand.Parameters.Add(usrPass);
-
-                myCommand.Connection.Open();
-                SqlDataReader myReader = myCommand.ExecuteReader(CommandBehavior.CloseConnection);
-
-                if (myReader.Read() == true)
-                {
-                    if (warning.Text.Length != 0)
-                        warning.Text = "";
-                    work.Show();
-                    this.Close();
-                }
-                else
-                {
-                    warning.Text = "Incorrect username or password";
-                    Username.Focus();
-                }
-
-                if (myConnection.State == ConnectionState.Open)
-                {
-                    myConnection.Dispose();
-                }
+                if (warning.Text.Length == 0)
+                    warning.Text = "";
+                work.Show();
+                this.Close();
             }
-            catch (Exception ex)
+            else
             {
-                MessageBox.Show(ex.Message, "Error occurred", MessageBoxButton.OK);
+                warning.Text = "ID or Password is incorrect";
+                Username.Focus();
             }
         }
 
@@ -159,13 +181,7 @@ namespace ChatGUI
             }
         }
 
-        public static ConvertedCode.client_type client
-        {
-            set;
-            get;
-        }
-        public ConvertedCode.Client CPP = new ConvertedCode.Client();
-        bool success;
+        
 
         private void ConnectServer_Click(object sender, RoutedEventArgs e)
         {

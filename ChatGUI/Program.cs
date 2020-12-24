@@ -7,7 +7,7 @@ using System.Net;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-
+using ChatGUI;
 
 namespace ConvertedCode
 {
@@ -41,7 +41,7 @@ namespace ConvertedCode
                     isConnected = true;
                     
                 }
-                catch (Exception e1)
+                catch
                 {
                     System.Threading.Thread.Sleep(2000);
                 }
@@ -103,7 +103,6 @@ namespace ConvertedCode
 
         public void Client_Private_Thread(client_type new_client)
         {
-            //try { }
             while (true)
             {
                 if (new_client.socket != null)
@@ -111,7 +110,7 @@ namespace ConvertedCode
                     byte[] messageReceived = new byte[4096];
                     int byteRecv = new_client.socket.Receive(messageReceived);
                     string str = Encoding.ASCII.GetString(messageReceived, 0, byteRecv);
-                    Console.WriteLine(str);
+                    WorkingWindow.AddListboxItems(str);
                 }
             }
         }
@@ -131,7 +130,7 @@ namespace ConvertedCode
                 //Encryt message before send
                 //sent_message = string_to_hex(sent_message);
 
-                if (str.Equals("exit")) break;    // De y dong nay, sau nay se chinh lai neu client muon out group chat
+                if (str.Equals("exit\0")) break;    // De y dong nay, sau nay se chinh lai neu client muon out group chat
 
                 byte[] messageSent = Encoding.ASCII.GetBytes(str);
                 int byteSent = client.socket.Send(messageSent);
@@ -142,76 +141,45 @@ namespace ConvertedCode
             my_thread.Abort();
         }
 
-        //void Send_File(client_type client)
-        //{
-        //    string str = "send file";
-        //    byte[] messageSent = Encoding.ASCII.GetBytes(str);
-        //    int byteSent = client.socket.Send(messageSent);
+        public bool Login(client_type client, string id, string password)
+        {
+            byte[] messageSent = Encoding.ASCII.GetBytes("login\0");
+            int byteSent = client.socket.Send(messageSent);
 
-        //    // Do something to take path file
-
-        //    // str = path file
-
-        //    //Path file taken
-
-        //    string fName = "";
-
-        //    for (int i = 0; i < str.Length; i++)
-        //    {
-        //        if (str[i] == '/') str.Replace('/', '\\');
-        //    }
-
-        //    for (int i = str.Length - 1; i >= 0; i--) {
-        //        if (str[i] == '\\')
-        //        {
-        //            fName += (str.Substring(i + 1));
-        //            break;
-        //        }
-        //    }
-
-        //    if (!File.Exists(fName))
-        //    {
-        //        // Warn cannot open file
+            byte[] messageReceived = new byte[4096];
+            int byteRecv = client.socket.Receive(messageReceived);
+            //string str = Encoding.ASCII.GetString(messageReceived, 0, byteRecv);
 
 
-        //        return;
-        //    }
+            if (Array.Equals(Encoding.ASCII.GetString(messageReceived, 0, byteRecv), "OK\0") == false)
+                return false;
 
 
-        //    // Send file name and file size
+            messageSent = Encoding.ASCII.GetBytes(id);
+            byteSent = client.socket.Send(messageSent);
 
-        //    long length = new System.IO.FileInfo(fName).Length;
+            Array.Clear(messageReceived, 0, messageReceived.Length);
+            byteRecv = client.socket.Receive(messageReceived);
 
-        //    Array.Clear(messageSent, 0, messageSent.Length);
-        //    messageSent = Encoding.ASCII.GetBytes(fName);
-        //    byteSent = client.socket.Send(messageSent);
+            if (Array.Equals(Encoding.ASCII.GetString(messageReceived, 0, byteRecv), "OK\0") == false)
+                return false;
 
-        //    Array.Clear(messageSent, 0, messageSent.Length);
-        //    messageSent = BitConverter.GetBytes(length);
-        //    byteSent = client.socket.Send(messageSent);
+            messageSent = Encoding.ASCII.GetBytes(password);
+            byteSent = client.socket.Send(messageSent);
 
+            while (true)
+            {
+                Array.Clear(messageReceived, 0, messageReceived.Length);
+                byteRecv = client.socket.Receive(messageReceived);
+                if (byteRecv <= 0) continue;
+                else break;
+            }
 
-        //    BinaryReader br;
-        //    try
-        //    {
-        //        br = new BinaryReader(new FileStream(str, FileMode.Open, FileAccess.Read));
-        //        while (br.BaseStream.Position != br.BaseStream.Length) {
-        //            byte[] fileSent = new byte[8196];
-        //            fileSent = br.ReadBytes(8196);
-        //            int fileByteSent = client.socket.Send(messageSent);
-        //        }
+            if (Array.Equals(Encoding.ASCII.GetString(messageReceived, 0, byteRecv), "ID or Password is incorrect") == true)
+                return false;
 
-        //        br.Close();
-        //        string temp = "end";
-        //        messageSent = Encoding.ASCII.GetBytes(temp);
-        //        byteSent = client.socket.Send(messageSent); 
-        //    }
-        //    catch (IOException e)
-        //    {
-        //        Console.WriteLine(e.Message);
-        //        return;
-        //    }
-        //}
+            return true;
+        }
 
     }
 }

@@ -302,7 +302,7 @@
             <ImageBrush ImageSource="Assets/background4.png" Stretch="UniformToFill"/>
         </StackPanel.Background>
         <Grid x:Name="WorkingGrid" Height="78.4">
-            <Button x:Name="ExitButton2" Style="{StaticResource MyButton}" HorizontalAlignment="Left" Height="30" Margin="848.798,22,0,0" VerticalAlignment="Top" Width="30" FontWeight="Bold" FontSize="16" Foreground="#FF121111" BorderBrush="{x:Null}" 
+            <Button x:Name="ExitButton2" Style="{StaticResource MyButton}" HorizontalAlignment="Left" Height="30" Margin="863.798,22,0,0" VerticalAlignment="Top" Width="30" FontWeight="Bold" FontSize="16" Foreground="#FF121111" BorderBrush="{x:Null}" 
                 Click="CloseButton_Click">
                 <Button.Background>
                     <ImageBrush ImageSource="Assets/close2.png" Stretch="Uniform"/>
@@ -311,14 +311,14 @@
             <TextBlock x:Name="ProfileName" HorizontalAlignment="Left" Height="30" Margin="81.4,13,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="182.4" FontSize="18" Padding="0,7,0,0" Foreground="Black"><Run Text="Name"/></TextBlock>
             <Label x:Name="Login_time" Content="{Binding CurrentTime}" HorizontalAlignment="Left" Height="25" Margin="81.4,43,0,0" VerticalAlignment="Top" Width="284" Background="{x:Null}" Padding="0,0,5,5" FontSize="14" FontWeight="Normal" Foreground="Black"/>
             <Image x:Name="Profile_photo" HorizontalAlignment="Left" Height="43.6" VerticalAlignment="Top" Width="43.6" Margin="23.8,13,0,0" Source="Assets/5.jpg" Stretch="UniformToFill"/>
-            <Button x:Name="LogoutBtn" Content="Button" HorizontalAlignment="Left" Height="38.415" Margin="741.537,18.185,0,0" VerticalAlignment="Top" Width="73.626" BorderBrush="#FFF9F7F7" Style="{StaticResource MainButton}" Click="LogoutButton_Click">
+            <Button x:Name="LogoutBtn" Content="Button" HorizontalAlignment="Left" Height="30" Margin="803.037,22,0,0" VerticalAlignment="Top" Width="41.226" BorderBrush="#FFF9F7F7" Style="{StaticResource MainButton}" Click="LogoutButton_Click">
                 <Button.Background>
                     <ImageBrush ImageSource="Assets/sign-out.png" Stretch="Uniform"/>
                 </Button.Background>
             </Button>
         </Grid>
         <Path x:Name="LineSeperator" Data="M10,75.3 L930,75.3" Fill="#FF0F0FA8" HorizontalAlignment="Left" Height="1" Margin="10,0,-1,0" Stretch="Fill" Stroke="#FF0F0FA8" Width="900"/>
-        <StackPanel x:Name="PreChatPanel" HorizontalAlignment="Left" Height="642.1" VerticalAlignment="Top" Width="930">
+        <StackPanel x:Name="PreChatPanel" HorizontalAlignment="Left" Height="642.1" VerticalAlignment="Top" Width="930" Visibility="Collapsed">
             <Grid x:Name="PreChatGrid" Height="642.1">
                 <Button x:Name="PrivateChatBtn" Content="Button" HorizontalAlignment="Left" Height="62.142" Margin="342.5,178.762,0,0" VerticalAlignment="Top" Width="223.534" BorderBrush="#FF050505" Style="{StaticResource MainButton}"
                         Click="EnterPrivateChat">
@@ -347,29 +347,21 @@
         </StackPanel>
         <StackPanel x:Name="PrivateChatPanel" HorizontalAlignment="Left" Height="642.1" Width="930" Visibility="Collapsed">
             <Grid x:Name="PrivateChatInfoGrid" Height="642.1" Visibility="Collapsed">
-                <TextBox x:Name="IPAddress_server_pr" HorizontalAlignment="Left" Height="32" Margin="336.8,114.1,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="309.6" FontSize="14" VerticalContentAlignment="Center" BorderBrush="#FF253CE2" Background="{x:Null}" SelectionBrush="{x:Null}" SelectionTextBrush="{x:Null}" Style="{DynamicResource IPAddTemplate}"/>
-                <RadioButton x:Name="Encr_No" Content="RadioButton" HorizontalAlignment="Left" Height="19.934" Margin="518.8,350.634,0,0" VerticalAlignment="Top" Width="25.134" Style="{DynamicResource Encr_yes}"/>
-                <RadioButton x:Name="Encr_Yes" Content="RadioButton" HorizontalAlignment="Left" Height="19.934" Margin="395.8,350.634,0,0" VerticalAlignment="Top" Width="25.134" Style="{DynamicResource Encr_yes}"/>
-                <TextBlock HorizontalAlignment="Left" Height="19.934" Margin="548.934,350.634,0,0" TextWrapping="Wrap" Text="No" VerticalAlignment="Top" Width="44.8" FontWeight="SemiBold" Foreground="Black"/>
-                <TextBlock HorizontalAlignment="Left" Height="19.934" Margin="425.934,350.634,0,0" TextWrapping="Wrap" Text="Yes" VerticalAlignment="Top" Width="56" FontWeight="SemiBold" Foreground="Black"/>
-                <TextBlock HorizontalAlignment="Left" Margin="226.8,123.1,0,503.04" TextWrapping="Wrap" Text="Server IP Address:" Width="105" FontWeight="Bold" VerticalAlignment="Center" Foreground="Black"/>
-                <TextBlock HorizontalAlignment="Left" Margin="212.4,193.52,0,416.66" TextWrapping="Wrap" Text="Friend's Username:" Width="119.4" FontWeight="Bold" VerticalAlignment="Center" Foreground="Black"/>
-                <TextBlock HorizontalAlignment="Left" Margin="226.8,280.7,0,345.44" TextWrapping="Wrap" Text="Port:" Width="105" FontWeight="Bold" VerticalAlignment="Center" TextAlignment="Center" Foreground="Black"/>
-                <TextBox x:Name="IPAddress_Private" HorizontalAlignment="Left" Height="32" Margin="336.8,193.5,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="309.6" FontSize="14" VerticalContentAlignment="Center" BorderBrush="#FF253CE2" Background="{x:Null}" SelectionBrush="{x:Null}" SelectionTextBrush="{x:Null}" Style="{DynamicResource IPAddTemplate}"/>
-                <TextBox x:Name="Port_pr" HorizontalAlignment="Left" Height="32" Margin="336.8,271.7,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="309.6" FontSize="14" VerticalContentAlignment="Center" BorderBrush="#FF253CE2" Background="{x:Null}" SelectionBrush="{x:Null}" SelectionTextBrush="{x:Null}" Style="{DynamicResource IPAddTemplate}"/>
-                <TextBlock HorizontalAlignment="Left" Margin="226.8,349.301,0,276.839" TextWrapping="Wrap" Text="Encrypt Message:" Width="105" FontWeight="Bold" VerticalAlignment="Center" TextAlignment="Center" Foreground="Black"/>
-                <Button x:Name="ConnectChat_pr" HorizontalAlignment="Left" Height="35.2" Margin="484.934,493,0,0" VerticalAlignment="Top" Width="148.134" BorderBrush="{x:Null}" FontWeight="SemiBold" FontSize="14" 
+                <TextBlock HorizontalAlignment="Left" Margin="212.4,276.5,0,349.64" TextWrapping="Wrap" Text="Friend's Username:" Width="119.4" FontWeight="Bold" VerticalAlignment="Center" Foreground="Black"/>
+                <TextBox x:Name="IPAddress_Private" HorizontalAlignment="Left" Height="32" Margin="336.8,268.5,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="309.6" FontSize="14" VerticalContentAlignment="Center" BorderBrush="{x:Null}" Background="#FFBCC8D6" SelectionBrush="{x:Null}" SelectionTextBrush="{x:Null}" Style="{DynamicResource IPAddTemplate}"/>
+                <Button x:Name="ConnectChat_pr" HorizontalAlignment="Left" Height="35.2" Margin="414.734,340.6,0,0" VerticalAlignment="Top" Width="148.134" BorderBrush="{x:Null}" FontWeight="SemiBold" FontSize="14" 
                     Style="{StaticResource MyButton}" Click="ConnectPrivateChat">
                     <Button.Background>
                         <ImageBrush ImageSource="Assets/next2.png" Stretch="Uniform"/>
                     </Button.Background>
                 </Button>
-                <Button x:Name="returnPage_pr" HorizontalAlignment="Left" Height="35.2" Margin="336.8,493,0,0" VerticalAlignment="Top" Width="148.134" BorderBrush="{x:Null}" FontWeight="SemiBold" FontSize="14" 
+                <Button x:Name="returnPage_pr" HorizontalAlignment="Left" Height="35.2" Margin="10,10,0,0" VerticalAlignment="Top" Width="77.334" BorderBrush="{x:Null}" FontWeight="SemiBold" FontSize="14" 
                     Style="{StaticResource MyButton}" Panel.ZIndex="2" Click="ReturnOptions">
                     <Button.Background>
                         <ImageBrush ImageSource="Assets/next-reverse.png" Stretch="Uniform"/>
                     </Button.Background>
                 </Button>
+                <TextBlock x:Name="pr_warning" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="342.71,418.8,-646.4,0" Height="27.96" Width="303.69" FontSize="16" Foreground="Red" FontWeight="Bold" TextAlignment="Center"/>
             </Grid>
             <Grid x:Name="PrivateChatMain" Height="641.1" Visibility="Collapsed">
                 <Grid x:Name="MainGrid_pr" HorizontalAlignment="Left" Height="631.1" VerticalAlignment="Top" Width="930" Margin="0,10,0,0">
@@ -398,27 +390,16 @@
         </StackPanel>
         <StackPanel x:Name="GroupChatPanel" HorizontalAlignment="Left" Height="642.1" Width="930" Visibility="Collapsed">
             <Grid x:Name="GroupChatInfoGrid" Height="642.1" Visibility="Collapsed">
-                <TextBox x:Name="IPAddress_server_gr" HorizontalAlignment="Left" Height="32" Margin="336.8,154.1,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="309.6" FontSize="14" VerticalContentAlignment="Center" BorderBrush="#FF253CE2" Background="{x:Null}" SelectionBrush="{x:Null}" SelectionTextBrush="{x:Null}" Style="{DynamicResource IPAddTemplate}"/>
-                <RadioButton x:Name="Encr_No2" Content="RadioButton" HorizontalAlignment="Left" Height="19.934" Margin="518.8,350.634,0,0" VerticalAlignment="Top" Width="25.134" Style="{DynamicResource Encr_yes}"/>
-                <RadioButton x:Name="Encr_Yes2" Content="RadioButton" HorizontalAlignment="Left" Height="19.934" Margin="395.8,350.634,0,0" VerticalAlignment="Top" Width="25.134" Style="{DynamicResource Encr_yes}"/>
-                <TextBlock HorizontalAlignment="Left" Height="19.934" Margin="548.934,350.634,0,0" TextWrapping="Wrap" Text="No" VerticalAlignment="Top" Width="44.8" FontWeight="SemiBold" Foreground="Black"/>
-                <TextBlock HorizontalAlignment="Left" Height="19.934" Margin="425.934,350.634,0,0" TextWrapping="Wrap" Text="Yes" VerticalAlignment="Top" Width="56" FontWeight="SemiBold" Foreground="Black"/>
-                <TextBlock HorizontalAlignment="Left" Margin="226.8,163.1,0,463.04" TextWrapping="Wrap" Text="Room ID" Width="105" FontWeight="Bold" VerticalAlignment="Center" Foreground="Black" TextAlignment="Center"/>
-                <TextBlock HorizontalAlignment="Left" Margin="226.8,260.7,0,365.44" TextWrapping="Wrap" Text="Port:" Width="105" FontWeight="Bold" VerticalAlignment="Center" TextAlignment="Center" Foreground="Black"/>
-                <TextBox x:Name="Port_gr" HorizontalAlignment="Left" Height="32" Margin="336.8,251.7,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="309.6" FontSize="14" VerticalContentAlignment="Center" BorderBrush="#FF253CE2" Background="{x:Null}" SelectionBrush="{x:Null}" SelectionTextBrush="{x:Null}" Style="{DynamicResource IPAddTemplate}"/>
-                <TextBlock HorizontalAlignment="Left" Margin="226.8,349.301,0,276.839" TextWrapping="Wrap" Text="Encrypt Message:" Width="105" FontWeight="Bold" VerticalAlignment="Center" TextAlignment="Center" Foreground="Black"/>
-                <Button x:Name="ConnectChat_gr" HorizontalAlignment="Left" Height="35.2" Margin="484.934,493,0,0" VerticalAlignment="Top" Width="148.134" BorderBrush="{x:Null}" FontWeight="SemiBold" FontSize="14" 
-                    Style="{StaticResource MyButton}" Click="ConnectGroupChat">
-                    <Button.Background>
-                        <ImageBrush ImageSource="Assets/next2.png" Stretch="Uniform"/>
-                    </Button.Background>
-                </Button>
-                <Button x:Name="returnPage_gr" HorizontalAlignment="Left" Height="35.2" Margin="336.8,493,-484.934,0" VerticalAlignment="Top" Width="148.134" BorderBrush="{x:Null}" FontWeight="SemiBold" FontSize="14" 
+                <TextBox x:Name="IPAddress_server_gr" HorizontalAlignment="Left" Height="32" Margin="336.8,244.1,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="309.6" FontSize="16" VerticalContentAlignment="Center" BorderBrush="{x:Null}" Background="#FFBCC8D6" SelectionBrush="{x:Null}" SelectionTextBrush="{x:Null}" Style="{DynamicResource IPAddTemplate}"/>
+                <TextBlock HorizontalAlignment="Left" Margin="226.8,253.1,0,373.04" TextWrapping="Wrap" Text="Room ID:" Width="105" FontWeight="Bold" VerticalAlignment="Center" Foreground="Black" TextAlignment="Center" FontSize="16"/>
+                <Button x:Name="returnPage_gr" HorizontalAlignment="Left" Height="35.2" Margin="10,10,0,0" VerticalAlignment="Top" Width="74.934" BorderBrush="{x:Null}" FontWeight="SemiBold" FontSize="14" 
                     Style="{StaticResource MyButton}" Click="_ReturnOptions">
                     <Button.Background>
                         <ImageBrush ImageSource="Assets/next-reverse.png" Stretch="Uniform"/>
                     </Button.Background>
                 </Button>
+                <Button Content="Create Room Chat" HorizontalAlignment="Left" Height="38.4" Margin="405,323.2,0,0" VerticalAlignment="Top" Width="159.6" Background="{x:Null}" BorderBrush="Black" FontSize="16" FontWeight="SemiBold"/>
+                <TextBlock x:Name="gr_warning" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="342.71,418.8,0,0" Height="27.96" Width="303.69" FontSize="16" Foreground="Red" FontWeight="Bold" TextAlignment="Center"/>
             </Grid>
             <Grid x:Name="GroupChatMain" HorizontalAlignment="Left" Height="642.1" VerticalAlignment="Top" Width="930" Visibility="Collapsed">
                 <Grid x:Name="MainGrid_gr" HorizontalAlignment="Left" Height="631.1" VerticalAlignment="Top" Width="930" Margin="0,10,0,0">
@@ -442,13 +423,13 @@
                 </Grid>
             </Grid>
         </StackPanel>
-        <StackPanel x:Name="MoreOptPanel" HorizontalAlignment="Left" Height="642.1" Width="930" Visibility="Collapsed">
+        <StackPanel x:Name="MoreOptPanel" HorizontalAlignment="Left" Height="642.1" Width="930">
             <Grid x:Name="MoreOptGrid" Height="640.1">
-                <Button x:Name="Change_Pass" Content="Change Password" HorizontalAlignment="Left" Height="50.4" Margin="361.4,129.7,0,0" VerticalAlignment="Top" Width="241.2" Style="{DynamicResource MoreOpt_Button_Template}" Background="{x:Null}" BorderBrush="#FF1B51BD" FontSize="16"/>
+                <Button x:Name="Change_Pass" Content="Change Password" HorizontalAlignment="Left" Height="50.4" Margin="361.4,159.7,0,0" VerticalAlignment="Top" Width="241.2" Style="{DynamicResource MoreOpt_Button_Template}" Background="{x:Null}" BorderBrush="Black" FontSize="16"/>
                 <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Height="42" Margin="361.4,43.3,0,0" TextWrapping="Wrap" Text="More Options" VerticalAlignment="Top" Width="241.2" FontWeight="Bold" FontSize="24" TextAlignment="Center"/>
-                <Button x:Name="CheckUsr" Content="Check User Status" HorizontalAlignment="Left" Height="50.4" Margin="361.4,237.7,0,0" VerticalAlignment="Top" Width="241.2" Style="{DynamicResource MoreOpt_Button_Template}" Background="{x:Null}" BorderBrush="#FF1B51BD" FontSize="16"/>
-                <Button x:Name="Change_Info" Content="Change Information" HorizontalAlignment="Left" Height="50.4" Margin="361.4,342.1,0,0" VerticalAlignment="Top" Width="241.2" Style="{DynamicResource MoreOpt_Button_Template}" Background="{x:Null}" BorderBrush="#FF1B51BD" FontSize="16"/>
-                <Button x:Name="returnPage_MoreOpt" Content="Connect To Chat" HorizontalAlignment="Left" Height="35.2" Margin="405.8,451,0,0" VerticalAlignment="Top" Width="148.134" BorderBrush="{x:Null}" FontWeight="SemiBold" FontSize="14" 
+                <Button x:Name="CheckUsr" Content="Check User Status" HorizontalAlignment="Left" Height="50.4" Margin="361.4,267.7,0,0" VerticalAlignment="Top" Width="241.2" Style="{DynamicResource MoreOpt_Button_Template}" Background="{x:Null}" BorderBrush="Black" FontSize="16"/>
+                <Button x:Name="Change_Info" Content="Change Information" HorizontalAlignment="Left" Height="50.4" Margin="361.4,372.1,0,0" VerticalAlignment="Top" Width="241.2" Style="{DynamicResource MoreOpt_Button_Template}" Background="{x:Null}" BorderBrush="Black" FontSize="16"/>
+                <Button x:Name="returnPage_MoreOpt" Content="Connect To Chat" HorizontalAlignment="Left" Height="35.2" Margin="10,10,0,0" VerticalAlignment="Top" Width="58.134" BorderBrush="{x:Null}" FontWeight="SemiBold" FontSize="14" 
                     Style="{StaticResource MyButton}" Panel.ZIndex="2" Click="ReturnMainOptions">
                     <Button.Background>
                         <ImageBrush ImageSource="Assets/next-reverse.png" Stretch="Uniform"/>

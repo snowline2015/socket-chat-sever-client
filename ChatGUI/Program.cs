@@ -19,8 +19,6 @@ namespace ConvertedCode
 
     public class Client
     {
-        private volatile bool stop_flag = false;
-
         public void ShutDownAndClose(ref client_type client)
         {
             client.socket.Shutdown(SocketShutdown.Both);
@@ -41,6 +39,7 @@ namespace ConvertedCode
                 {
                     client.socket.Connect(end);
                     isConnected = true;
+                    
                 }
                 catch
                 {
@@ -126,7 +125,7 @@ namespace ConvertedCode
 
             while (true)
             {
-                str = Console.ReadLine();       // Nhap chat
+                str = Console.ReadLine();
 
                 //Encryt message before send
                 //sent_message = string_to_hex(sent_message);
@@ -149,9 +148,12 @@ namespace ConvertedCode
 
             byte[] messageReceived = new byte[4096];
             int byteRecv = client.socket.Receive(messageReceived);
+            //string str = Encoding.ASCII.GetString(messageReceived, 0, byteRecv);
+
 
             if (Array.Equals(Encoding.ASCII.GetString(messageReceived, 0, byteRecv), "OK\0") == false)
                 return false;
+
 
             messageSent = Encoding.ASCII.GetBytes(id);
             byteSent = client.socket.Send(messageSent);
@@ -173,93 +175,8 @@ namespace ConvertedCode
                 else break;
             }
 
-            if (Array.Equals(Encoding.ASCII.GetString(messageReceived, 0, byteRecv), "ID or Password is incorrect\0") == true)
+            if (Array.Equals(Encoding.ASCII.GetString(messageReceived, 0, byteRecv), "ID or Password is incorrect") == true)
                 return false;
-
-            return true;
-        }
-
-        public bool Register(client_type client, string username, string password, string fullname, string birthday, string email)
-        {
-            byte[] messageSent = Encoding.ASCII.GetBytes("register\0");
-            int byteSent = client.socket.Send(messageSent);
-
-            byte[] messageReceived = new byte[4096];
-            int byteRecv = client.socket.Receive(messageReceived);
-
-            if (Array.Equals(Encoding.ASCII.GetString(messageReceived, 0, byteRecv), "OK\0") == false)
-                return false;
-
-            messageSent = Encoding.ASCII.GetBytes(username);
-            byteSent = client.socket.Send(messageSent);
-
-            Array.Clear(messageReceived, 0, messageReceived.Length);
-            byteRecv = client.socket.Receive(messageReceived);
-
-            if (byteSent > 0)
-            {
-                if (Array.Equals(Encoding.ASCII.GetString(messageReceived, 0, byteRecv), "Username already taken\0") == false)
-                {
-                    // co nen lam gi do de in exception ra khong ?
-
-                    return false;
-                }
-            }
-            else return false;
-
-            messageSent = Encoding.ASCII.GetBytes(password);
-            byteSent = client.socket.Send(messageSent);
-
-            Array.Clear(messageReceived, 0, messageReceived.Length);
-            byteRecv = client.socket.Receive(messageReceived);
-
-            if (byteSent > 0)
-            {
-                if (Array.Equals(Encoding.ASCII.GetString(messageReceived, 0, byteRecv), "OK\0") == false)
-                    return false;
-                
-            }
-            else return false;
-
-            messageSent = Encoding.ASCII.GetBytes(fullname);
-            byteSent = client.socket.Send(messageSent);
-
-            Array.Clear(messageReceived, 0, messageReceived.Length);
-            byteRecv = client.socket.Receive(messageReceived);
-
-            if (byteSent > 0)
-            {
-                if (Array.Equals(Encoding.ASCII.GetString(messageReceived, 0, byteRecv), "OK\0") == false)
-                    return false;
-
-            }
-            else return false;
-
-            messageSent = Encoding.ASCII.GetBytes(birthday);
-            byteSent = client.socket.Send(messageSent);
-
-            Array.Clear(messageReceived, 0, messageReceived.Length);
-            byteRecv = client.socket.Receive(messageReceived);
-
-            if (byteSent > 0)
-            {
-                if (Array.Equals(Encoding.ASCII.GetString(messageReceived, 0, byteRecv), "OK\0") == false)
-                    return false;
-
-            }
-            else return false;
-
-            messageSent = Encoding.ASCII.GetBytes(email);
-            byteSent = client.socket.Send(messageSent);
-
-            Array.Clear(messageReceived, 0, messageReceived.Length);
-            byteRecv = client.socket.Receive(messageReceived);
-
-            if (byteSent > 0)
-            {
-                if (Array.Equals(Encoding.ASCII.GetString(messageReceived, 0, byteRecv), "Register successfully\0") == false)
-                    return false;
-            }
 
             return true;
         }

@@ -2,6 +2,8 @@
 using System.Data;
 using System.Data.SqlClient;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 using ConvertedCode;
 
 namespace ChatGUI
@@ -181,27 +183,57 @@ namespace ChatGUI
             }
         }
 
-        
+
 
         private void ConnectServer_Click(object sender, RoutedEventArgs e)
         {
-            ConvertedCode.client_type temp = new ConvertedCode.client_type(); ;
-            CPP.Init(ref temp, ServerIP.Text, ref success);
-
-            if (success == true)
+            if (ServerIP.Text.Length == 0)
             {
-                client = temp;
-                ServerIP.Visibility = Visibility.Collapsed;
-                ConnectServer.Visibility = Visibility.Collapsed;
-
-                Username.Visibility = Visibility.Visible;
-                Password.Visibility = Visibility.Visible;
-                LoginButton.Visibility = Visibility.Visible;
+                warning.Text = "Connection Error";
             }
             else
-                warning.Text = "Connection Error";
+            {
+                ConvertedCode.client_type temp = new ConvertedCode.client_type();
+                CPP.Init(ref temp, ServerIP.Text, ref success);
+
+                if (success == true)
+                {
+                    client = temp;
+                    ServerIP.Visibility = Visibility.Collapsed;
+                    ConnectServer.Visibility = Visibility.Collapsed;
+                    label_ip.Visibility = Visibility.Collapsed;
+
+                    Username.Visibility = Visibility.Visible;
+                    Password.Visibility = Visibility.Visible;
+                    LoginButton.Visibility = Visibility.Visible;
+                    label_username.Visibility = Visibility.Visible;
+                    label_pass.Visibility = Visibility.Visible;
+                }
+                else
+                    warning.Text = "Connection Error";
+            }
+
         }
-        
-        
+
+        #region Press Enter
+        public void EnterOk(object sender, System.Windows.Input.KeyEventArgs k)
+        {
+
+            if (Keyboard.Modifiers == ModifierKeys.Control && k.Key == Key.Return)
+            {
+                ConnectServer.Focus();
+                ConnectServer.RaiseEvent(new RoutedEventArgs(Button.ClickEvent, ConnectServer));
+            }
+        }
+
+        public void Login_Enter(object sender, KeyEventArgs k)
+        {
+            if(Keyboard.Modifiers == ModifierKeys.Control && k.Key == Key.Enter)
+            {
+                LoginButton.Focus();
+                LoginButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent, LoginButton));
+            }
+        }
+        #endregion
     }
 }

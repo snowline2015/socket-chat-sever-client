@@ -260,17 +260,6 @@ void Upload_File(client_type& first_client) {
         int buffersize = stoi(string(tempmsg));
         send(first_client.socket, "OK", 3, 0);
 
-        // Use for stopping client thread
-        /*if (check == false) {
-            memset(&tempmsg, NULL, sizeof(tempmsg));
-            recv(first_client.socket, tempmsg, DEFAULT_MSG_LENGTH, 0);
-            if (strcmp(tempmsg, "resend") == 0) {
-                send(first_client.socket, "OK", 3, 0);
-                check = true;
-            }
-        }*/
-        //
-
         int iResult = recv(first_client.socket, buffer, DEFAULT_TRANSFER_BUFFER_SIZE, 0);
         if (iResult == SOCKET_ERROR)
             break;
@@ -296,4 +285,36 @@ void Upload_File(client_type& first_client) {
 
 void Download_File(client_type& client) {
 
+}
+
+void Client_Thread(SOCKET NewSockid, std::vector<client_type>& client_List, std::vector<client_type>& client, std::thread my_thread[], int temp_id) {
+    blahblah:
+    char temp[DEFAULT_MSG_LENGTH];
+    int iResult = recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
+
+    if (strcmp(temp, "register") == 0) {
+        send(NewSockid, "OK", 3, 0);
+        if (Register(NewSockid, client_List) == true) { 
+            Write_Account(client_List);
+            goto blahblah;
+        }
+
+        if (strcmp(temp, "login") == 0) {
+            std::string username;
+            send(NewSockid, "OK", 3, 0);
+            if (Login(NewSockid, client_List, username) == true) {
+                client[temp_id].Username = username;
+                memset(&temp, NULL, sizeof(temp));
+                recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
+                if (strcmp(temp, "private chat") == 0) {
+                    recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
+                    string tempo = std::string(temp);
+                    my_thread[temp_id] = std::thread(Client_Single_Chatting, std::ref(client[temp_id]), std::ref(client), std::ref(tempo), std::ref(my_thread[temp_id]));
+                }
+                else {
+                    my_thread[temp_id] = std::thread(Client_Multiple_Chatting, std::ref(client[temp_id]), std::ref(client), std::ref(my_thread[temp_id]));
+                }
+            }
+        }
+    }
 }

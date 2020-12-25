@@ -83,11 +83,6 @@ void Client_Group_Chat(client_type& client) {
         {
             getline(std::cin, str);
 
-            //Encryt message before send
-            //sent_message = string_to_hex(sent_message);
-
-
-
             if (str.compare("exit") == 0) break;    // De y dong nay, sau nay se chinh lai neu client muon out group chat
 
             int iResult = send(client.socket, str.c_str(), strlen(str.c_str()), 0);

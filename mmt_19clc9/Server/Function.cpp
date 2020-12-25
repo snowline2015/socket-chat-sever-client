@@ -1,4 +1,5 @@
 #include "Header.h"
+std::atomic<bool> stop_flag(false);
 
 void Read_Account(std::vector<client_type>& User_List) {
     std::ifstream f("Data\\Account.csv");
@@ -160,6 +161,7 @@ void Client_Multiple_Chatting(client_type& new_client, std::vector<client_type>&
     }
 
     thread.detach();
+    stop_flag.store(false);
 }
 
 void Client_Single_Chatting(client_type& first_client, std::vector<client_type>& client_array, std::string second_username, std::thread& thread) {
@@ -213,6 +215,7 @@ void Client_Single_Chatting(client_type& first_client, std::vector<client_type>&
     }
 
     thread.detach();
+    stop_flag.store(false);
 }
 
 void Upload_File(client_type& first_client) {
@@ -288,15 +291,15 @@ void Download_File(client_type& client) {
 }
 
 void Client_Thread(SOCKET NewSockid, std::vector<client_type>& client_List, std::vector<client_type>& client, std::thread my_thread[], int temp_id) {
-    blahblah:
-    char temp[DEFAULT_MSG_LENGTH];
-    int iResult = recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
+    while (true) {
+        if (stop_flag.load() == true) continue;
+        char temp[DEFAULT_MSG_LENGTH];
+        int iResult = recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
 
-    if (strcmp(temp, "register") == 0) {
-        send(NewSockid, "OK", 3, 0);
-        if (Register(NewSockid, client_List) == true) { 
-            Write_Account(client_List);
-            goto blahblah;
+        if (strcmp(temp, "register") == 0) {
+            send(NewSockid, "OK", 3, 0);
+            if (Register(NewSockid, client_List) == true)
+                Write_Account(client_List);
         }
 
         if (strcmp(temp, "login") == 0) {
@@ -309,12 +312,26 @@ void Client_Thread(SOCKET NewSockid, std::vector<client_type>& client_List, std:
                 if (strcmp(temp, "private chat") == 0) {
                     recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
                     string tempo = std::string(temp);
+                    
+                    stop_flag.store(true);
                     my_thread[temp_id] = std::thread(Client_Single_Chatting, std::ref(client[temp_id]), std::ref(client), std::ref(tempo), std::ref(my_thread[temp_id]));
                 }
                 else {
+
+                    stop_flag.store(true);
                     my_thread[temp_id] = std::thread(Client_Multiple_Chatting, std::ref(client[temp_id]), std::ref(client), std::ref(my_thread[temp_id]));
                 }
             }
+            my_thread[temp_id].join();
+        }
+        
+        if (strcmp(temp, "logout") == 0) {
+            my_thread[temp_id].detach();
+            break;
         }
     }
+}
+
+void Check_Users_Online(SOCKET NewSockid, std::vector<client_type>& User_List) {
+
 }

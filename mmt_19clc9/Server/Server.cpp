@@ -8,8 +8,7 @@ int main()
     std::vector<client_type> client(MAX_CLIENTS), client_List;
     int num_clients = 0;
     int temp_id = -1;
-    std::thread my_thread[MAX_CLIENTS];
-    std::thread temp_thread;
+    std::thread my_thread[MAX_CLIENTS], temp_thread[MAX_CLIENTS];
 
     Read_Account(client_List);
 
@@ -72,7 +71,7 @@ int main()
 
         if (temp_id != -1)
         {
-            temp_thread = std::thread(Client_Thread, std::ref(NewSockid), std::ref(client_List), std::ref(client), std::ref(my_thread), std::ref(temp_id));
+            temp_thread[temp_id] = std::thread(Client_Thread, std::ref(NewSockid), std::ref(client_List), std::ref(client), std::ref(my_thread), std::ref(temp_id));
         }
         else
         {
@@ -86,6 +85,7 @@ int main()
 
     for (int i = 0; i < MAX_CLIENTS; i++)
     {
+        temp_thread[i].detach();
         my_thread[i].detach();
         closesocket(client[i].socket);
     }

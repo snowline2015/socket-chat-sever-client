@@ -71,7 +71,7 @@ int main()
 
         if (temp_id != -1)
         {
-            temp_thread[temp_id] = std::thread(Client_Thread, std::ref(NewSockid), std::ref(client_List), std::ref(client), std::ref(my_thread), std::ref(temp_id));
+            temp_thread[temp_id] = std::thread(Client_Thread, NewSockid, std::ref(client_List), std::ref(client), std::ref(my_thread), temp_id);
         }
         else
         {

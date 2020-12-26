@@ -71,7 +71,7 @@ int main()
 
         if (temp_id != -1)
         {
-            temp_thread[temp_id] = std::thread(Client_Thread, NewSockid, std::ref(client_List), std::ref(client), std::ref(my_thread), temp_id);
+            temp_thread[temp_id] = std::thread(Client_Thread, NewSockid, std::ref(client_List), std::ref(client), std::ref(my_thread), temp_id, std::ref(temp_thread[temp_id]));
         }
         else
         {
@@ -79,7 +79,6 @@ int main()
             send(NewSockid, msg.c_str(), strlen(msg.c_str()), 0);
         }
     }
-
 
     closesocket(sockid);
 

@@ -319,7 +319,14 @@ namespace ConvertedCode
 
         public void Check_Users_Online(client_type client, ref string[] client_array) 
         {
+            byte[] messageSent = Encoding.ASCII.GetBytes("-check-users\0");
+            int byteSent = client.socket.Send(messageSent);
 
+            byte[] messageReceived = new byte[4096];
+            int byteRecv = client.socket.Receive(messageReceived);
+
+            string temp = BitConverter.ToString(messageReceived);
+            client_array = temp.Split('\0');
         }
     }
 }

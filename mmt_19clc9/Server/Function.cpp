@@ -291,7 +291,7 @@ void Download_File(client_type& client) {
 
 }
 
-void Client_Thread(SOCKET NewSockid, std::vector<client_type>& client_List, std::vector<client_type>& client, std::thread my_thread[], int temp_id) {
+void Client_Thread(SOCKET NewSockid, std::vector<client_type>& client_List, std::vector<client_type>& client, std::thread my_thread[], int temp_id, std::thread& thread) {
     while (true) {
         if (stop_client_thread_flag.load() == true) continue;
         char temp[DEFAULT_MSG_LENGTH];
@@ -310,13 +310,28 @@ void Client_Thread(SOCKET NewSockid, std::vector<client_type>& client_List, std:
                 client[temp_id].Username = username;
                 memset(&temp, NULL, sizeof(temp));
                 recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
-                if (strcmp(temp, "private chat") == 0) {
+
+                if (strcmp(temp, "logout") == 0) {
+                    if (my_thread[temp_id].joinable())
+                        my_thread[temp_id].detach();
+                    closesocket(client[temp_id].socket);
+                    client[temp_id].socket = INVALID_SOCKET;
+                    break;
+                }
+
+                else if (strcmp(temp, "private chat") == 0) {
                     stop_client_thread_flag.store(true);
+
+                    // Receive check user command
                     recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
+
+                    Check_Users_Online(NewSockid, client);
+
+                    // receive online-user username
+                    memset(&temp, NULL, sizeof(temp));
+                    recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
+
                     string tempo = std::string(temp);
-                    
-
-
                     
                     my_thread[temp_id] = std::thread(Client_Single_Chatting, std::ref(client[temp_id]), std::ref(client), std::ref(tempo), std::ref(my_thread[temp_id]));
                 }
@@ -332,14 +347,9 @@ void Client_Thread(SOCKET NewSockid, std::vector<client_type>& client_List, std:
             }
             my_thread[temp_id].join();
         }
-        
-        if (strcmp(temp, "logout") == 0) {
-            my_thread[temp_id].detach();
-            closesocket(client[temp_id].socket);
-            client[temp_id].socket = INVALID_SOCKET;
-            break;
-        }
     }
+
+    thread.detach();
 }
 
 void Check_Users_Online(SOCKET NewSockid, std::vector<client_type>& User_List) {

@@ -187,7 +187,11 @@ namespace ChatGUI
 
         private void ConnectServer_Click(object sender, RoutedEventArgs e)
         {
-            if (ServerIP.Text.Length == 0)
+            if (warning.Text != "")
+            {
+                warning.Text = "";
+            }
+            else if (ServerIP.Text.Length == 0)
             {
                 warning.Text = "Connection Error";
             }

@@ -32,20 +32,18 @@ namespace ConvertedCode
             IPEndPoint end = new IPEndPoint(ip, 50000);
             client.socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
-            isConnected = false;
-            while (!isConnected)
+            IAsyncResult result = client.socket.BeginConnect(ip, 50000, null, null);
+            result.AsyncWaitHandle.WaitOne(3000, true);
+
+            if (client.socket.Connected)
             {
-                try
-                {
-                    client.socket.Connect(end);
-                    isConnected = true;
-                    
-                }
-                catch
-                {
-                    System.Threading.Thread.Sleep(2000);
-                }
+                isConnected = true;
             }
+            else
+            {
+                isConnected = false;
+            }
+
         }
 
         public void Client_Thread(ref client_type new_client)

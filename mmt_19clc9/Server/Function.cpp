@@ -1,5 +1,6 @@
 #include "Header.h"
-std::atomic<bool> stop_flag(false);
+std::atomic<bool> stop_client_thread_flag(false);
+std::atomic<bool> stop_chatting_for_uploading_flag(false);
 
 void Read_Account(std::vector<client_type>& User_List) {
     std::ifstream f("Data\\Account.csv");
@@ -161,7 +162,7 @@ void Client_Multiple_Chatting(client_type& new_client, std::vector<client_type>&
     }
 
     thread.detach();
-    stop_flag.store(false);
+    stop_client_thread_flag.store(false);
 }
 
 void Client_Single_Chatting(client_type& first_client, std::vector<client_type>& client_array, std::string second_username, std::thread& thread) {
@@ -215,7 +216,7 @@ void Client_Single_Chatting(client_type& first_client, std::vector<client_type>&
     }
 
     thread.detach();
-    stop_flag.store(false);
+    stop_client_thread_flag.store(false);
 }
 
 void Upload_File(client_type& first_client) {
@@ -292,7 +293,7 @@ void Download_File(client_type& client) {
 
 void Client_Thread(SOCKET NewSockid, std::vector<client_type>& client_List, std::vector<client_type>& client, std::thread my_thread[], int temp_id) {
     while (true) {
-        if (stop_flag.load() == true) continue;
+        if (stop_client_thread_flag.load() == true) continue;
         char temp[DEFAULT_MSG_LENGTH];
         int iResult = recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
 
@@ -310,15 +311,22 @@ void Client_Thread(SOCKET NewSockid, std::vector<client_type>& client_List, std:
                 memset(&temp, NULL, sizeof(temp));
                 recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
                 if (strcmp(temp, "private chat") == 0) {
+                    stop_client_thread_flag.store(true);
                     recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
                     string tempo = std::string(temp);
                     
-                    stop_flag.store(true);
+
+
+                    
                     my_thread[temp_id] = std::thread(Client_Single_Chatting, std::ref(client[temp_id]), std::ref(client), std::ref(tempo), std::ref(my_thread[temp_id]));
                 }
                 else {
+                    stop_client_thread_flag.store(true);
 
-                    stop_flag.store(true);
+
+
+
+
                     my_thread[temp_id] = std::thread(Client_Multiple_Chatting, std::ref(client[temp_id]), std::ref(client), std::ref(my_thread[temp_id]));
                 }
             }
@@ -327,11 +335,18 @@ void Client_Thread(SOCKET NewSockid, std::vector<client_type>& client_List, std:
         
         if (strcmp(temp, "logout") == 0) {
             my_thread[temp_id].detach();
+            closesocket(client[temp_id].socket);
+            client[temp_id].socket = INVALID_SOCKET;
             break;
         }
     }
 }
 
 void Check_Users_Online(SOCKET NewSockid, std::vector<client_type>& User_List) {
-
+    std::string str = "";
+    for (int i = 0; i < MAX_CLIENTS; i++) 
+        if (User_List[i].socket != INVALID_SOCKET && User_List[i].Username != "")
+            str.append(User_List[i].Username + "\n");
+        
+    send(NewSockid, str.c_str(), strlen(str.c_str()), 0);
 }

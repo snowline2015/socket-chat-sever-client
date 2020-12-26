@@ -41,6 +41,8 @@ namespace ChatGUI
         public void LogoutButton_Click(object sender, RoutedEventArgs e)
         {
             LoginWindow login = new LoginWindow();
+            byte[] messageSent = Encoding.ASCII.GetBytes("logout\0");
+            int byteSent = LoginWindow.client.socket.Send(messageSent);
             login.Show();
             this.Close();
         }

@@ -6,6 +6,7 @@ using System.Windows;
 using ConvertedCode;
 using AESEncryption;
 using System.Text;
+using System.Threading;
 
 namespace ChatGUI
 {
@@ -22,6 +23,38 @@ namespace ChatGUI
 
         //private readonly LoginWindow login = new LoginWindow();
         string[] pathArr = new string[10];
+        string[] user_list = new string[10];
+
+        private void TakeUserList()
+        {
+            Array.Clear(user_list, 0, user_list.Length);
+            ChatGUI.LoginWindow.CPP.Check_Users_Online(ChatGUI.LoginWindow.client, ref user_list);
+            foreach (string str in user_list)
+            {
+                if (str.Equals(ChatGUI.LoginWindow._friend) == false)
+                    list_friend_pr.Items.Add(str);
+            }  
+        }
+
+        private void SelectUser()
+        {
+            while (true)
+            {
+                if (list_friend_pr.SelectedIndex != -1)
+                {
+                    string _Friend = "";
+                    object selected = this.list_friend_pr.SelectedItem;
+
+                    _Friend = selected.ToString();
+                    byte[] messageSent = Encoding.ASCII.GetBytes(_Friend);
+                    int byteSent = (ChatGUI.LoginWindow.client.socket.Send(messageSent));
+                    break;
+                }
+
+                Thread.Sleep(2000);
+                TakeUserList();
+            }   
+        }
 
         public void OnOpenDialog(object sender, RoutedEventArgs e)
         {
@@ -41,16 +74,23 @@ namespace ChatGUI
         public void LogoutButton_Click(object sender, RoutedEventArgs e)
         {
             LoginWindow login = new LoginWindow();
+            byte[] messageSent = Encoding.ASCII.GetBytes("logout\0");
+            int byteSent = LoginWindow.client.socket.Send(messageSent);
             login.Show();
             this.Close();
         }
 
         private void EnterPrivateChat(object sender, RoutedEventArgs e)
         {
+            byte[] messageSent = Encoding.ASCII.GetBytes("private chat\0");
+            int byteSent = LoginWindow.client.socket.Send(messageSent);
+
             if (PreChatPanel.Visibility == Visibility.Visible)
                 PreChatPanel.Visibility = Visibility.Collapsed;
             PrivateChatPanel.Visibility = Visibility.Visible;
             PrivateChatInfoGrid.Visibility = Visibility.Visible;
+
+            this.TakeUserList();
         }
 
         private void EnterGroupChat(object sender, RoutedEventArgs e)
@@ -75,13 +115,12 @@ namespace ChatGUI
 
         private void ConnectPrivateChat(object sender, RoutedEventArgs e)
         {
+            this.SelectUser();
             if (PrivateChatInfoGrid.Visibility == Visibility.Visible)
                 PrivateChatInfoGrid.Visibility = Visibility.Collapsed;
 
-            byte[] messageSent = Encoding.ASCII.GetBytes("private chat\0");
-            int byteSent = LoginWindow.client.socket.Send(messageSent);
             PrivateChatMain.Visibility = Visibility.Visible;
-
+            LoginWindow.CPP.Start_Client_Private_Chat(LoginWindow.client);
         }
 
         private void ReturnOptions(object sender, RoutedEventArgs e)
@@ -122,7 +161,14 @@ namespace ChatGUI
                 PrivateChat.Items.Add("[" + DateTime.Now.ToString("HH:mm") +"] Me: " + ChatBox_pr.Text + "\n");
                 PrivateChat.SelectedIndex = PrivateChat.Items.Count - 1;
                 ChatBox_pr.Text = "";
+
+                LoginWindow.CPP.Client_Send(ChatGUI.LoginWindow.client, ChatBox_pr.Text);
             }
+        }
+
+        private void EndChat_Click(object sender, RoutedEventArgs e)
+        {
+            LoginWindow.CPP.End_Client_Private_Chat(LoginWindow.client);
         }
 
         public static void AddListboxItems(string item)

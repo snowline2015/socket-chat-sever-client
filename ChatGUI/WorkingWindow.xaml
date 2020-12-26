@@ -318,7 +318,7 @@
             </Button>
         </Grid>
         <Path x:Name="LineSeperator" Data="M10,75.3 L930,75.3" Fill="#FF0F0FA8" HorizontalAlignment="Left" Height="1" Margin="10,0,-1,0" Stretch="Fill" Stroke="#FF0F0FA8" Width="900"/>
-        <StackPanel x:Name="PreChatPanel" HorizontalAlignment="Left" Height="642.1" VerticalAlignment="Top" Width="930" Visibility="Collapsed">
+        <StackPanel x:Name="PreChatPanel" HorizontalAlignment="Left" Height="642.1" VerticalAlignment="Top" Width="930">
             <Grid x:Name="PreChatGrid" Height="642.1">
                 <Button x:Name="PrivateChatBtn" Content="Button" HorizontalAlignment="Left" Height="62.142" Margin="342.5,178.762,0,0" VerticalAlignment="Top" Width="223.534" BorderBrush="#FF050505" Style="{StaticResource MainButton}"
                         Click="EnterPrivateChat">
@@ -345,8 +345,8 @@
                 <Label x:Name="label2" Content="Please choose an option" HorizontalAlignment="Left" Height="44.7" Margin="271.6,93.662,0,0" VerticalAlignment="Top" Width="351.7" Background="{x:Null}" HorizontalContentAlignment="Center" FontSize="20"/>
             </Grid>
         </StackPanel>
-        <StackPanel x:Name="PrivateChatPanel" HorizontalAlignment="Left" Height="642.1" Width="930">
-            <Grid x:Name="PrivateChatInfoGrid" Height="642.1">
+        <StackPanel x:Name="PrivateChatPanel" HorizontalAlignment="Left" Height="642.1" Width="930" Visibility="Collapsed">
+            <Grid x:Name="PrivateChatInfoGrid" Height="642.1" Visibility="Collapsed">
                 <TextBlock HorizontalAlignment="Left" Margin="212.4,276.5,0,349.64" TextWrapping="Wrap" Text="Friend's Username:" Width="119.4" FontWeight="Bold" VerticalAlignment="Center" Foreground="Black"/>
                 <TextBox x:Name="friendname_pr" HorizontalAlignment="Left" Height="32" Margin="336.8,268.5,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="309.6" FontSize="14" VerticalContentAlignment="Center" BorderBrush="{x:Null}" Background="#FFBCC8D6" SelectionBrush="{x:Null}" SelectionTextBrush="{x:Null}" Style="{DynamicResource IPAddTemplate}"/>
                 <Button x:Name="ConnectChat_pr" HorizontalAlignment="Left" Height="35.2" Margin="414.734,340.6,0,0" VerticalAlignment="Top" Width="148.134" BorderBrush="{x:Null}" FontWeight="SemiBold" FontSize="14" 

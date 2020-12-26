@@ -18,13 +18,16 @@ namespace ChatGUI
             InitializeComponent();
         }
 
-        public ConvertedCode.Client CPP = new ConvertedCode.Client();
+        public static ConvertedCode.Client CPP = new ConvertedCode.Client();
         public static ConvertedCode.client_type client
         {
             set;
             get;
         }
+        
         bool success;
+
+        public static string _friend;
        
         //Doi vi tri cuar AttachDbFilename thanh cho luu folder ChatGUI
         String db = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\LENOVO\source\repos\ChatGUI\LoginData.mdf;Integrated Security=True";
@@ -119,6 +122,7 @@ namespace ChatGUI
 
             if(CPP.Login(client, Username.Text, Password.Password) == true)
             {
+                _friend = Username.Text;
                 if (warning.Text.Length == 0)
                     warning.Text = "";
                 work.Show();

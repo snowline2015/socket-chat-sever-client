@@ -19,6 +19,7 @@ namespace ConvertedCode
 
     public class Client
     {
+        Thread my_thread;
         public void ShutDownAndClose(ref client_type client)
         {
             client.socket.Shutdown(SocketShutdown.Both);
@@ -113,30 +114,24 @@ namespace ConvertedCode
             }
         }
 
-        public void Client_Private_Chat(client_type client)
+        public void Start_Client_Private_Chat(client_type client)
         {
-            string str;
-
-            Thread my_thread = new Thread(() => Client_Private_Thread(client));
+            my_thread = new Thread(() => Client_Private_Thread(client));
             my_thread.IsBackground = true;
             my_thread.Start();
+        }
 
-            while (true)
-            {
-                str = Console.ReadLine();
-
-                //Encryt message before send
-                //sent_message = string_to_hex(sent_message);
-
-                if (str.Equals("exit\0")) break;    // De y dong nay, sau nay se chinh lai neu client muon out group chat
-
-                byte[] messageSent = Encoding.ASCII.GetBytes(str);
-                int byteSent = client.socket.Send(messageSent);
-            }
-
+        public void End_Client_Private_Chat(client_type client)
+        {
             client.socket = null;
-
             my_thread.Abort();
+        }
+    
+
+        public void Client_Send(client_type client, string mess)
+        {
+            byte[] messageSent = Encoding.ASCII.GetBytes(mess);
+            int byteSent = client.socket.Send(messageSent);
         }
 
         public bool Login(client_type client, string id, string password)
@@ -325,8 +320,15 @@ namespace ConvertedCode
             byte[] messageReceived = new byte[4096];
             int byteRecv = client.socket.Receive(messageReceived);
 
-            string temp = BitConverter.ToString(messageReceived);
-            client_array = temp.Split('\0');
+            string temp = System.Text.Encoding.UTF8.GetString(messageReceived, 0, messageReceived.Length);
+            client_array = temp.Split('\n');
+
+            //for (int i = 0; i < client_array.Length; i++)
+            //{
+            //    if (client_array[i][0] == '\0')
+            //        client_array[i] = "";
+            //}
+            
         }
     }
 }

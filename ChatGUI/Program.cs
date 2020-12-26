@@ -204,7 +204,7 @@ namespace ConvertedCode
             {
                 br = new BinaryReader(new FileStream(str, FileMode.Open));      // open ifstream here
             }
-            catch 
+            catch
             {
                 return false;
             }
@@ -315,6 +315,11 @@ namespace ConvertedCode
         public bool Download_File(client_type client)
         {
             return true;
+        }
+
+        public void Check_Users_Online(client_type client, ref string[] client_array) 
+        {
+
         }
     }
 }

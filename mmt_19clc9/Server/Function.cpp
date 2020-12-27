@@ -325,12 +325,15 @@ void Client_Thread(SOCKET NewSockid, std::vector<client_type>& client_List, std:
                     // Receive check user command
                     recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
 
-                    Check_Users_Online(NewSockid, client);
+                    while (true) {
+                        Check_Users_Online(NewSockid, client);
 
-                    // receive online-user username
-                    memset(&temp, NULL, sizeof(temp));
-                    recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
+                        // receive online-user username
+                        memset(&temp, NULL, sizeof(temp));
+                        recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
 
+                        if (strcmp(temp, "-check-users") != 0) break;
+                    }
                     string tempo = std::string(temp);
                     
                     my_thread[temp_id] = std::thread(Client_Single_Chatting, std::ref(client[temp_id]), std::ref(client), std::ref(tempo), std::ref(my_thread[temp_id]));

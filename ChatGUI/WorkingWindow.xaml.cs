@@ -24,6 +24,13 @@ namespace ChatGUI
         //private readonly LoginWindow login = new LoginWindow();
         string[] pathArr = new string[10];
         string[] user_list = new string[10];
+        private static string Item;
+        public static string item
+        {
+            set { Item = value; }
+            get { return Item; }
+        }
+        string temp = Item;
 
         private void TakeUserList()
         {
@@ -171,11 +178,10 @@ namespace ChatGUI
             LoginWindow.CPP.End_Client_Private_Chat(LoginWindow.client);
         }
 
-        public static void AddListboxItems(string item)
+        public void AddListboxItems()
         {
-            WorkingWindow win = new WorkingWindow();
-            win.PrivateChat.Items.Add("[" + DateTime.Now.ToString("HH:mm") + "]" + item);
-            win.PrivateChat.SelectedIndex = win.PrivateChat.Items.Count - 1;
+            PrivateChat.Items.Add("[" + DateTime.Now.ToString("HH:mm") + "]" + temp);
+            PrivateChat.SelectedIndex = PrivateChat.Items.Count - 1;
         }
     }
 

@@ -109,7 +109,7 @@ namespace ConvertedCode
                     byte[] messageReceived = new byte[4096];
                     int byteRecv = new_client.socket.Receive(messageReceived);
                     string str = Encoding.ASCII.GetString(messageReceived, 0, byteRecv);
-                    WorkingWindow.AddListboxItems(str);
+                    WorkingWindow.item = str;
                 }
             }
         }

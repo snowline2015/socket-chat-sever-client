@@ -27,18 +27,17 @@ namespace ChatGUI
         private static string Item;
         public static string item
         {
-            set { Item = value; }
-            get { return Item; }
+            set => Item = value;
+            get => Item;
         }
-        string temp = Item;
 
         private void TakeUserList()
         {
             Array.Clear(user_list, 0, user_list.Length);
-            ChatGUI.LoginWindow.CPP.Check_Users_Online(ChatGUI.LoginWindow.client, ref user_list);
+            LoginWindow.CPP.Check_Users_Online(LoginWindow.client, ref user_list);
             foreach (string str in user_list)
             {
-                if (str.Equals(ChatGUI.LoginWindow._friend) == false)
+                if (str.Equals(LoginWindow._friend) == false)
                     list_friend_pr.Items.Add(str);
             }  
         }
@@ -54,11 +53,11 @@ namespace ChatGUI
 
                     _Friend = selected.ToString();
                     byte[] messageSent = Encoding.ASCII.GetBytes(_Friend);
-                    int byteSent = (ChatGUI.LoginWindow.client.socket.Send(messageSent));
+                    int byteSent = LoginWindow.client.socket.Send(messageSent);
                     break;
                 }
 
-                Thread.Sleep(2000);
+                Thread.Sleep(1500);
                 TakeUserList();
             }   
         }
@@ -169,7 +168,7 @@ namespace ChatGUI
                 PrivateChat.SelectedIndex = PrivateChat.Items.Count - 1;
                 ChatBox_pr.Text = "";
 
-                LoginWindow.CPP.Client_Send(ChatGUI.LoginWindow.client, ChatBox_pr.Text);
+                LoginWindow.CPP.Client_Send(LoginWindow.client, ChatBox_pr.Text);
             }
         }
 
@@ -180,6 +179,7 @@ namespace ChatGUI
 
         public void AddListboxItems()
         {
+            string temp = item;
             PrivateChat.Items.Add("[" + DateTime.Now.ToString("HH:mm") + "]" + temp);
             PrivateChat.SelectedIndex = PrivateChat.Items.Count - 1;
         }

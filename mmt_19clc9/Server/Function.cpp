@@ -180,12 +180,12 @@ void Client_Single_Chatting(client_type& first_client, std::vector<client_type>&
                     if (client_array[i].socket == INVALID_SOCKET) continue;
                     else if (first_client.id != i && client_array[i].Username.compare(second_username) == 0) {
 
-                        if (strcmp(tempmsg, "upload file") == 0) {
+                        if (strcmp(tempmsg, "-upload-file") == 0) {
                             Upload_File(first_client);
                             break;
                         }
 
-                        else if (strcmp(tempmsg, "download file") == 0) {
+                        else if (strcmp(tempmsg, "-download-file") == 0) {
                             Download_File(first_client);
                             break;
                         }

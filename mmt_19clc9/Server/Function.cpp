@@ -334,9 +334,10 @@ void Client_Thread(SOCKET NewSockid, std::vector<client_type>& client_List, std:
 
                         if (strcmp(temp, "-check-users") != 0) break;
                     }
+
                     string tempo = std::string(temp);
                     
-                    my_thread[temp_id] = std::thread(Client_Single_Chatting, std::ref(client[temp_id]), std::ref(client), std::ref(tempo), std::ref(my_thread[temp_id]));
+                    my_thread[temp_id] = std::thread(Client_Single_Chatting, std::ref(client[temp_id]), std::ref(client), tempo, std::ref(my_thread[temp_id]));
                 }
                 else {
                     stop_client_thread_flag.store(true);

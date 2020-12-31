@@ -24,6 +24,8 @@ namespace ChatGUI
         //private readonly LoginWindow login = new LoginWindow();
         string[] pathArr = new string[10];
         string[] user_list = new string[10];
+        public static volatile bool start_flag = false;
+        private static volatile bool logout_flag = false;
         private static string Item;
         public static string item
         {
@@ -59,7 +61,7 @@ namespace ChatGUI
 
                 Thread.Sleep(1500);
                 TakeUserList();
-            }   
+            }  
         }
 
         public void OnOpenDialog(object sender, RoutedEventArgs e)
@@ -127,6 +129,7 @@ namespace ChatGUI
 
             PrivateChatMain.Visibility = Visibility.Visible;
             LoginWindow.CPP.Start_Client_Private_Chat(LoginWindow.client);
+            Thread my_thread = new Thread(new ThreadStart(AddListboxItems));
         }
 
         private void ReturnOptions(object sender, RoutedEventArgs e)
@@ -174,14 +177,21 @@ namespace ChatGUI
 
         private void EndChat_Click(object sender, RoutedEventArgs e)
         {
+            logout_flag = true;
             LoginWindow.CPP.End_Client_Private_Chat(LoginWindow.client);
         }
 
         public void AddListboxItems()
         {
-            string temp = item;
-            PrivateChat.Items.Add("[" + DateTime.Now.ToString("HH:mm") + "]" + temp);
-            PrivateChat.SelectedIndex = PrivateChat.Items.Count - 1;
+            while (!logout_flag)
+            {
+                if (start_flag)
+                {
+                    PrivateChat.Items.Add("[" + DateTime.Now.ToString("HH:mm") + "]" + item);
+                    PrivateChat.SelectedIndex = PrivateChat.Items.Count - 1;
+                    start_flag = false;
+                }
+            }
         }
     }
 

@@ -110,6 +110,7 @@ namespace ConvertedCode
                     int byteRecv = new_client.socket.Receive(messageReceived);
                     string str = Encoding.ASCII.GetString(messageReceived, 0, byteRecv);
                     WorkingWindow.item = str;
+                    WorkingWindow.start_flag = true;
                 }
             }
         }

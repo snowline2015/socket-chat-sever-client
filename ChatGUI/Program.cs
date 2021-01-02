@@ -166,12 +166,8 @@ namespace ConvertedCode
             return true;
         }
 
-        public bool Upload_File(client_type client)
+        public bool Upload_File(client_type client, string str)
         {
-
-            // take file path
-            string str = "";        // file path here
-
 
             string fName = "";
 
@@ -206,7 +202,8 @@ namespace ConvertedCode
             int byteRecv = client.socket.Receive(messageReceived);
 
             long size = new System.IO.FileInfo(str).Length;
-            byteSent = client.socket.Send(BitConverter.GetBytes(size));
+            messageSent = Encoding.ASCII.GetBytes(size.ToString());
+            byteSent = client.socket.Send(messageSent);
 
             Array.Clear(messageReceived, 0, messageReceived.Length);
             byteRecv = client.socket.Receive(messageReceived);
@@ -227,11 +224,12 @@ namespace ConvertedCode
                         Array.Clear(messageReceived, 0, messageReceived.Length);
                         byteRecv = client.socket.Receive(messageReceived);
 
-                        byteSent = client.socket.Send(BitConverter.GetBytes(sizetemp));
+                        messageSent = Encoding.ASCII.GetBytes(sizetemp.ToString());
+                        byteSent = client.socket.Send(messageSent);
                         while (byteSent == -1)
                         {
                             Thread.Sleep(5);
-                            byteSent = client.socket.Send(BitConverter.GetBytes(sizetemp));
+                            byteSent = client.socket.Send(messageSent);
                         }
 
                         Array.Clear(messageReceived, 0, messageReceived.Length);
@@ -262,11 +260,13 @@ namespace ConvertedCode
                         Array.Clear(messageReceived, 0, messageReceived.Length);
                         byteRecv = client.socket.Receive(messageReceived);
 
-                        byteSent = client.socket.Send(BitConverter.GetBytes(512));
+                        messageSent = Encoding.ASCII.GetBytes("512");
+                        byteSent = client.socket.Send(messageSent);
+
                         while (byteSent == -1)
                         {
                             Thread.Sleep(5);
-                            byteSent = client.socket.Send(BitConverter.GetBytes(512));
+                            byteSent = client.socket.Send(messageSent);
                         }
 
                         Array.Clear(messageReceived, 0, messageReceived.Length);
@@ -314,12 +314,6 @@ namespace ConvertedCode
 
             string temp = System.Text.Encoding.UTF8.GetString(messageReceived, 0, messageReceived.Length);
             client_array = temp.Split('\n');
-
-            //for (int i = 0; i < client_array.Length; i++)
-            //{
-            //    if (client_array[i][0] == '\0')
-            //        client_array[i] = "";
-            //}
             
         }
     }

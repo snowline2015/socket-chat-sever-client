@@ -7,6 +7,7 @@ using ConvertedCode;
 using AESEncryption;
 using System.Text;
 using System.Threading;
+using System.Windows.Input;
 
 namespace ChatGUI
 {
@@ -22,18 +23,11 @@ namespace ChatGUI
         }
 
         //private readonly LoginWindow login = new LoginWindow();
-        string[] pathArr = new string[10];
         string[] user_list = new string[10];
 
         public static volatile bool start_flag = false;
         private static volatile bool logout_flag = false;
         public static string item;
-        //private static string Item;
-        //public static string item
-        //{
-        //    set => Item = value;
-        //    get => Item;
-        //}
 
 
         Thread my_thread;
@@ -76,12 +70,15 @@ namespace ChatGUI
             open.Filter = "All files (*.*)|*.*";
             open.FilterIndex = 1;
             open.ShowDialog();
-            int index = 0;
             foreach (string str in open.FileNames)
             {
-                pathArr[index] = str;
+                byte[] messageSent = Encoding.ASCII.GetBytes("-upload-file\0");
+                int byteSent = LoginWindow.client.socket.Send(messageSent);
+                LoginWindow.CPP.Upload_File(LoginWindow.client, str);
             }
         }
+
+
 
         #region Some Button
         public void LogoutButton_Click(object sender, RoutedEventArgs e)
@@ -170,6 +167,15 @@ namespace ChatGUI
         }
         #endregion
 
+        private void Send_Enter(object sender, KeyEventArgs k)
+        {
+            if(Keyboard.Modifiers == ModifierKeys.Control && k.Key == Key.Enter)
+            {
+                Send.Focus();
+                Send.RaiseEvent(new RoutedEventArgs(System.Windows.Controls.Button.ClickEvent, Send));
+            }
+        }
+
         private void Send_Click(object sender, RoutedEventArgs e)
         {
             if (ChatBox_pr.Text.Length != 0)
@@ -197,13 +203,33 @@ namespace ChatGUI
             {
                 if (start_flag)
                 {
-
-                    PrivateChat.Items.Add("[" + DateTime.Now.ToString("HH:mm") + "]" + item);       // Van de nam o day
-                    PrivateChat.SelectedIndex = PrivateChat.Items.Count - 1;
-                    start_flag = false;
+                    this.Dispatcher.Invoke((Action)(() =>
+                    {
+                        PrivateChat.Items.Add("[" + DateTime.Now.ToString("HH:mm") + "] " + item + "\n");       
+                        PrivateChat.SelectedIndex = PrivateChat.Items.Count - 1;
+                        start_flag = false;
+                    }));
                 }
             }
         }
+
+        //public void upload_file()
+        //{
+        //    foreach (string filepath in pathArr)
+        //    {
+        //        if (filepath.Equals("") == false)
+        //        {
+        //            byte[] messageSent = Encoding.ASCII.GetBytes("-upload-file\0");
+        //            int byteSent = LoginWindow.client.socket.Send(messageSent);
+        //            LoginWindow.CPP.Upload_File(LoginWindow.client, filepath);
+        //        }
+        //    }
+
+        //    for (int i = 0; i < 10; i++)
+        //    {
+        //        pathArr[i] = "";
+        //    }
+        //}
     }
 
     public class CurrentTimeViewModel : INotifyPropertyChanged

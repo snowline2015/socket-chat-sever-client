@@ -202,7 +202,7 @@ namespace ChatGUI
             else
             {
                 ConvertedCode.client_type temp = new ConvertedCode.client_type();
-                CPP.Init(ref temp, ServerIP.Text, ref success);
+                CPP.Init(temp, ServerIP.Text, ref success);
 
                 if (success == true)
                 {

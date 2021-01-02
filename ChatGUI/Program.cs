@@ -20,13 +20,13 @@ namespace ConvertedCode
     public class Client
     {
         Thread my_thread;
-        public void ShutDownAndClose(ref client_type client)
+        public void ShutDownAndClose(client_type client)
         {
             client.socket.Shutdown(SocketShutdown.Both);
             client.socket.Close();
         }
 
-        public void Init(ref client_type client, string input, ref bool isConnected)
+        public void Init(client_type client, string input, ref bool isConnected)
         {
 
             IPAddress ip = IPAddress.Parse(input);
@@ -47,7 +47,7 @@ namespace ConvertedCode
 
         }
 
-        public void Client_Thread(ref client_type new_client)
+        public void Client_Thread(client_type new_client)
         {
             try
             {
@@ -63,7 +63,7 @@ namespace ConvertedCode
             }
             catch
             {
-                ShutDownAndClose(ref new_client);
+                ShutDownAndClose(new_client);
             }
         }
 
@@ -77,8 +77,7 @@ namespace ConvertedCode
             if (!str.Equals("Server is full"))
             {
 
-                Thread my_thread = new Thread(() => Client_Thread(ref client));
-                my_thread.IsBackground = true;
+                Thread my_thread = new Thread(() => Client_Thread(client));
                 my_thread.Start();
 
                 while (true)
@@ -100,14 +99,14 @@ namespace ConvertedCode
             }
         }
 
-        public void Client_Private_Thread(client_type new_client)
+        public void Client_Private_Thread(client_type client)
         {
             while (true)
             {
-                if (new_client.socket != null)
+                if (client.socket != null)
                 {
                     byte[] messageReceived = new byte[4096];
-                    int byteRecv = new_client.socket.Receive(messageReceived);
+                    int byteRecv = client.socket.Receive(messageReceived);
                     string str = Encoding.ASCII.GetString(messageReceived, 0, byteRecv);
                     WorkingWindow.item = str;
                     WorkingWindow.start_flag = true;
@@ -118,7 +117,6 @@ namespace ConvertedCode
         public void Start_Client_Private_Chat(client_type client)
         {
             my_thread = new Thread(() => Client_Private_Thread(client));
-            my_thread.IsBackground = true;
             my_thread.Start();
         }
 
@@ -126,13 +124,6 @@ namespace ConvertedCode
         {
             client.socket = null;
             my_thread.Abort();
-        }
-    
-
-        public void Client_Send(client_type client, string mess)
-        {
-            byte[] messageSent = Encoding.ASCII.GetBytes(mess);
-            int byteSent = client.socket.Send(messageSent);
         }
 
         public bool Login(client_type client, string id, string password)

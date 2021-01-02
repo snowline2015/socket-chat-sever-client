@@ -207,9 +207,6 @@ void Client_Single_Chatting(client_type& first_client, std::vector<client_type>&
                 closesocket(client_array[first_client.id].socket);
                 client_array[first_client.id].socket = INVALID_SOCKET;
 
-                closesocket(client_array[pos].socket);
-                client_array[pos].socket = INVALID_SOCKET;
-
                 break;
             }
         }
@@ -338,6 +335,8 @@ void Client_Thread(SOCKET NewSockid, std::vector<client_type>& client_List, std:
                     string tempo = std::string(temp);
                     
                     my_thread[temp_id] = std::thread(Client_Single_Chatting, std::ref(client[temp_id]), std::ref(client), tempo, std::ref(my_thread[temp_id]));
+                
+                    my_thread[temp_id].join();
                 }
                 else {
                     stop_client_thread_flag.store(true);
@@ -347,9 +346,10 @@ void Client_Thread(SOCKET NewSockid, std::vector<client_type>& client_List, std:
 
 
                     my_thread[temp_id] = std::thread(Client_Multiple_Chatting, std::ref(client[temp_id]), std::ref(client), std::ref(my_thread[temp_id]));
+                
+                    my_thread[temp_id].join();
                 }
             }
-            my_thread[temp_id].join();
         }
     }
 

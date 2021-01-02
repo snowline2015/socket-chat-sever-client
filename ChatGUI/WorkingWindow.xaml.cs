@@ -24,14 +24,19 @@ namespace ChatGUI
         //private readonly LoginWindow login = new LoginWindow();
         string[] pathArr = new string[10];
         string[] user_list = new string[10];
+
         public static volatile bool start_flag = false;
         private static volatile bool logout_flag = false;
-        private static string Item;
-        public static string item
-        {
-            set => Item = value;
-            get => Item;
-        }
+        public static string item;
+        //private static string Item;
+        //public static string item
+        //{
+        //    set => Item = value;
+        //    get => Item;
+        //}
+
+
+        Thread my_thread;
 
         private void TakeUserList()
         {
@@ -129,7 +134,9 @@ namespace ChatGUI
 
             PrivateChatMain.Visibility = Visibility.Visible;
             LoginWindow.CPP.Start_Client_Private_Chat(LoginWindow.client);
-            Thread my_thread = new Thread(new ThreadStart(AddListboxItems));
+
+            my_thread = new Thread(new ThreadStart(AddListboxItems));
+            my_thread.Start();
         }
 
         private void ReturnOptions(object sender, RoutedEventArgs e)
@@ -169,9 +176,11 @@ namespace ChatGUI
             {
                 PrivateChat.Items.Add("[" + DateTime.Now.ToString("HH:mm") +"] Me: " + ChatBox_pr.Text + "\n");
                 PrivateChat.SelectedIndex = PrivateChat.Items.Count - 1;
-                ChatBox_pr.Text = "";
 
-                LoginWindow.CPP.Client_Send(LoginWindow.client, ChatBox_pr.Text);
+                byte[] messageSent = Encoding.ASCII.GetBytes(ChatBox_pr.Text);
+                int byteSent = LoginWindow.client.socket.Send(messageSent);
+
+                ChatBox_pr.Text = "";
             }
         }
 
@@ -179,6 +188,7 @@ namespace ChatGUI
         {
             logout_flag = true;
             LoginWindow.CPP.End_Client_Private_Chat(LoginWindow.client);
+            my_thread.Join();
         }
 
         public void AddListboxItems()
@@ -187,7 +197,8 @@ namespace ChatGUI
             {
                 if (start_flag)
                 {
-                    PrivateChat.Items.Add("[" + DateTime.Now.ToString("HH:mm") + "]" + item);
+
+                    PrivateChat.Items.Add("[" + DateTime.Now.ToString("HH:mm") + "]" + item);       // Van de nam o day
                     PrivateChat.SelectedIndex = PrivateChat.Items.Count - 1;
                     start_flag = false;
                 }

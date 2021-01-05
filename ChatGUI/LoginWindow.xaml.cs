@@ -29,6 +29,7 @@ namespace ChatGUI
 
         public static string _friend;
        
+
         //Doi vi tri cuar AttachDbFilename thanh cho luu folder ChatGUI
         String db = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\LENOVO\source\repos\ChatGUI\LoginData.mdf;Integrated Security=True";
         private readonly WorkingWindow work = new WorkingWindow();

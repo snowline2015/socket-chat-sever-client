@@ -29,7 +29,6 @@ namespace ChatGUI
         private static volatile bool logout_flag = false;
         public static string item;
 
-
         Thread my_thread;
 
         private void TakeUserList()
@@ -70,15 +69,18 @@ namespace ChatGUI
             open.Filter = "All files (*.*)|*.*";
             open.FilterIndex = 1;
             open.ShowDialog();
-            foreach (string str in open.FileNames)
+            LoginWindow.CPP.upload_flag = true;
+            for (int i = 0; i < open.FileNames.Length; i++)
             {
-                byte[] messageSent = Encoding.ASCII.GetBytes("-upload-file\0");
-                int byteSent = LoginWindow.client.socket.Send(messageSent);
-                LoginWindow.CPP.Upload_File(LoginWindow.client, str);
+                if (open.FileNames[i] != "")
+                {
+                    byte[] messageSent = Encoding.ASCII.GetBytes("-upload-file\0");
+                    int byteSent = LoginWindow.client.socket.Send(messageSent);
+                    LoginWindow.CPP.Upload_File(LoginWindow.client, open.FileNames[i]);
+                }
             }
+            LoginWindow.CPP.upload_flag = false;
         }
-
-
 
         #region Some Button
         public void LogoutButton_Click(object sender, RoutedEventArgs e)
@@ -212,24 +214,6 @@ namespace ChatGUI
                 }
             }
         }
-
-        //public void upload_file()
-        //{
-        //    foreach (string filepath in pathArr)
-        //    {
-        //        if (filepath.Equals("") == false)
-        //        {
-        //            byte[] messageSent = Encoding.ASCII.GetBytes("-upload-file\0");
-        //            int byteSent = LoginWindow.client.socket.Send(messageSent);
-        //            LoginWindow.CPP.Upload_File(LoginWindow.client, filepath);
-        //        }
-        //    }
-
-        //    for (int i = 0; i < 10; i++)
-        //    {
-        //        pathArr[i] = "";
-        //    }
-        //}
     }
 
     public class CurrentTimeViewModel : INotifyPropertyChanged

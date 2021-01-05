@@ -222,22 +222,19 @@ void Upload_File(client_type& first_client) {
     //Receive file name and size from first client 
     memset(&tempmsg, NULL, sizeof(tempmsg));
     recv(first_client.socket, tempmsg, DEFAULT_MSG_LENGTH, 0);
-    send(first_client.socket, "OK", 3, 0);
+    int iResult = send(first_client.socket, "OK", 3, 0);
     string fName = string(tempmsg);
 
-    // Use for stopping client thread
     memset(&tempmsg, NULL, sizeof(tempmsg));
     recv(first_client.socket, tempmsg, DEFAULT_MSG_LENGTH, 0);
-    if (strcmp(tempmsg, "resend") == 0) {
-        send(first_client.socket, "OK", 3, 0);
-    }
-    //
+
+    if (strcmp(tempmsg, "-resend") == 0)
+        iResult = send(first_client.socket, "OK", 3, 0);
 
     memset(&tempmsg, NULL, sizeof(tempmsg));
     recv(first_client.socket, tempmsg, DEFAULT_MSG_LENGTH, 0);
-    send(first_client.socket, "OK", 3, 0);
+    iResult = send(first_client.socket, "OK", 3, 0);
     long long int fSize = stoll(string(tempmsg));
-
 
     //Receive file buffer from first client and save to temp folder
     ofstream fs;
@@ -254,22 +251,22 @@ void Upload_File(client_type& first_client) {
         if (strcmp(tempmsg, "end") == 0) {
             fs.close();
             delete[] buffer;
-            send(first_client.socket, "OK", 3, 0);
+            iResult = send(first_client.socket, "OK", 3, 0);
             break;
         }
 
         int buffersize = stoi(string(tempmsg));
-        send(first_client.socket, "OK", 3, 0);
+        iResult = send(first_client.socket, "OK", 3, 0);
 
-        int iResult = recv(first_client.socket, buffer, DEFAULT_TRANSFER_BUFFER_SIZE, 0);
+        iResult = recv(first_client.socket, buffer, DEFAULT_TRANSFER_BUFFER_SIZE, 0);
         if (iResult == SOCKET_ERROR)
             break;
 
-        else if (iResult != buffersize)
-            send(first_client.socket, "no", 3, 0);
+        else if (iResult != buffersize) 
+            iResult = send(first_client.socket, "no", 3, 0);
 
         else if (iResult < DEFAULT_TRANSFER_BUFFER_SIZE) {
-            send(first_client.socket, "OK", 3, 0);
+            iResult = send(first_client.socket, "OK", 3, 0);
             char* buffer2 = new char[iResult];
             memcpy(buffer2, buffer, iResult);
             fs.write(buffer2, iResult);
@@ -277,7 +274,7 @@ void Upload_File(client_type& first_client) {
         }
 
         else {
-            send(first_client.socket, "OK", 3, 0);
+            iResult = send(first_client.socket, "OK", 3, 0);
             fs.write(buffer, DEFAULT_TRANSFER_BUFFER_SIZE);
         }
         delete[] buffer;

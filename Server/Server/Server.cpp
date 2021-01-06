@@ -20,22 +20,14 @@ int main()
         std::cout << "Can't initialize winsock. Application is now exiting..." << std::endl;
         return 0;
     }
+    std::cout << "Server started..." << std::endl;
 
     ZeroMemory(&addrport, sizeof(addrport));
     addrport.sin_family = AF_INET;
     addrport.sin_port = htons(50000);
     addrport.sin_addr.s_addr = htonl(INADDR_ANY);// inet_addr(c);
 
-    /*std::cout << "Setting up server..." << std::endl;
-    getaddrinfo(IP_ADDRESS, PORT, &hints, &server);*/
-
     sockid = socket(PF_INET, SOCK_STREAM, 0);
-
-    ////Setup socket options
-    //setsockopt(server_socket, SOL_SOCKET, SO_REUSEADDR, &OPTION_VALUE, sizeof(int)); //Make it possible to re-bind to a port that was used within the last 2 minutes
-    //setsockopt(server_socket, IPPROTO_TCP, TCP_NODELAY, &OPTION_VALUE, sizeof(int)); //Used for interactive programs
-
-
     bind(sockid, (struct sockaddr*)&addrport, sizeof(addrport));
     listen(sockid, SOMAXCONN);
 
@@ -90,7 +82,7 @@ int main()
     }
 
     WSACleanup();
-    std::cout << "Program has ended successfully" << std::endl;
+    std::cout << "Server has ended successfully" << std::endl;
 
     system("pause");
     return 0;

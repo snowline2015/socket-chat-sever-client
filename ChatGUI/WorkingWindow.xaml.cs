@@ -87,7 +87,7 @@ namespace ChatGUI
         public void LogoutButton_Click(object sender, RoutedEventArgs e)
         {
             LoginWindow login = new LoginWindow();
-            byte[] messageSent = Encoding.ASCII.GetBytes("logout\0");
+            byte[] messageSent = Encoding.ASCII.GetBytes("-logout\0");
             int byteSent = LoginWindow.client.socket.Send(messageSent);
             login.Show();
             this.Close();
@@ -95,7 +95,7 @@ namespace ChatGUI
 
         private void EnterPrivateChat(object sender, RoutedEventArgs e)
         {
-            byte[] messageSent = Encoding.ASCII.GetBytes("private chat\0");
+            byte[] messageSent = Encoding.ASCII.GetBytes("-private-chat\0");
             int byteSent = LoginWindow.client.socket.Send(messageSent);
 
             if (PreChatPanel.Visibility == Visibility.Visible)
@@ -172,7 +172,7 @@ namespace ChatGUI
 
         private void Send_Enter(object sender, KeyEventArgs k)
         {
-            if(Keyboard.Modifiers == ModifierKeys.Control && k.Key == Key.Enter)
+            if (Keyboard.Modifiers == ModifierKeys.Control && k.Key == Key.Return)
             {
                 Send.Focus();
                 Send.RaiseEvent(new RoutedEventArgs(System.Windows.Controls.Button.ClickEvent, Send));

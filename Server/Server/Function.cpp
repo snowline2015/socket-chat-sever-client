@@ -4,7 +4,6 @@ std::atomic<bool> stop_chatting_for_uploading_flag(false);
 
 void Read_Account(std::vector<client_type>& User_List) {
     std::ifstream f("Data\\Account.csv");
-    //SkipBOM(f);
     if (!f.is_open())
         return;
     string temp;
@@ -126,13 +125,9 @@ void Client_Multiple_Chatting(client_type& new_client, std::vector<client_type>&
 
         if (new_client.socket != 0) {
             int iResult = recv(new_client.socket, tempmsg, DEFAULT_MSG_LENGTH, 0);
-            //tempmsg[strlen(tempmsg)] = '\0';
             if (iResult != SOCKET_ERROR) {
-                //if (strcmp("", tempmsg) == 0)
 
                 msg = new_client.Username + ": " + (tempmsg);
-
-                //std::cout << msg.c_str() << std::endl;
 
                 for (int i = 0; i < MAX_CLIENTS; i++) {
                     if (client_array[i].socket != INVALID_SOCKET)
@@ -287,13 +282,13 @@ void Client_Thread(SOCKET NewSockid, std::vector<client_type>& client_List, std:
         char temp[DEFAULT_MSG_LENGTH];
         int iResult = recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
 
-        if (strcmp(temp, "register") == 0) {
+        if (strcmp(temp, "-register") == 0) {
             send(NewSockid, "OK", 3, 0);
             if (Register(NewSockid, client_List) == true)
                 Write_Account(client_List);
         }
 
-        if (strcmp(temp, "login") == 0) {
+        if (strcmp(temp, "-login") == 0) {
             std::string username;
             send(NewSockid, "OK", 3, 0);
             if (Login(NewSockid, client_List, username) == true) {
@@ -301,7 +296,7 @@ void Client_Thread(SOCKET NewSockid, std::vector<client_type>& client_List, std:
                 memset(&temp, NULL, sizeof(temp));
                 recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
 
-                if (strcmp(temp, "logout") == 0) {
+                if (strcmp(temp, "-logout") == 0) {
                     if (my_thread[temp_id].joinable())
                         my_thread[temp_id].detach();
                     closesocket(client[temp_id].socket);
@@ -309,7 +304,7 @@ void Client_Thread(SOCKET NewSockid, std::vector<client_type>& client_List, std:
                     break;
                 }
 
-                else if (strcmp(temp, "private chat") == 0) {
+                else if (strcmp(temp, "-private-chat") == 0) {
                     stop_client_thread_flag.store(true);
 
                     // Receive check user command

@@ -136,7 +136,7 @@ namespace ConvertedCode
 
         public bool Login(client_type client, string id, string password)
         {
-            byte[] messageSent = Encoding.ASCII.GetBytes("login\0");
+            byte[] messageSent = Encoding.ASCII.GetBytes("-login\0");
             int byteSent = client.socket.Send(messageSent);
 
             byte[] messageReceived = new byte[4096];

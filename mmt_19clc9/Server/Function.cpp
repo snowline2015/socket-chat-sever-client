@@ -1,5 +1,6 @@
 #include "Header.h"
 std::atomic<bool> stop_client_thread_flag(false);
+bool first_send = true;
 std::atomic<bool> stop_chatting_for_uploading_flag(false);
 
 void Read_Account(std::vector<client_type>& User_List) {
@@ -180,6 +181,7 @@ void Client_Single_Chatting(client_type& first_client, std::vector<client_type>&
                     Upload_File(first_client);
                    
 
+
                 else {
                     for (int i = 0; i < MAX_CLIENTS; i++) {
                         if (client_array[i].socket == INVALID_SOCKET) continue;
@@ -217,15 +219,17 @@ void Upload_File(client_type& first_client) {
     int iResult = send(first_client.socket, "OK", 3, 0);
     string fName = string(tempmsg);
 
+    if (first_send == true) {
+        memset(&tempmsg, NULL, sizeof(tempmsg));
+        recv(first_client.socket, tempmsg, DEFAULT_MSG_LENGTH, 0);
+        if (strcmp(tempmsg, "-resend") == 0)
+            send(first_client.socket, "OK", 3, 0);
+        first_send = false;
+    }
+
     memset(&tempmsg, NULL, sizeof(tempmsg));
     recv(first_client.socket, tempmsg, DEFAULT_MSG_LENGTH, 0);
-
-    if (strcmp(tempmsg, "-resend") == 0)
-        iResult = send(first_client.socket, "OK", 3, 0);
-
-    memset(&tempmsg, NULL, sizeof(tempmsg));
-    recv(first_client.socket, tempmsg, DEFAULT_MSG_LENGTH, 0);
-    iResult = send(first_client.socket, "OK", 3, 0);
+    send(first_client.socket, "OK", 3, 0);
     long long int fSize = stoll(string(tempmsg));
 
     //Receive file buffer from first client and save to temp folder

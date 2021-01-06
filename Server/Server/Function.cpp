@@ -175,21 +175,25 @@ void Client_Single_Chatting(client_type& first_client, std::vector<client_type>&
         if (first_client.socket != INVALID_SOCKET) {
             int iResult = recv(first_client.socket, tempmsg, DEFAULT_MSG_LENGTH, 0);
             if (iResult != SOCKET_ERROR) {
+                for (int i = 0; i < MAX_CLIENTS; i++) {
+                    if (client_array[i].socket == INVALID_SOCKET) continue;
+                    else if (first_client.id != i && client_array[i].Username.compare(second_username) == 0) {
 
-                if (strcmp(tempmsg, "-upload-file") == 0) 
-                    Upload_File(first_client);
+                        if (strcmp(tempmsg, "-upload-file") == 0) {
+                            Upload_File(first_client);
 
-                else {
-                    for (int i = 0; i < MAX_CLIENTS; i++) {
-                        if (client_array[i].socket == INVALID_SOCKET) continue;
-                        else if (first_client.id != i && client_array[i].Username.compare(second_username) == 0) {
+
+                        }
+
+                        else {
                             pos = i;
                             msg = first_client.Username + ": " + (tempmsg);
                             iResult = send(client_array[i].socket, msg.c_str(), strlen(msg.c_str()), 0);
                             break;
                         }
                     }
-                }
+                }      
+                
             }
             else {
                 closesocket(first_client.socket);
@@ -269,10 +273,12 @@ void Upload_File(client_type& first_client) {
         }
         delete[] buffer;
     }
+
+
 }
 
 void Download_File(client_type& client) {
-
+    int iResult = send(client.socket, "-download-file", 15, 0);
 }
 
 void Client_Thread(SOCKET NewSockid, std::vector<client_type>& client_List, std::vector<client_type>& client, std::thread my_thread[], int temp_id, std::thread& thread) {

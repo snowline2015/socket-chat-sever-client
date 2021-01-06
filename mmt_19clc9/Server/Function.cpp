@@ -176,21 +176,14 @@ void Client_Single_Chatting(client_type& first_client, std::vector<client_type>&
             int iResult = recv(first_client.socket, tempmsg, DEFAULT_MSG_LENGTH, 0);
             if (iResult != SOCKET_ERROR) {
 
-                for (int i = 0; i < MAX_CLIENTS; i++) {
-                    if (client_array[i].socket == INVALID_SOCKET) continue;
-                    else if (first_client.id != i && client_array[i].Username.compare(second_username) == 0) {
+                if (strcmp(tempmsg, "-upload-file") == 0) 
+                    Upload_File(first_client);
+                   
 
-                        if (strcmp(tempmsg, "-upload-file") == 0) {
-                            Upload_File(first_client);
-                            break;
-                        }
-
-                        else if (strcmp(tempmsg, "-download-file") == 0) {
-                            Download_File(first_client);
-                            break;
-                        }
-
-                        else {
+                else {
+                    for (int i = 0; i < MAX_CLIENTS; i++) {
+                        if (client_array[i].socket == INVALID_SOCKET) continue;
+                        else if (first_client.id != i && client_array[i].Username.compare(second_username) == 0) {
                             pos = i;
                             msg = first_client.Username + ": " + (tempmsg);
                             iResult = send(client_array[i].socket, msg.c_str(), strlen(msg.c_str()), 0);
@@ -200,7 +193,6 @@ void Client_Single_Chatting(client_type& first_client, std::vector<client_type>&
                 }
             }
             else {
-
                 closesocket(first_client.socket);
                 first_client.socket = INVALID_SOCKET;
 
@@ -248,25 +240,25 @@ void Upload_File(client_type& first_client) {
 
         recv(first_client.socket, tempmsg, DEFAULT_MSG_LENGTH, 0);
 
-        if (strcmp(tempmsg, "end") == 0) {
+        if (strcmp(tempmsg, "-end") == 0) {
             fs.close();
             delete[] buffer;
-            iResult = send(first_client.socket, "OK", 3, 0);
+            send(first_client.socket, "OK", 3, 0);
             break;
         }
 
         int buffersize = stoi(string(tempmsg));
-        iResult = send(first_client.socket, "OK", 3, 0);
+        send(first_client.socket, "OK", 3, 0);
 
         iResult = recv(first_client.socket, buffer, DEFAULT_TRANSFER_BUFFER_SIZE, 0);
         if (iResult == SOCKET_ERROR)
             break;
 
         else if (iResult != buffersize) 
-            iResult = send(first_client.socket, "no", 3, 0);
+            send(first_client.socket, "NO", 3, 0);
 
         else if (iResult < DEFAULT_TRANSFER_BUFFER_SIZE) {
-            iResult = send(first_client.socket, "OK", 3, 0);
+            send(first_client.socket, "OK", 3, 0);
             char* buffer2 = new char[iResult];
             memcpy(buffer2, buffer, iResult);
             fs.write(buffer2, iResult);
@@ -274,7 +266,7 @@ void Upload_File(client_type& first_client) {
         }
 
         else {
-            iResult = send(first_client.socket, "OK", 3, 0);
+            send(first_client.socket, "OK", 3, 0);
             fs.write(buffer, DEFAULT_TRANSFER_BUFFER_SIZE);
         }
         delete[] buffer;

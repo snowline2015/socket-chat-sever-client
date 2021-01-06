@@ -168,7 +168,7 @@ namespace ConvertedCode
                 else break;
             }
 
-            if (Array.Equals(Encoding.ASCII.GetString(messageReceived, 0, byteRecv), "ID or Password is incorrect") == true)
+            if (Array.Equals(Encoding.ASCII.GetString(messageReceived, 0, byteRecv), "ID or Password is incorrect\0") == true)
                 return false;
 
             return true;
@@ -189,20 +189,8 @@ namespace ConvertedCode
                 }
             }
 
-            BinaryReader br;
-
-            try
-            {
-                br = new BinaryReader(new FileStream(str, FileMode.Open));      // open ifstream here
-            }
-            catch
-            {
-                return false;
-            }
-
 
             // Send file name and file size
-
             byte[] messageSent = Encoding.ASCII.GetBytes(fName);
             int byteSent = client.socket.Send(messageSent);
 
@@ -217,6 +205,17 @@ namespace ConvertedCode
             byteRecv = client.socket.Receive(messageReceived);
 
 
+            BinaryReader br;
+            try
+            {
+                br = new BinaryReader(new FileStream(str, FileMode.Open));      
+            }
+            catch
+            {
+                return false;
+            }
+
+
             //Sending file processing
             long sizetemp = size;
 
@@ -226,34 +225,45 @@ namespace ConvertedCode
                 {
                     int tempo = (int)sizetemp;
                     byte[] buffer = new byte[tempo];
-                    buffer = br.ReadBytes(tempo);
+                    br.Read(buffer, 0, tempo);
                     do
                     {
                         Array.Clear(messageReceived, 0, messageReceived.Length);
 
                         messageSent = Encoding.ASCII.GetBytes(sizetemp.ToString());
-                        byteSent = client.socket.Send(messageSent);
 
-                        while (byteSent == -1)
+                        while (true)
                         {
-                            Thread.Sleep(5);
-                            byteSent = client.socket.Send(messageSent);
+                            try
+                            {
+                                byteSent = client.socket.Send(messageSent);
+                            }
+                            catch
+                            {
+                                continue;
+                            }
+                            break;
                         }
 
                         byteRecv = client.socket.Receive(messageReceived);
                         Array.Clear(messageReceived, 0, messageReceived.Length);
 
-                        byteSent = client.socket.Send(buffer);
-
-                        while (byteSent == -1)
+                        while (true)
                         {
-                            Thread.Sleep(5);
-                            byteSent = client.socket.Send(buffer);
+                            try
+                            {
+                                byteSent = client.socket.Send(buffer);
+                            }
+                            catch
+                            {
+                                continue;
+                            }
+                            break;
                         }
 
                         byteRecv = client.socket.Receive(messageReceived);
 
-                    } while (Array.Equals(Encoding.ASCII.GetString(messageReceived, 0, byteRecv), "no\0") == true);
+                    } while (Array.Equals(Encoding.ASCII.GetString(messageReceived, 0, byteRecv), "NO\0") == true);
                     
                     Array.Clear(buffer, 0, buffer.Length);
                     sizetemp = 0;
@@ -261,46 +271,59 @@ namespace ConvertedCode
                 else
                 {
                     byte[] buffer = new byte[512];
-                    buffer = br.ReadBytes(512);
+                    br.Read(buffer, 0, 512);
                     do
                     {
                         Array.Clear(messageReceived, 0, messageReceived.Length);
 
-                        messageSent = Encoding.ASCII.GetBytes("512");
-                        byteSent = client.socket.Send(messageSent);
+                        messageSent = Encoding.ASCII.GetBytes("512\0");
 
-                        while (byteSent == -1)
+                        while (true)
                         {
-                            Thread.Sleep(5);
-                            byteSent = client.socket.Send(messageSent);
+                            try
+                            {
+                                byteSent = client.socket.Send(messageSent);
+                            }
+                            catch
+                            {
+                                continue;
+                            }
+                            break;
                         }
-  
+
                         byteRecv = client.socket.Receive(messageReceived);
                         Array.Clear(messageReceived, 0, messageReceived.Length);
 
-                        byteSent = client.socket.Send(buffer);
-
-                        while (byteSent == -1)
+                        while (true)
                         {
-                            Thread.Sleep(5);
-                            byteSent = client.socket.Send(buffer);
+                            try
+                            {
+                                byteSent = client.socket.Send(buffer);
+                            }
+                            catch
+                            {
+                                continue;
+                            }
+                            break;
                         }
 
                         byteRecv = client.socket.Receive(messageReceived);
 
-                    } while (Array.Equals(Encoding.ASCII.GetString(messageReceived, 0, byteRecv), "no") == true);
+                    } while (Array.Equals(Encoding.ASCII.GetString(messageReceived, 0, byteRecv), "NO\0") == true);
 
                     Array.Clear(buffer, 0, buffer.Length);
                     sizetemp -= 512;
                 }
             }
+
             br.Close();
 
-            messageSent = Encoding.ASCII.GetBytes("end\0");
+            messageSent = Encoding.ASCII.GetBytes("-end\0");
             byteSent = client.socket.Send(messageSent);
 
             Array.Clear(messageReceived, 0, messageReceived.Length);
             byteRecv = client.socket.Receive(messageReceived);
+
             return true;
         }
 

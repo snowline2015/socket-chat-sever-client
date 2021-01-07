@@ -121,6 +121,7 @@ namespace ConvertedCode
                     {
                         byte[] messageSent = Encoding.ASCII.GetBytes("OK\0");
                         int byteSent = client.socket.Send(messageSent);
+                        byteSent = client.socket.Send(messageSent);
                         Download_File(client);
                     }
                     else

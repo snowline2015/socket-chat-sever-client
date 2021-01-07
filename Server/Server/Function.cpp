@@ -1,6 +1,6 @@
 #include "Header.h"
 std::atomic<bool> stop_client_thread_flag(false);
-std::atomic<bool> stop_chatting_for_uploading_flag(false);
+std::atomic<bool> stop_receiving_for_downloading_flag(false);
 
 void Read_Account(std::vector<client_type>& User_List) {
     std::ifstream f("Data\\Account.csv");
@@ -167,7 +167,7 @@ void Client_Single_Chatting(client_type& first_client, std::vector<client_type>&
 
     while (true) {
         memset(&tempmsg, NULL, sizeof(tempmsg));
-        if (first_client.socket != INVALID_SOCKET) {
+        if (first_client.socket != INVALID_SOCKET && stop_receiving_for_downloading_flag.load() == false) {
             int iResult = recv(first_client.socket, tempmsg, DEFAULT_MSG_LENGTH, 0);
             if (iResult != SOCKET_ERROR) {
                 for (int i = 0; i < MAX_CLIENTS; i++) {
@@ -178,15 +178,19 @@ void Client_Single_Chatting(client_type& first_client, std::vector<client_type>&
                             string fileName;
                             Upload_File(first_client, fileName);
 
+                            stop_receiving_for_downloading_flag.store(true);
+
                             send(client_array[i].socket, "-download-file", 15, 0);
                             memset(&tempmsg, NULL, sizeof(tempmsg));
                             recv(client_array[i].socket, tempmsg, DEFAULT_MSG_LENGTH, 0);
                             Download_File(client_array[i], fileName);
 
                             send(first_client.socket, "OK", 3, 0);        // Response to first client for another upload
+
+                            stop_receiving_for_downloading_flag.store(false);
                         }
 
-                        else {
+                        else if (stop_receiving_for_downloading_flag.load() == false) {
                             pos = i;
                             msg = first_client.Username + ": " + (tempmsg);
                             iResult = send(client_array[i].socket, msg.c_str(), strlen(msg.c_str()), 0);

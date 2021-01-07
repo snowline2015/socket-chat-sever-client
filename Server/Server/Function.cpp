@@ -179,6 +179,8 @@ void Client_Single_Chatting(client_type& first_client, std::vector<client_type>&
                             Upload_File(first_client, fileName);
 
                             send(client_array[i].socket, "-download-file", 15, 0);
+                            memset(&tempmsg, NULL, sizeof(tempmsg));
+                            recv(client_array[i].socket, tempmsg, DEFAULT_MSG_LENGTH, 0);
                             Download_File(client_array[i], fileName);
 
                             send(first_client.socket, "OK", 3, 0);        // Response to first client for another upload

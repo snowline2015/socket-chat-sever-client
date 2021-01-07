@@ -109,15 +109,23 @@ namespace ConvertedCode
                 {
                     byte[] messageReceived = new byte[4096];
                     int byteRecv = client.socket.Receive(messageReceived);
-                    string str = Encoding.ASCII.GetString(messageReceived, 0, byteRecv);
+                    
                     if (upload_flag == true)
                     {
                         byte[] messageSent = Encoding.ASCII.GetBytes("-resend\0");
                         int byteSent = client.socket.Send(messageSent);
                         continue;
                     }
-                    WorkingWindow.item = str;
-                    WorkingWindow.start_flag = true;
+                    else if (Array.Equals(Encoding.ASCII.GetString(messageReceived, 0, byteRecv), "-download-file\0") == true)
+                    {
+                        Download_File(client);
+                    }
+                    else
+                    {
+                        string str = Encoding.ASCII.GetString(messageReceived, 0, byteRecv);
+                        WorkingWindow.item = str;
+                        WorkingWindow.start_flag = true;
+                    }
                 }
             }
         }
@@ -317,6 +325,7 @@ namespace ConvertedCode
             }
 
             br.Close();
+            br.Dispose();
 
             messageSent = Encoding.ASCII.GetBytes("-end\0");
             byteSent = client.socket.Send(messageSent);
@@ -329,6 +338,86 @@ namespace ConvertedCode
 
         public bool Download_File(client_type client)
         {
+            // Receive file name and file size
+            byte[] messageReceived = new byte[4096];
+            int byteRecv = client.socket.Receive(messageReceived);
+            string fName = Encoding.ASCII.GetString(messageReceived, 0, messageReceived.Length);
+
+            byte[] messageSent = Encoding.ASCII.GetBytes("OK\0");
+            int byteSent = client.socket.Send(messageSent);
+
+            Array.Clear(messageReceived, 0, messageReceived.Length);
+            byteRecv = client.socket.Receive(messageReceived);
+            long fSize = long.Parse(Encoding.ASCII.GetString(messageReceived, 0, messageReceived.Length));
+
+            byteSent = client.socket.Send(messageSent);
+
+            BinaryWriter bw;
+            try
+            {
+                bw = new BinaryWriter(File.Open("Temp\\" + fName, FileMode.Create));       // Folder name to add file here
+            }
+            catch
+            {
+                return false;
+            }
+
+            while (true)
+            {
+                Array.Clear(messageReceived, 0, messageReceived.Length);
+                byte[] buffer = new byte[512];
+
+                byteRecv = client.socket.Receive(messageReceived);
+
+                if (Array.Equals(Encoding.ASCII.GetString(messageReceived, 0, byteRecv), "-end\0") == true)
+                {
+                    bw.Close();
+                    bw.Dispose();
+
+                    Array.Clear(buffer, 0, buffer.Length);
+                    messageSent = Encoding.ASCII.GetBytes("OK\0");
+                    byteSent = client.socket.Send(messageSent);
+                    break;
+                }
+
+                int buffersize = Int32.Parse(Encoding.ASCII.GetString(messageReceived, 0, byteRecv));
+                messageSent = Encoding.ASCII.GetBytes("OK\0");
+                byteSent = client.socket.Send(messageSent);
+
+                try
+                {
+                    byteRecv = client.socket.Receive(buffer);
+                }
+                catch
+                {
+                    break;
+                }
+
+                if (byteRecv != buffersize)
+                {
+                    messageSent = Encoding.ASCII.GetBytes("NO\0");
+                    byteSent = client.socket.Send(messageSent);
+                }
+
+                else if (byteRecv < 512)
+                {
+                    messageSent = Encoding.ASCII.GetBytes("OK\0");
+                    byteSent = client.socket.Send(messageSent);
+                    byte[] buffer2 = new byte[byteRecv];
+                    buffer.CopyTo(buffer2, 0);
+                    bw.Write(buffer2);
+                    Array.Clear(buffer2, 0, buffer2.Length);
+                }
+
+                else
+                {
+                    messageSent = Encoding.ASCII.GetBytes("OK\0");
+                    byteSent = client.socket.Send(messageSent);
+                    bw.Write(buffer);
+                }
+                Array.Clear(buffer, 0, buffer.Length);
+            }
+
             return true;
         }
 
@@ -340,7 +429,7 @@ namespace ConvertedCode
             byte[] messageReceived = new byte[4096];
             int byteRecv = client.socket.Receive(messageReceived);
 
-            string temp = System.Text.Encoding.UTF8.GetString(messageReceived, 0, messageReceived.Length);
+            string temp = System.Text.Encoding.ASCII.GetString(messageReceived, 0, messageReceived.Length);
             client_array = temp.Split('\n');
             
         }

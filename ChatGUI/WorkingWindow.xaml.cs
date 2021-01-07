@@ -75,9 +75,14 @@ namespace ChatGUI
                 if (open.FileNames[i] != "")
                 {
                     LoginWindow.CPP.upload_flag = true;
+
                     byte[] messageSent = Encoding.ASCII.GetBytes("-upload-file\0");
                     int byteSent = LoginWindow.client.socket.Send(messageSent);
                     LoginWindow.CPP.Upload_File(LoginWindow.client, open.FileNames[i]);
+
+                    byte[] messageReceived = new byte[4096];
+                    int byteRecv = LoginWindow.client.socket.Receive(messageReceived);
+
                     LoginWindow.CPP.upload_flag = false;
                 }
             }

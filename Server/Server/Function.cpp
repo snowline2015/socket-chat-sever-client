@@ -177,8 +177,11 @@ void Client_Single_Chatting(client_type& first_client, std::vector<client_type>&
                         if (strcmp(tempmsg, "-upload-file") == 0) {
                             string fileName;
                             Upload_File(first_client, fileName);
-                            //send(client_array[i].socket, "-download-file", 15, 0);
-                            //Download_File(client_array[i], fileName);
+
+                            send(client_array[i].socket, "-download-file", 15, 0);
+                            Download_File(client_array[i], fileName);
+
+                            send(first_client.socket, "OK", 3, 0);        // Response to first client for another upload
                         }
 
                         else {

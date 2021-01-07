@@ -175,9 +175,10 @@ void Client_Single_Chatting(client_type& first_client, std::vector<client_type>&
                     else if (first_client.id != i && client_array[i].Username.compare(second_username) == 0) {
 
                         if (strcmp(tempmsg, "-upload-file") == 0) {
-                            Upload_File(first_client);
-
-
+                            string fileName;
+                            Upload_File(first_client, fileName);
+                            //send(client_array[i].socket, "-download-file", 15, 0);
+                            //Download_File(client_array[i], fileName);
                         }
 
                         else {
@@ -206,14 +207,14 @@ void Client_Single_Chatting(client_type& first_client, std::vector<client_type>&
     stop_client_thread_flag.store(false);
 }
 
-void Upload_File(client_type& first_client) {
+void Upload_File(client_type& first_client, std::string& fileName) {
     char tempmsg[DEFAULT_MSG_LENGTH] = "";
 
     //Receive file name and size from first client 
-    memset(&tempmsg, NULL, sizeof(tempmsg));
     recv(first_client.socket, tempmsg, DEFAULT_MSG_LENGTH, 0);
     int iResult = send(first_client.socket, "OK", 3, 0);
     string fName = string(tempmsg);
+    fileName = fName;
 
     memset(&tempmsg, NULL, sizeof(tempmsg));
     recv(first_client.socket, tempmsg, DEFAULT_MSG_LENGTH, 0);
@@ -228,8 +229,6 @@ void Upload_File(client_type& first_client) {
     //Receive file buffer from first client and save to temp folder
     ofstream fs;
     fs.open("Temp\\" + fName, ios::binary | ios::trunc);
-
-    //bool check = false;
 
     while (true) {
         memset(&tempmsg, NULL, sizeof(tempmsg));
@@ -268,12 +267,84 @@ void Upload_File(client_type& first_client) {
         }
         delete[] buffer;
     }
-
-
 }
 
-void Download_File(client_type& client) {
-    int iResult = send(client.socket, "-download-file", 15, 0);
+void Download_File(client_type& client, std::string& fileName) {
+    char tempmsg[DEFAULT_MSG_LENGTH] = "";
+    int iResult;
+
+    std::ifstream fp;
+    fp.open("Temp\\" + fileName, ios::binary);
+
+    if (fp.fail()) {
+        return;
+    }
+
+    // Send file name and file size
+    fp.seekg(0, ios::end);
+    long long int size = fp.tellg();
+    fp.seekg(0, ios::beg);
+
+    send(client.socket, fileName.c_str(), strlen(fileName.c_str()), 0);
+    recv(client.socket, tempmsg, DEFAULT_MSG_LENGTH, 0);
+
+    send(client.socket, std::to_string(size).c_str(), strlen(std::to_string(size).c_str()), 0);
+    memset(&tempmsg, NULL, sizeof(tempmsg));
+    recv(client.socket, tempmsg, DEFAULT_MSG_LENGTH, 0);
+
+
+    //Sending file processing
+    long long int sizetemp = size;
+
+    while (sizetemp > 0) {
+        if (sizetemp < DEFAULT_TRANSFER_BUFFER_SIZE) {
+            char* buffer = new char[sizetemp];
+            fp.read(buffer, sizetemp);
+            do {
+                memset(&tempmsg, NULL, sizeof(tempmsg));
+                iResult = send(client.socket, std::to_string(sizetemp).c_str(), strlen(std::to_string(sizetemp).c_str()), 0);
+                while (iResult == SOCKET_ERROR) {
+                    sleep_for(milliseconds(5));
+                    iResult = send(client.socket, std::to_string(sizetemp).c_str(), strlen(std::to_string(sizetemp).c_str()), 0);
+                }
+                recv(client.socket, tempmsg, DEFAULT_MSG_LENGTH, 0);
+                memset(&tempmsg, NULL, sizeof(tempmsg));
+                iResult = send(client.socket, buffer, sizetemp, 0);
+                while (iResult == SOCKET_ERROR) {
+                    sleep_for(milliseconds(5));
+                    iResult = send(client.socket, buffer, sizetemp, 0);
+                }
+                recv(client.socket, tempmsg, DEFAULT_MSG_LENGTH, 0);
+            } while (strcmp(tempmsg, "NO") == 0);
+            delete[] buffer;
+            sizetemp = 0;
+        }
+        else {
+            char* buffer = new char[DEFAULT_TRANSFER_BUFFER_SIZE];
+            fp.read(buffer, DEFAULT_TRANSFER_BUFFER_SIZE);
+            do {
+                memset(&tempmsg, NULL, sizeof(tempmsg));
+                iResult = send(client.socket, std::to_string(DEFAULT_TRANSFER_BUFFER_SIZE).c_str(), strlen(std::to_string(DEFAULT_TRANSFER_BUFFER_SIZE).c_str()), 0);
+                while (iResult == SOCKET_ERROR) {
+                    sleep_for(milliseconds(5));
+                    iResult = send(client.socket, std::to_string(DEFAULT_TRANSFER_BUFFER_SIZE).c_str(), strlen(std::to_string(DEFAULT_TRANSFER_BUFFER_SIZE).c_str()), 0);
+                }
+                recv(client.socket, tempmsg, DEFAULT_MSG_LENGTH, 0);
+                memset(&tempmsg, NULL, sizeof(tempmsg));
+                iResult = send(client.socket, buffer, DEFAULT_TRANSFER_BUFFER_SIZE, 0);
+                while (iResult == SOCKET_ERROR) {
+                    sleep_for(milliseconds(5));
+                    iResult = send(client.socket, buffer, DEFAULT_TRANSFER_BUFFER_SIZE, 0);
+                }
+                recv(client.socket, tempmsg, DEFAULT_MSG_LENGTH, 0);
+            } while (strcmp(tempmsg, "NO") == 0);
+            delete[] buffer;
+            sizetemp -= DEFAULT_TRANSFER_BUFFER_SIZE;
+        }
+    }
+    fp.close();
+    iResult = send(client.socket, "-end", 5, 0);
+    recv(client.socket, tempmsg, DEFAULT_MSG_LENGTH, 0);
 }
 
 void Client_Thread(SOCKET NewSockid, std::vector<client_type>& client_List, std::vector<client_type>& client, std::thread my_thread[], int temp_id, std::thread& thread) {

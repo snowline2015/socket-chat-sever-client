@@ -8,6 +8,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using ChatGUI;
+using Microsoft.Win32;
 
 namespace ConvertedCode
 {
@@ -118,6 +119,8 @@ namespace ConvertedCode
                     }
                     else if (Array.Equals(Encoding.ASCII.GetString(messageReceived, 0, byteRecv), "-download-file\0") == true)
                     {
+                        byte[] messageSent = Encoding.ASCII.GetBytes("OK\0");
+                        int byteSent = client.socket.Send(messageSent);
                         Download_File(client);
                     }
                     else
@@ -352,10 +355,18 @@ namespace ConvertedCode
 
             byteSent = client.socket.Send(messageSent);
 
+            // save file dialog here //
+            
+            SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+            saveFileDialog1.Title = "Save as";
+            saveFileDialog1.Filter = "All files (*.*)|*.*";
+            saveFileDialog1.FileName = fName;
+            saveFileDialog1.ShowDialog();
+
             BinaryWriter bw;
             try
             {
-                bw = new BinaryWriter(File.Open("Temp\\" + fName, FileMode.Create));       // Folder name to add file here
+                bw = new BinaryWriter(File.Open(saveFileDialog1.FileName, FileMode.Create));       // Folder name to add file here
             }
             catch
             {

@@ -416,7 +416,7 @@ namespace ConvertedCode
                     messageSent = Encoding.ASCII.GetBytes("OK\0");
                     byteSent = client.socket.Send(messageSent);
                     byte[] buffer2 = new byte[byteRecv];
-                    buffer.CopyTo(buffer2, 0);
+                    Array.Copy(buffer, buffer2, byteRecv);
                     bw.Write(buffer2);
                     Array.Clear(buffer2, 0, buffer2.Length);
                 }

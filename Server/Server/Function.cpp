@@ -352,6 +352,7 @@ void Download_File(client_type& client, std::string& fileName) {
         }
     }
     fp.close();
+
     iResult = send(client.socket, "-end", 5, 0);
     recv(client.socket, tempmsg, DEFAULT_MSG_LENGTH, 0);
 }

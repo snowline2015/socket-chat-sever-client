@@ -683,7 +683,7 @@
             <Label x:Name="UsrName" Content="{Binding CurrentName}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="46,17,0,0" Height="26" Width="284" FontWeight="SemiBold" FontSize="15" Foreground="Black" VerticalContentAlignment="Center" Padding="1,1,0,0"/>
         </Grid>
         <Path x:Name="LineSeperator" Data="M10,75.3 L930,75.3" Fill="#FF0F0FA8" HorizontalAlignment="Left" Height="1" Margin="10,0,-1,0" Stretch="Fill" Stroke="#FF0F0FA8" Width="900"/>
-        <StackPanel x:Name="PreChatPanel" HorizontalAlignment="Left" Height="642.1" VerticalAlignment="Top" Width="930">
+        <StackPanel x:Name="PreChatPanel" HorizontalAlignment="Left" Height="642.1" VerticalAlignment="Top" Width="930" Visibility="Collapsed">
             <Grid x:Name="PreChatGrid" Height="642.1">
                 <Button x:Name="PrivateChatBtn" Content="Button" HorizontalAlignment="Left" Height="62.142" Margin="342.5,178.762,0,0" VerticalAlignment="Top" Width="223.534" BorderBrush="#FF050505" Style="{StaticResource MainButton}"
                         Click="EnterPrivateChat">
@@ -726,7 +726,7 @@
                     </Button.Background>
                 </Button>
                 <TextBlock x:Name="pr_warning" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="342.71,418.8,-646.4,0" Height="27.96" Width="303.69" FontSize="16" Foreground="Red" FontWeight="Bold" TextAlignment="Center"/>
-                <ComboBox x:Name="list_friend_pr" HorizontalAlignment="Left" Height="24" Margin="336.8,273.5,0,0" VerticalAlignment="Top" Width="309.6" BorderBrush="Black" Background="Black" Style="{DynamicResource list_template}" SelectedIndex="0"/>
+                <ComboBox x:Name="list_friend_pr" HorizontalAlignment="Left" Height="24" Margin="336.8,273.5,0,0" VerticalAlignment="Top" Width="309.6" BorderBrush="Black" Background="Black" Style="{DynamicResource list_template}" SelectedIndex="-1"/>
             </Grid>
             <Grid x:Name="PrivateChatMain" Height="641.1" Visibility="Collapsed">
                 <Grid x:Name="MainGrid_pr" HorizontalAlignment="Left" Height="631.1" VerticalAlignment="Top" Width="930" Margin="0,10,0,0">
@@ -747,9 +747,10 @@
                 </Grid>
             </Grid>
         </StackPanel>
-        <StackPanel x:Name="GroupChatPanel" HorizontalAlignment="Left" Height="642.1" Width="930" Visibility="Collapsed">
-            <Grid x:Name="GroupChatInfoGrid" Height="642.1" Visibility="Collapsed">
-                <TextBox x:Name="IPAddress_server_gr" HorizontalAlignment="Left" Height="32" Margin="336.8,244.1,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="309.6" FontSize="16" VerticalContentAlignment="Center" BorderBrush="{x:Null}" Background="#FFBCC8D6" SelectionBrush="{x:Null}" SelectionTextBrush="{x:Null}" Style="{DynamicResource IPAddTemplate}"/>
+        <StackPanel x:Name="GroupChatPanel" HorizontalAlignment="Left" Height="642.1" Width="930">
+            <Grid x:Name="GroupChatInfoGrid" Height="642.1">
+                <TextBox x:Name="IPAddress_server_gr" HorizontalAlignment="Left" Height="32" Margin="336.8,244.1,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="309.6" FontSize="16" VerticalContentAlignment="Center" BorderBrush="{x:Null}" Background="#FFBCC8D6" SelectionBrush="{x:Null}" SelectionTextBrush="{x:Null}" Style="{DynamicResource IPAddTemplate}"
+                         PreviewTextInput="OnlyNumber" MaxLength="4"/>
                 <TextBlock HorizontalAlignment="Left" Margin="226.8,253.1,0,373.04" TextWrapping="Wrap" Text="Room ID:" Width="105" FontWeight="Bold" VerticalAlignment="Center" Foreground="Black" TextAlignment="Center" FontSize="16"/>
                 <Button x:Name="returnPage_gr" HorizontalAlignment="Left" Height="35.2" Margin="10,10,0,0" VerticalAlignment="Top" Width="74.934" BorderBrush="{x:Null}" FontWeight="SemiBold" FontSize="14" 
                     Style="{StaticResource MyButton}" Click="_ReturnOptions">
@@ -757,8 +758,9 @@
                         <ImageBrush ImageSource="Assets/next-reverse.png" Stretch="Uniform"/>
                     </Button.Background>
                 </Button>
-                <Button Content="Create Room Chat" HorizontalAlignment="Left" Height="38.4" Margin="405,323.2,0,0" VerticalAlignment="Top" Width="159.6" Background="{x:Null}" BorderBrush="Black" FontSize="16" FontWeight="SemiBold"/>
+                <Button x:Name="CreateRoom" Content="Create Room Chat" HorizontalAlignment="Left" Height="38.4" Margin="290.51,335.2,0,0" VerticalAlignment="Top" Width="159.6" Background="{x:Null}" BorderBrush="Black" FontSize="16" FontWeight="SemiBold" Click="CreateRoomClick"/>
                 <TextBlock x:Name="gr_warning" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="342.71,418.8,0,0" Height="27.96" Width="303.69" FontSize="16" Foreground="Red" FontWeight="Bold" TextAlignment="Center"/>
+                <Button x:Name="JoinRoom" Content="Join Room" HorizontalAlignment="Left" Height="38.4" Margin="506.4,335.2,0,0" VerticalAlignment="Top" Width="159.6" Background="{x:Null}" BorderBrush="Black" FontSize="16" FontWeight="SemiBold" Click="JoinRoomClick"/>
             </Grid>
             <Grid x:Name="GroupChatMain" HorizontalAlignment="Left" Height="642.1" VerticalAlignment="Top" Width="930" Visibility="Collapsed">
                 <Grid x:Name="MainGrid_gr" HorizontalAlignment="Left" Height="631.1" VerticalAlignment="Top" Width="930" Margin="0,10,0,0">

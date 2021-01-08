@@ -132,7 +132,7 @@ void Client_Multiple_Chatting(client_type& new_client, std::vector<client_type>&
                 for (int i = 0; i < MAX_CLIENTS; i++) {
                     if (client_array[i].socket != INVALID_SOCKET)
                         if (client_array[i].socket == SOCKET_ERROR) continue;
-                    if (new_client.id != i)
+                    if (new_client.id != i && new_client.RoomID.compare(client_array[i].RoomID) == 0)
                         iResult = send(client_array[i].socket, msg.c_str(), strlen(msg.c_str()), 0);
                 }
             }
@@ -390,6 +390,7 @@ void Client_Thread(SOCKET NewSockid, std::vector<client_type>& client_List, std:
                     stop_client_thread_flag.store(true);
 
                     // Receive check user command
+                    memset(&temp, NULL, sizeof(temp));
                     recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
 
                     while (true) {
@@ -403,21 +404,67 @@ void Client_Thread(SOCKET NewSockid, std::vector<client_type>& client_List, std:
                     }
 
                     string tempo = std::string(temp);
-                    
+
                     my_thread[temp_id] = std::thread(Client_Single_Chatting, std::ref(client[temp_id]), std::ref(client), tempo, std::ref(my_thread[temp_id]));
-                
+
                     my_thread[temp_id].join();
                 }
-                else {
+
+                else if (strcmp(temp, "-public-chat") == 0) {
                     stop_client_thread_flag.store(true);
 
+                    while (true) {
+                        // Receive create or join room command
+                        memset(&temp, NULL, sizeof(temp));
+                        recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
 
+                        if (strcmp(temp, "-create-room") == 0) {
+                            //Receive room id
+                            memset(&temp, NULL, sizeof(temp));
+                            recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
 
+                            client[temp_id].RoomID = string(temp);
+
+                            int i;
+                            for (i = 0; i < client.size(); i++) {
+                                if (i != temp_id && client[i].RoomID.compare(string(temp)) == 0) {
+                                    send(NewSockid, "NO", 3, 0);
+                                    break;
+                                }
+                            }
+
+                            if (i == client.size()) break;
+                        }
+
+                        // join room command
+                        else {
+                            //Receive room id
+                            memset(&temp, NULL, sizeof(temp));
+                            recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
+
+                            int i;
+                            for (i = 0; i < client.size(); i++) {
+                                if (i != temp_id && client[i].RoomID.compare(string(temp)) == 0) {
+                                    send(NewSockid, "OK", 3, 0);
+                                    client[temp_id].RoomID = string(temp);
+                                    break;
+                                }
+                            }
+
+                            if (i == client.size())
+                                send(NewSockid, "NO", 3, 0);
+                            else break;
+                        }
+                    }
 
 
                     my_thread[temp_id] = std::thread(Client_Multiple_Chatting, std::ref(client[temp_id]), std::ref(client), std::ref(my_thread[temp_id]));
-                
+
                     my_thread[temp_id].join();
+                }
+
+                else {
+
                 }
             }
         }

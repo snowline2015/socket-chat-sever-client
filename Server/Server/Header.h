@@ -16,6 +16,7 @@
 #include <Windows.h>
 #include <thread>
 #include <chrono>
+#include <ctime>
 #pragma comment( lib, "wsock32.lib" )
 #pragma comment( lib, "Ws2_32.lib")
 #pragma comment( lib, "Winmm.lib")
@@ -32,7 +33,7 @@ const int MAX_CLIENTS = 10;
 struct client_type
 {
     int id = -1;
-    std::string IP, Username, Password, Fullname, DOB, Email;
+    std::string IP, Username, Password, Fullname, DOB, Email, RoomID;
     SOCKET socket = INVALID_SOCKET;
 };
 

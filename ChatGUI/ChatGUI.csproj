@@ -153,6 +153,7 @@
     <Resource Include="Assets\attach-icon.png" />
     <Resource Include="Assets\calendar-icon.png" />
     <Resource Include="Assets\background4.png" />
+    <Resource Include="background4-2 neo.png" />
     <Content Include="Database1.mdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

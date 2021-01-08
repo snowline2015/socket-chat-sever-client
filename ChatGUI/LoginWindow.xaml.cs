@@ -32,7 +32,7 @@ namespace ChatGUI
 
         //Doi vi tri cuar AttachDbFilename thanh cho luu folder ChatGUI
         String db = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\LENOVO\source\repos\ChatGUI\LoginData.mdf;Integrated Security=True";
-        private readonly WorkingWindow work = new WorkingWindow();
+        //private readonly WorkingWindow work = new WorkingWindow();
 
         private void CloseButton_Click(object sender, RoutedEventArgs e) => Close();
 
@@ -80,52 +80,12 @@ namespace ChatGUI
                 return;
             }
 
-            //try
-            //{
-            //    SqlConnection myConnection = default(SqlConnection);
-            //    myConnection = new SqlConnection(db);
-            //    SqlCommand myCommand = default(SqlCommand);
-            //    myCommand = new SqlCommand("SELECT Username,Password FROM Users WHERE Username = @Username AND Password = @Password", myConnection);
-            //    SqlParameter usrName = new SqlParameter("@Username", SqlDbType.VarChar);
-            //    SqlParameter usrPass = new SqlParameter("@Password", SqlDbType.VarChar);
-
-            //    usrName.Value = Username.Text;
-            //    usrPass.Value = Password.Password;
-
-            //    myCommand.Parameters.Add(usrName);
-            //    myCommand.Parameters.Add(usrPass);
-
-            //    myCommand.Connection.Open();
-            //    SqlDataReader myReader = myCommand.ExecuteReader(CommandBehavior.CloseConnection);
-
-            //    if (myReader.Read() == true)
-            //    {
-            //        if (warning.Text.Length != 0)
-            //            warning.Text = "";
-            //        work.Show();
-            //        this.Close();
-            //    }
-            //    else
-            //    {
-            //        warning.Text = "Incorrect username or password";
-            //        Username.Focus();
-            //    }
-
-            //    if (myConnection.State == ConnectionState.Open)
-            //    {
-            //        myConnection.Dispose();
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show(ex.Message, "Error occurred", MessageBoxButton.OK);
-            //}
-
             if(CPP.Login(client, Username.Text, Password.Password) == true)
             {
                 _friend = Username.Text;
                 if (warning.Text.Length == 0)
                     warning.Text = "";
+                WorkingWindow work = new WorkingWindow();
                 work.Show();
                 this.Close();
             }

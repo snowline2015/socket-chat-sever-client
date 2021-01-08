@@ -228,6 +228,7 @@ namespace ChatGUI
         public CurrentTimeViewModel()
         {
             UpdateTime();
+            UpdateName();
         }
 
         private void UpdateTime()
@@ -245,6 +246,18 @@ namespace ChatGUI
         {
             get { return currTime; }
             set { currTime = value; OnPropertyChanged(); }
+        }
+
+        private string name;
+        private void UpdateName()
+        {
+            CurrentName = LoginWindow._friend;
+        }
+
+        public string CurrentName
+        {
+            get { return name; }
+            set { name = value; OnPropertyChanged(); }
         }
     }
 }

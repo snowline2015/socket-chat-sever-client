@@ -162,7 +162,69 @@ namespace ConvertedCode
             return true;
         }
 
-        public bool Upload_File(client_type client, string str)
+        public bool Register(client_type client, string id, string password, string fullname, string dob, string email)
+        {
+            byte[] messageSent = Encoding.ASCII.GetBytes("-register\0");
+            int byteSent = client.socket.Send(messageSent);
+
+            byte[] messageReceived = new byte[4096];
+            int byteRecv = client.socket.Receive(messageReceived);
+
+            if (Array.Equals(Encoding.ASCII.GetString(messageReceived, 0, byteRecv), "OK\0") == false)
+                return false;
+
+            messageSent = Encoding.ASCII.GetBytes(id);
+            byteSent = client.socket.Send(messageSent);
+
+            Array.Clear(messageReceived, 0, messageReceived.Length);
+            byteRecv = client.socket.Receive(messageReceived);
+
+            if (Array.Equals(Encoding.ASCII.GetString(messageReceived, 0, byteRecv), "NO\0") == true)
+            {
+                // Tao warning   = "Username already taken !"
+                return false;
+            }
+
+            messageSent = Encoding.ASCII.GetBytes(password);
+            byteSent = client.socket.Send(messageSent);
+
+            Array.Clear(messageReceived, 0, messageReceived.Length);
+            byteRecv = client.socket.Receive(messageReceived);
+
+            if (Array.Equals(Encoding.ASCII.GetString(messageReceived, 0, byteRecv), "OK\0") == false)
+                return false;
+
+            messageSent = Encoding.ASCII.GetBytes(fullname);
+            byteSent = client.socket.Send(messageSent);
+
+            Array.Clear(messageReceived, 0, messageReceived.Length);
+            byteRecv = client.socket.Receive(messageReceived);
+
+            if (Array.Equals(Encoding.ASCII.GetString(messageReceived, 0, byteRecv), "OK\0") == false)
+                return false;
+
+            messageSent = Encoding.ASCII.GetBytes(dob);
+            byteSent = client.socket.Send(messageSent);
+
+            Array.Clear(messageReceived, 0, messageReceived.Length);
+            byteRecv = client.socket.Receive(messageReceived);
+
+            if (Array.Equals(Encoding.ASCII.GetString(messageReceived, 0, byteRecv), "OK\0") == false)
+                return false;
+
+            messageSent = Encoding.ASCII.GetBytes(email);
+            byteSent = client.socket.Send(messageSent);
+
+            Array.Clear(messageReceived, 0, messageReceived.Length);
+            byteRecv = client.socket.Receive(messageReceived);
+
+            if (Array.Equals(Encoding.ASCII.GetString(messageReceived, 0, byteRecv), "OK\0") == false)
+                return false;
+
+            return true;
+        }
+
+            public bool Upload_File(client_type client, string str)
         {
 
             string fName = "";

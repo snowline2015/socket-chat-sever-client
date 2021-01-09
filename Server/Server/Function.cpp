@@ -433,7 +433,10 @@ void Client_Thread(SOCKET NewSockid, std::vector<client_type>& client_List, std:
                                 }
                             }
 
-                            if (i == client.size()) break;
+                            if (i == client.size()) {
+                                send(NewSockid, "OK", 3, 0);
+                                break;
+                            }
                         }
 
                         // join room command

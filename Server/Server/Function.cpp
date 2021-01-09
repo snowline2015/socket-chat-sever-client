@@ -41,9 +41,7 @@ bool Register(SOCKET NewSockid, std::vector<client_type>& User_List) {
     if (iResult != SOCKET_ERROR) {
         for (std::vector<client_type>::iterator p = User_List.begin(); p != User_List.end(); p++) {
             if ((*p).Username.compare(std::string(temp)) == 0) {
-                memset(&temp, NULL, sizeof(temp));
-                strncpy(temp, "Username already taken", DEFAULT_MSG_LENGTH);
-                send(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
+                send(NewSockid, "NO", 3, 0);
                 return false;
             }
         }
@@ -69,9 +67,7 @@ bool Register(SOCKET NewSockid, std::vector<client_type>& User_List) {
                     if (iResult != SOCKET_ERROR) {
                         new_user.Email = std::string(temp);
                         User_List.push_back(new_user);
-                        memset(&temp, NULL, sizeof(temp));
-                        strncpy(temp, "Register successfully", DEFAULT_MSG_LENGTH);
-                        send(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
+                        send(NewSockid, "OK", 3, 0);
                         return true;
                     }
                     return false;

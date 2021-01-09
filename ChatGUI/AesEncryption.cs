@@ -71,29 +71,5 @@ namespace AESEncryption
 
             return plaintext;
         }
-
-        //private static void Main()
-        //{
-        //    try
-        //    {
-        //        Console.WriteLine("Input: ");
-        //        string str = Console.ReadLine();
-
-        //        using (Aes aes = Aes.Create())
-        //        {
-        //            byte[] encrypted = Encrypt_Aes(str, aes.Key, aes.IV);
-        //            Console.WriteLine(Convert.ToBase64String(encrypted));
-
-        //            string decrypted = Decrypt_Aes(encrypted, aes.Key, aes.IV);
-        //            Console.WriteLine(decrypted);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine("Error: {0}", ex.Message);
-        //    }
-        //}
-
-        
     }
 }

@@ -125,23 +125,25 @@ namespace ChatGUI
 
         private void CreateRoomClick(object sender, RoutedEventArgs e)
         {
+            gr_warning.Text = "";
             string temp = "";
             this.EnterPublicChatCommand(ref temp, "-create-room\0");
 
             if (temp.Equals("NO\0"))    //Them vai thu
             {
-                
+                gr_warning.Text = "Room already existed";
             }
         }
 
         private void JoinRoomClick(object sender, RoutedEventArgs e)
         {
+            gr_warning.Text = "";
             string temp = "";
             this.EnterPublicChatCommand(ref temp, "-join-room\0");
 
             if (temp.Equals("NO\0"))    //Them vai thu
             {
-                
+                gr_warning.Text = "Room does not exist";
             }
         }
 
@@ -158,7 +160,6 @@ namespace ChatGUI
 
             str = Encoding.ASCII.GetString(messageReceived, 0, byteRecv);
         }
-
 
         private void EnterMoreOpts(object sender, RoutedEventArgs e)
         {

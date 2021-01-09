@@ -778,9 +778,6 @@
                         </Button.Background>
                     </Button>
                     <ListBox x:Name="GroupChat" HorizontalAlignment="Left" Height="551.6" Margin="299.4,14.5,0,0" VerticalAlignment="Top" Width="620.6" Background="{x:Null}" BorderBrush="{x:Null}" FontSize="14"/>
-                    <TextBox x:Name="Search_gr" HorizontalAlignment="Left" Height="27.2" Margin="10,23.3,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="222.4" FontSize="14" Style="{DynamicResource SearchStyle1}" Background="{x:Null}" SelectionBrush="{x:Null}" SelectionTextBrush="{x:Null}" BorderBrush="#FF1C3D9A"/>
-                    <Image HorizontalAlignment="Left" Height="27.2" Margin="242.733,23.3,0,0" VerticalAlignment="Top" Width="27.133" Source="Assets/search-icon.png"/>
-                    <ListBox x:Name="ListAttendances" HorizontalAlignment="Left" Height="551.9" Margin="10,55.5,0,0" VerticalAlignment="Top" Width="275.9" Background="{x:Null}" BorderBrush="{x:Null}" FontSize="14"/>
                 </Grid>
             </Grid>
         </StackPanel>

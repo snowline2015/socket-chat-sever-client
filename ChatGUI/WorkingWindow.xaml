@@ -772,7 +772,7 @@
                         </Button.Background>
 
                     </Button>
-                    <Button x:Name="Send1" Content="Button" HorizontalAlignment="Left" Height="24" Margin="885.236,578.133,0,0" VerticalAlignment="Top" Width="24" Style="{StaticResource MyButton}">
+                    <Button x:Name="Send1" Content="Button" HorizontalAlignment="Left" Height="24" Margin="885.236,578.133,0,0" VerticalAlignment="Top" Width="24" Style="{StaticResource MyButton}" Click="Send_Click_Group" KeyDown="Send_Enter_" IsDefault="True">
                         <Button.Background>
                             <ImageBrush ImageSource="Assets/send-icon.png" Stretch="Uniform"/>
                         </Button.Background>

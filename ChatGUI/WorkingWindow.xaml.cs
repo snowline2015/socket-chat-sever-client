@@ -27,7 +27,7 @@ namespace ChatGUI
         string[] user_list = new string[10];
 
         public static volatile bool start_flag = false;
-        private static volatile bool logout_flag = false;
+        public static volatile bool logout_flag = false;
         public static string item;
 
         Thread my_thread;
@@ -133,6 +133,18 @@ namespace ChatGUI
             {
                 gr_warning.Text = "Room already existed";
             }
+
+            else
+            {
+                if (GroupChatInfoGrid.Visibility == Visibility.Visible)
+                    GroupChatInfoGrid.Visibility = Visibility.Collapsed;
+                GroupChatMain.Visibility = Visibility.Visible;
+
+                LoginWindow.CPP.Start_Client_Group_Chat(LoginWindow.client);
+
+                my_thread = new Thread(new ThreadStart(AddListboxItemsGroup));
+                my_thread.Start();
+            }
         }
 
         private void JoinRoomClick(object sender, RoutedEventArgs e)
@@ -144,6 +156,18 @@ namespace ChatGUI
             if (temp.Equals("NO\0"))    //Them vai thu
             {
                 gr_warning.Text = "Room does not exist";
+            }
+
+            else
+            {
+                if (GroupChatInfoGrid.Visibility == Visibility.Visible)
+                    GroupChatInfoGrid.Visibility = Visibility.Collapsed;
+                GroupChatMain.Visibility = Visibility.Visible;
+
+                LoginWindow.CPP.Start_Client_Group_Chat(LoginWindow.client);
+
+                my_thread = new Thread(new ThreadStart(AddListboxItemsGroup));
+                my_thread.Start();
             }
         }
 
@@ -202,13 +226,6 @@ namespace ChatGUI
             PreChatPanel.Visibility = Visibility.Visible;
         }
 
-        private void ConnectGroupChat(object sender, RoutedEventArgs e)
-        {
-            if (GroupChatInfoGrid.Visibility == Visibility.Visible)
-                GroupChatInfoGrid.Visibility = Visibility.Collapsed;
-            GroupChatMain.Visibility = Visibility.Visible;
-        }
-
         private void ReturnMainOptions(object sender, RoutedEventArgs e)
         {
             if (MoreOptPanel.Visibility == Visibility.Visible)
@@ -219,10 +236,19 @@ namespace ChatGUI
 
         private void Send_Enter(object sender, KeyEventArgs k)
         {
-            if (Keyboard.Modifiers == ModifierKeys.Control && k.Key == Key.Return)
+            if (Keyboard.Modifiers == ModifierKeys.Control && k.Key == Key.Enter)
             {
                 Send.Focus();
-                Send.RaiseEvent(new RoutedEventArgs(System.Windows.Controls.Button.ClickEvent, Send));
+                Send.RaiseEvent(new RoutedEventArgs(Button.ClickEvent, Send));
+            }
+        }
+
+        private void Send_Enter_(object sender, KeyEventArgs k)
+        {
+            if(Keyboard.Modifiers == ModifierKeys.Control && k.Key == Key.Enter)
+            {
+                Send1.Focus();
+                Send1.RaiseEvent(new RoutedEventArgs(Button.ClickEvent, Send1));
             }
         }
 
@@ -244,7 +270,7 @@ namespace ChatGUI
         {
             logout_flag = true;
             LoginWindow.CPP.End_Client_Private_Chat(LoginWindow.client);
-            my_thread.Join();
+            my_thread.Join();                 
         }
 
         public void AddListboxItems()
@@ -261,6 +287,43 @@ namespace ChatGUI
                     }));
                 }
             }
+        }
+
+        private void Send_Click_Group(object sender, RoutedEventArgs e)
+        {
+            if (ChatBox_gr.Text.Length != 0)
+            {
+                GroupChat.Items.Add("[" + DateTime.Now.ToString("HH:mm") + "] Me: " + ChatBox_gr.Text + "\n");
+                GroupChat.SelectedIndex = GroupChat.Items.Count - 1;
+
+                byte[] messageSent = Encoding.ASCII.GetBytes(ChatBox_gr.Text);
+                int byteSent = LoginWindow.client.socket.Send(messageSent);
+
+                ChatBox_gr.Text = "";
+            }
+        }
+
+        public void AddListboxItemsGroup()
+        {
+            while (!logout_flag)
+            {
+                if (start_flag)
+                {
+                    this.Dispatcher.Invoke((Action)(() =>
+                    {
+                        GroupChat.Items.Add("[" + DateTime.Now.ToString("HH:mm") + "] " + item + "\n");
+                        GroupChat.SelectedIndex = GroupChat.Items.Count - 1;
+                        start_flag = false;
+                    }));
+                }
+            }
+        }
+
+        private void EndGroupChat_Click(object sender, RoutedEventArgs e)                   // Tinh sau
+        {
+            logout_flag = true;
+            LoginWindow.CPP.End_Client_Group_Chat(LoginWindow.client);
+            my_thread.Join();                   
         }
 
         private void OnlyNumber(object sender, TextCompositionEventArgs e)

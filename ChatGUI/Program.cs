@@ -50,56 +50,39 @@ namespace ConvertedCode
 
         }
 
-        public void Client_Thread(client_type new_client)
+        public void Client_Group_Thread(client_type client)
         {
             try
             {
                 while (true)
                 {
-                    if (new_client.socket != null)
+                    if (client.socket != null)
                     {
                         byte[] messageReceived = new byte[4096];
-                        int byteRecv = new_client.socket.Receive(messageReceived);
-                        Console.WriteLine(Encoding.ASCII.GetString(messageReceived, 0, byteRecv));      //  Add listbox items
+                        int byteRecv = client.socket.Receive(messageReceived);
+
+                        string str = Encoding.ASCII.GetString(messageReceived, 0, byteRecv);
+                        WorkingWindow.item = str;
+                        WorkingWindow.start_flag = true;     //  Add listbox items
                     }
                 }
             }
             catch
             {
-                ShutDownAndClose(new_client);
+                ShutDownAndClose(client);
             }
         }
 
-        public void Client_Group_Chat(client_type client)
+        public void Start_Client_Group_Chat(client_type client)
         {
-            string str;
-            byte[] messageReceived = new byte[4096];
-            int byteRecv = client.socket.Receive(messageReceived);
-            str = Encoding.ASCII.GetString(messageReceived, 0, byteRecv);
+            WorkingWindow.logout_flag = false;
+            my_thread = new Thread(() => Client_Group_Thread(client));
+            my_thread.Start();
+        }
 
-            if (!str.Equals("-server-full"))
-            {
-
-                Thread my_thread = new Thread(() => Client_Thread(client));
-                my_thread.Start();
-
-                while (true)
-                {
-                    str = Console.ReadLine();           // nhap tin nhan
-
-                    //Encryt message before send
-                    //sent_message = string_to_hex(sent_message);
-
-                    if (str.Equals("exit")) break;    // De y dong nay, sau nay se chinh lai neu client muon out group chat
-
-                    byte[] messageSent = Encoding.ASCII.GetBytes(str);
-                    int byteSent = client.socket.Send(messageSent);
-                }
-
-                client.socket = null;
-
-                my_thread.Abort();
-            }
+        public void End_Client_Group_Chat(client_type client)
+        {
+            my_thread.Abort();
         }
 
         public void Client_Private_Thread(client_type client)
@@ -136,13 +119,13 @@ namespace ConvertedCode
 
         public void Start_Client_Private_Chat(client_type client)
         {
+            WorkingWindow.logout_flag = false;
             my_thread = new Thread(() => Client_Private_Thread(client));
             my_thread.Start();
         }
 
         public void End_Client_Private_Chat(client_type client)
         {
-            client.socket = null;
             my_thread.Abort();
         }
 
@@ -153,8 +136,6 @@ namespace ConvertedCode
 
             byte[] messageReceived = new byte[4096];
             int byteRecv = client.socket.Receive(messageReceived);
-            //string str = Encoding.ASCII.GetString(messageReceived, 0, byteRecv);
-
 
             if (Array.Equals(Encoding.ASCII.GetString(messageReceived, 0, byteRecv), "OK\0") == false)
                 return false;

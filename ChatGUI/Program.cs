@@ -60,7 +60,7 @@ namespace ConvertedCode
                     {
                         byte[] messageReceived = new byte[4096];
                         int byteRecv = new_client.socket.Receive(messageReceived);
-                        Console.WriteLine(Encoding.ASCII.GetString(messageReceived, 0, byteRecv));
+                        Console.WriteLine(Encoding.ASCII.GetString(messageReceived, 0, byteRecv));      //  Add listbox items
                     }
                 }
             }
@@ -77,7 +77,7 @@ namespace ConvertedCode
             int byteRecv = client.socket.Receive(messageReceived);
             str = Encoding.ASCII.GetString(messageReceived, 0, byteRecv);
 
-            if (!str.Equals("Server is full"))
+            if (!str.Equals("-server-full"))
             {
 
                 Thread my_thread = new Thread(() => Client_Thread(client));
@@ -85,7 +85,7 @@ namespace ConvertedCode
 
                 while (true)
                 {
-                    str = Console.ReadLine();
+                    str = Console.ReadLine();           // nhap tin nhan
 
                     //Encryt message before send
                     //sent_message = string_to_hex(sent_message);

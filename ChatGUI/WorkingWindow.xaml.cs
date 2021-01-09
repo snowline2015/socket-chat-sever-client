@@ -8,6 +8,7 @@ using AESEncryption;
 using System.Text;
 using System.Threading;
 using System.Windows.Input;
+using System.Windows.Controls;
 
 namespace ChatGUI
 {
@@ -113,11 +114,51 @@ namespace ChatGUI
 
         private void EnterGroupChat(object sender, RoutedEventArgs e)
         {
+            byte[] messageSent = Encoding.ASCII.GetBytes("-public-chat\0");
+            int byteSent = LoginWindow.client.socket.Send(messageSent);
+
             if (PreChatPanel.Visibility == Visibility.Visible)
                 PreChatPanel.Visibility = Visibility.Collapsed;
             GroupChatPanel.Visibility = Visibility.Visible;
             GroupChatInfoGrid.Visibility = Visibility.Visible;
         }
+
+        private void CreateRoomClick(object sender, RoutedEventArgs e)
+        {
+            string temp = "";
+            this.EnterPublicChatCommand(ref temp, "-create-room\0");
+
+            if (temp.Equals("NO\0"))    //Them vai thu
+            {
+                
+            }
+        }
+
+        private void JoinRoomClick(object sender, RoutedEventArgs e)
+        {
+            string temp = "";
+            this.EnterPublicChatCommand(ref temp, "-join-room\0");
+
+            if (temp.Equals("NO\0"))    //Them vai thu
+            {
+                
+            }
+        }
+
+        private void EnterPublicChatCommand(ref string str, string cmd)
+        {
+            byte[] messageSent = Encoding.ASCII.GetBytes(cmd);
+            int byteSent = LoginWindow.client.socket.Send(messageSent);
+
+            messageSent = Encoding.ASCII.GetBytes(IPAddress_server_gr.Text);
+            byteSent = LoginWindow.client.socket.Send(messageSent);
+
+            byte[] messageReceived = new byte[4096];
+            int byteRecv = LoginWindow.client.socket.Receive(messageReceived);
+
+            str = Encoding.ASCII.GetString(messageReceived, 0, byteRecv);
+        }
+
 
         private void EnterMoreOpts(object sender, RoutedEventArgs e)
         {
@@ -220,6 +261,12 @@ namespace ChatGUI
                 }
             }
         }
+
+        private void OnlyNumber(object sender, TextCompositionEventArgs e)
+        {
+            System.Text.RegularExpressions.Regex regex = new System.Text.RegularExpressions.Regex("[^0-9]");
+            e.Handled = regex.IsMatch(e.Text);
+        }
     }
 
     public class CurrentTimeViewModel : INotifyPropertyChanged
@@ -260,4 +307,6 @@ namespace ChatGUI
             set { name = value; OnPropertyChanged(); }
         }
     }
+
+    
 }

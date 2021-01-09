@@ -95,22 +95,20 @@ bool Login(SOCKET NewSockid, std::vector<client_type>& User_List, std::string& u
                 username = (*p).Username;
                 memset(&temp, NULL, sizeof(temp));
                 iResult = recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
-                if (iResult != SOCKET_ERROR) 
+                if (iResult != SOCKET_ERROR) {
                     if ((*p).Password.compare(std::string(temp)) == 0) {
-                        memset(&temp, NULL, sizeof(temp));
-                        strncpy(temp, "Login successfully", DEFAULT_MSG_LENGTH);
-                        send(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
+                        send(NewSockid, "OK", 3, 0);
                         return true;
                     }
                     else {
-                        memset(&temp, NULL, sizeof(temp));
-                        strncpy(temp, "ID or Password is incorrect", DEFAULT_MSG_LENGTH);
-                        send(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
+                        send(NewSockid, "NO", 3, 0);
                         return false;
                     }
-                return false;
+                }
+                else return false;
             }
         }
+        send(NewSockid, "NO", 3, 0);
         return false;
     }
     return false;

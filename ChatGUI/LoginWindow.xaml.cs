@@ -92,6 +92,7 @@ namespace ChatGUI
             else
             {
                 warning.Text = "ID or Password is incorrect";
+                Password.Password = "";
                 Username.Focus();
             }
         }

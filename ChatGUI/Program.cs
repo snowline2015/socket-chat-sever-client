@@ -153,15 +153,10 @@ namespace ConvertedCode
             messageSent = Encoding.ASCII.GetBytes(password);
             byteSent = client.socket.Send(messageSent);
 
-            while (true)
-            {
-                Array.Clear(messageReceived, 0, messageReceived.Length);
-                byteRecv = client.socket.Receive(messageReceived);
-                if (byteRecv <= 0) continue;
-                else break;
-            }
+            Array.Clear(messageReceived, 0, messageReceived.Length);
+            byteRecv = client.socket.Receive(messageReceived);
 
-            if (Array.Equals(Encoding.ASCII.GetString(messageReceived, 0, byteRecv), "ID or Password is incorrect\0") == true)
+            if (Array.Equals(Encoding.ASCII.GetString(messageReceived, 0, byteRecv), "NO\0") == true)
                 return false;
 
             return true;

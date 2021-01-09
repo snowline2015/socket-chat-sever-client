@@ -266,7 +266,7 @@ namespace ChatGUI
             }
         }
 
-        private void EndChat_Click(object sender, RoutedEventArgs e)
+        private void EndChat_Click(object sender, RoutedEventArgs e)                // Tinh sau
         {
             logout_flag = true;
             LoginWindow.CPP.End_Client_Private_Chat(LoginWindow.client);

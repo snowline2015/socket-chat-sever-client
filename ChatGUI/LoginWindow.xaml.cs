@@ -28,11 +28,6 @@ namespace ChatGUI
         bool success;
 
         public static string _friend;
-       
-
-        //Doi vi tri cuar AttachDbFilename thanh cho luu folder ChatGUI
-        String db = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\LENOVO\source\repos\ChatGUI\LoginData.mdf;Integrated Security=True";
-        //private readonly WorkingWindow work = new WorkingWindow();
 
         private void CloseButton_Click(object sender, RoutedEventArgs e) => Close();
 
@@ -118,38 +113,25 @@ namespace ChatGUI
                 MessageBox.Show("Please fill all information");
                 return;
             }
-            try
+
+            if (CPP.Register(client, UsrName_reg.Text, Pass_reg.Text, Name.Text, Birthday.Text, Mail_reg.Text) == true)
             {
-                SqlConnection connection = default(SqlConnection);
-                connection = new SqlConnection(db);
-                string cmd = "Insert into Users (Username,Password,Name,Email,Birthday) VALUES (@Username,@Password,@Name,@Email,@Birthday)";
+                MessageBox.Show("Register successfully");
 
-                SqlCommand command = default(SqlCommand);
-                command = new SqlCommand(cmd, connection);
-
-                connection.Open();
-                command.Parameters.AddWithValue("@Username", UsrName_reg.Text);
-                command.Parameters.AddWithValue("@Password", Pass_reg.Text);
-                command.Parameters.AddWithValue("@Name", Name.Text);
-                command.Parameters.AddWithValue("@Email", Mail_reg.Text);
-                command.Parameters.AddWithValue("@Birthday", Birthday.SelectedDate.Value.Date.ToShortDateString());
-
-                command.ExecuteNonQuery();
-                MessageBox.Show("Success");
-                connection.Close();
-
-                if (connection.State == ConnectionState.Open)
-                {
-                    connection.Dispose();
-                }
+                UsrName_reg.Text = "";
+                Pass_reg.Text = "";
+                Name.Text = "";
+                Birthday.Text = "";
+                Mail_reg.Text = "";
             }
-            catch (Exception ex)
+            else
             {
-                MessageBox.Show(ex.Message, "Error occurred", MessageBoxButton.OK);
+                MessageBox.Show("Username already taken");
+
+                UsrName_reg.Text = "";
+                Pass_reg.Text = "";
             }
         }
-
-
 
         private void ConnectServer_Click(object sender, RoutedEventArgs e)
         {

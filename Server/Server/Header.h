@@ -33,6 +33,7 @@ const int MAX_CLIENTS = 10;
 struct client_type
 {
     int id = -1;
+    bool Online = false;
     std::string IP, Username, Password, Fullname, DOB, Email, RoomID;
     SOCKET socket = INVALID_SOCKET;
 };

@@ -6,3 +6,4 @@
 6. (Quan trọng) làm options 3
 7. thêm đồ wjbu
 8. (Cuối cùng) chuyển thành release
+9. Thêm thông báo client login logout bên server

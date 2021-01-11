@@ -23,14 +23,13 @@ namespace ChatGUI
             DataContext = new CurrentTimeViewModel();
         }
 
-        //private readonly LoginWindow login = new LoginWindow();
         string[] user_list = new string[10];
 
         public static volatile bool start_flag = false;
         public static volatile bool logout_flag = false;
         public static string item;
 
-        Thread my_thread;
+        public static Thread my_thread;
 
         private void TakeUserList()
         {
@@ -40,7 +39,7 @@ namespace ChatGUI
             {
                 if (str.Equals(LoginWindow._friend) == false)
                     list_friend_pr.Items.Add(str);
-            }  
+            }
         }
 
         private void SelectUser()
@@ -194,6 +193,8 @@ namespace ChatGUI
 
         public void CloseButton_Click(object sender, RoutedEventArgs e)
         {
+            byte[] messageSent = Encoding.ASCII.GetBytes("-logout\0");
+            int byteSent = LoginWindow.client.socket.Send(messageSent);
             this.Close();
         }
 
@@ -256,7 +257,7 @@ namespace ChatGUI
         {
             if (ChatBox_pr.Text.Length != 0)
             {
-                PrivateChat.Items.Add("Me at " + DateTime.Now.ToString("HH:mm") +":\n" + ChatBox_pr.Text + "\n");
+                PrivateChat.Items.Add("Me at " + DateTime.Now.ToString("HH:mm") +" :\n" + ChatBox_pr.Text + "\n");
                 PrivateChat.SelectedIndex = PrivateChat.Items.Count - 1;
 
                 byte[] messageSent = Encoding.ASCII.GetBytes(ChatBox_pr.Text);
@@ -272,6 +273,8 @@ namespace ChatGUI
             logout_flag = true;
             LoginWindow.CPP.End_Client_Private_Chat(LoginWindow.client);
             my_thread.Join();
+            byte[] messageSent = Encoding.ASCII.GetBytes("-back\0");
+            int byteSent = LoginWindow.client.socket.Send(messageSent);
 
             PrivateChatPanel.Visibility = Visibility.Collapsed;
             PreChatPanel.Visibility = Visibility.Visible;
@@ -288,9 +291,32 @@ namespace ChatGUI
                     this.Dispatcher.Invoke((Action)(() =>
                     {
                         item_array = item.Split(sep, 2);
-                        PrivateChat.Items.Add(item_array[0] + " at " + DateTime.Now.ToString("HH:mm") + ":\n" + item_array[1] + "\n");       
-                        PrivateChat.SelectedIndex = PrivateChat.Items.Count - 1;
-                        start_flag = false;
+
+                        if (item_array[0] == "-disconnect")
+                        {
+                            PrivateChat.Items.Add("User disconnected\nEnding private chat.....");
+                            Thread.Sleep(2000);
+
+                            //PrivateChatMain.Visibility = Visibility.Collapsed;
+                            //logout_flag = true;
+                            start_flag = false;
+                            //LoginWindow.CPP.End_Client_Private_Chat(LoginWindow.client);
+                            //my_thread.Join();
+                            //byte[] messageSent = Encoding.ASCII.GetBytes("-back\0");
+                            //int byteSent = LoginWindow.client.socket.Send(messageSent);
+
+                            //PrivateChatPanel.Visibility = Visibility.Collapsed;
+                            //PreChatPanel.Visibility = Visibility.Visible;
+
+                            exit_pr_chat.Focus();
+                            exit_pr_chat.RaiseEvent(new RoutedEventArgs(Button.ClickEvent, exit_pr_chat));
+                        }
+                        else
+                        {
+                            PrivateChat.Items.Add(item_array[0] + " at " + DateTime.Now.ToString("HH:mm") + " :\n" + item_array[1] + "\n");
+                            PrivateChat.SelectedIndex = PrivateChat.Items.Count - 1;
+                            start_flag = false;
+                        }
                     }));
                 }
             }
@@ -300,7 +326,7 @@ namespace ChatGUI
         {
             if (ChatBox_gr.Text.Length != 0)
             {
-                GroupChat.Items.Add("Me at " + DateTime.Now.ToString("HH:mm") + ":\n" + ChatBox_gr.Text + "\n");
+                GroupChat.Items.Add("Me at " + DateTime.Now.ToString("HH:mm") + " :\n" + ChatBox_gr.Text + "\n");
                 GroupChat.SelectedIndex = GroupChat.Items.Count - 1;
 
                 byte[] messageSent = Encoding.ASCII.GetBytes(ChatBox_gr.Text);
@@ -321,7 +347,7 @@ namespace ChatGUI
                     this.Dispatcher.Invoke((Action)(() =>
                     {
                         item_array = item.Split(sep, 2);
-                        GroupChat.Items.Add(item_array[0] + " at " + DateTime.Now.ToString("HH:mm") + ":\n" + item_array[1] + "\n");
+                        GroupChat.Items.Add(item_array[0] + " at " + DateTime.Now.ToString("HH:mm") + " :\n" + item_array[1] + "\n");
                         GroupChat.SelectedIndex = GroupChat.Items.Count - 1;
                         start_flag = false;
                     }));

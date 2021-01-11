@@ -154,6 +154,8 @@
     <Resource Include="Assets\calendar-icon.png" />
     <Resource Include="Assets\background4.png" />
     <Resource Include="5.jpg" />
+    <Resource Include="Assets\encrypted.png" />
+    <Resource Include="Assets\search-icon.png" />
     <Content Include="Database1.mdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

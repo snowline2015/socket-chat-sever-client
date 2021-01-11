@@ -107,6 +107,12 @@ namespace ConvertedCode
                         byteSent = client.socket.Send(messageSent);
                         Download_File(client);
                     }
+                    else if (Array.Equals(Encoding.ASCII.GetString(messageReceived, 0, byteRecv), "-disconnect\0") == true)
+                    {
+                        WorkingWindow.item = "-disconnect";
+                        WorkingWindow.start_flag = true;
+                        break;
+                    }
                     else
                     {
                         string str = Encoding.ASCII.GetString(messageReceived, 0, byteRecv);
@@ -139,7 +145,6 @@ namespace ConvertedCode
 
             if (Array.Equals(Encoding.ASCII.GetString(messageReceived, 0, byteRecv), "OK\0") == false)
                 return false;
-
 
             messageSent = Encoding.ASCII.GetBytes(id);
             byteSent = client.socket.Send(messageSent);

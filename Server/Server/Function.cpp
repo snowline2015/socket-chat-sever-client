@@ -354,114 +354,159 @@ void Download_File(client_type& client, std::string& fileName) {
 
 void Client_Thread(SOCKET NewSockid, std::vector<client_type>& client_List, std::vector<client_type>& client, std::thread my_thread[], int temp_id, std::thread& thread) {
     while (true) {
-        if (stop_client_thread_flag.load() == true) continue;
         char temp[DEFAULT_MSG_LENGTH];
-        int iResult = recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
 
-        if (strcmp(temp, "-register") == 0) {
+        int iResult = recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
+        if (iResult == SOCKET_ERROR) break;
+
+        if (strcmp(temp, "-logout") == 0) {
+            closesocket(client[temp_id].socket);
+            closesocket(NewSockid);
+            client[temp_id].socket = INVALID_SOCKET;
+            client[temp_id].Online = false;
+            break;
+        }
+
+        else if (strcmp(temp, "-register") == 0) {
             send(NewSockid, "OK", 3, 0);
             if (Register(NewSockid, client_List) == true)
                 Write_Account(client_List);
         }
 
-        if (strcmp(temp, "-login") == 0) {
+        else if (strcmp(temp, "-login") == 0) {
             std::string username;
             send(NewSockid, "OK", 3, 0);
             if (Login(NewSockid, client_List, username) == true) {
                 client[temp_id].Username = username;
-                memset(&temp, NULL, sizeof(temp));
-                recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
+                client[temp_id].Online = true;
+                
+                while (true) {
 
-                if (strcmp(temp, "-logout") == 0) {
-                    if (my_thread[temp_id].joinable())
-                        my_thread[temp_id].detach();
-                    closesocket(client[temp_id].socket);
-                    client[temp_id].socket = INVALID_SOCKET;
-                    break;
-                }
+                    if (stop_client_thread_flag.load() == true) continue;
 
-                else if (strcmp(temp, "-private-chat") == 0) {
-                    stop_client_thread_flag.store(true);
-
-                    // Receive check user command
                     memset(&temp, NULL, sizeof(temp));
-                    recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
+                    iResult = recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
 
-                    while (true) {
-                        Check_Users_Online(NewSockid, client);
-
-                        // receive online-user username
-                        memset(&temp, NULL, sizeof(temp));
-                        recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
-
-                        if (strcmp(temp, "-check-users") != 0) break;
+                    if (strcmp(temp, "-logout") == 0) {
+                        my_thread[temp_id].detach();
+                        closesocket(client[temp_id].socket);
+                        closesocket(NewSockid);
+                        client[temp_id].socket = INVALID_SOCKET;
+                        client[temp_id].Online = false;
+                        break;
                     }
 
-                    string tempo = std::string(temp);
+                    else if (strcmp(temp, "-private-chat") == 0) {
+                        stop_client_thread_flag.store(true);
 
-                    my_thread[temp_id] = std::thread(Client_Single_Chatting, std::ref(client[temp_id]), std::ref(client), tempo, std::ref(my_thread[temp_id]));
-
-                    my_thread[temp_id].join();
-                }
-
-                else if (strcmp(temp, "-public-chat") == 0) {
-                    stop_client_thread_flag.store(true);
-
-                    while (true) {
-                        // Receive create or join room command
+                        // Receive check user command
                         memset(&temp, NULL, sizeof(temp));
-                        recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
+                        iResult = recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
 
-                        if (strcmp(temp, "-create-room") == 0) {
-                            //Receive room id
-                            memset(&temp, NULL, sizeof(temp));
-                            recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
+                        if (strcmp(temp, "-back") == 0) {
+                            stop_client_thread_flag.store(false);
+                        }
+                        
+                        else {
+                            while (true) {
+                                Check_Users_Online(NewSockid, client);
 
-                            client[temp_id].RoomID = string(temp);
+                                // receive online-user username
+                                memset(&temp, NULL, sizeof(temp));
+                                iResult = recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
 
-                            int i;
-                            for (i = 0; i < client.size(); i++) {
-                                if (i != temp_id && client[i].RoomID.compare(string(temp)) == 0) {
-                                    send(NewSockid, "NO", 3, 0);
-                                    break;
-                                }
+                                if (strcmp(temp, "-check-users") != 0) break;
                             }
 
-                            if (i == client.size()) {
-                                send(NewSockid, "OK", 3, 0);
+                            string tempo = std::string(temp);
+
+                            my_thread[temp_id] = std::thread(Client_Single_Chatting, std::ref(client[temp_id]), std::ref(client), tempo, std::ref(my_thread[temp_id]));
+
+                            my_thread[temp_id].join();
+                        }
+                    }
+
+                    else if (strcmp(temp, "-public-chat") == 0) {
+                        stop_client_thread_flag.store(true);
+
+                        while (true) {
+                            // Receive create or join room command
+                            memset(&temp, NULL, sizeof(temp));
+                            iResult = recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
+
+                            if (strcmp(temp, "-back") == 0) {
+                                stop_client_thread_flag.store(false);
                                 break;
                             }
-                        }
 
-                        // join room command
-                        else {
-                            //Receive room id
-                            memset(&temp, NULL, sizeof(temp));
-                            recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
+                            else if (strcmp(temp, "-create-room") == 0) {
+                                //Receive room id
+                                memset(&temp, NULL, sizeof(temp));
+                                iResult = recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
 
-                            int i;
-                            for (i = 0; i < client.size(); i++) {
-                                if (i != temp_id && client[i].RoomID.compare(string(temp)) == 0) {
+                                client[temp_id].RoomID = string(temp);
+
+                                int i;
+                                for (i = 0; i < client.size(); i++) {
+                                    if (i != temp_id && client[i].RoomID.compare(string(temp)) == 0) {
+                                        send(NewSockid, "NO", 3, 0);
+                                        break;
+                                    }
+                                }
+
+                                if (i == client.size()) {
                                     send(NewSockid, "OK", 3, 0);
-                                    client[temp_id].RoomID = string(temp);
                                     break;
                                 }
                             }
 
-                            if (i == client.size())
-                                send(NewSockid, "NO", 3, 0);
-                            else break;
+                            // join room command
+                            else {
+                                //Receive room id
+                                memset(&temp, NULL, sizeof(temp));
+                                iResult = recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
+
+                                int i;
+                                for (i = 0; i < client.size(); i++) {
+                                    if (i != temp_id && client[i].RoomID.compare(string(temp)) == 0) {
+                                        send(NewSockid, "OK", 3, 0);
+                                        client[temp_id].RoomID = string(temp);
+                                        break;
+                                    }
+                                }
+
+                                if (i == client.size())
+                                    send(NewSockid, "NO", 3, 0);
+                                else break;
+                            }
+                        }
+
+                        if (strcmp(temp, "-back") != 0) {
+                            my_thread[temp_id] = std::thread(Client_Multiple_Chatting, std::ref(client[temp_id]), std::ref(client), std::ref(my_thread[temp_id]));
+                            my_thread[temp_id].join();
                         }
                     }
 
+                    else if (strcmp(temp, "-other-option") == 0) {
 
-                    my_thread[temp_id] = std::thread(Client_Multiple_Chatting, std::ref(client[temp_id]), std::ref(client), std::ref(my_thread[temp_id]));
+                        memset(&temp, NULL, sizeof(temp));
+                        iResult = recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
 
-                    my_thread[temp_id].join();
-                }
+                        if (strcmp(temp, "-change-password") == 0) {
+                            send(NewSockid, "OK", 3, 0);
+                            Change_Password(NewSockid, client_List);
+                        }
 
-                else {
+                        else if (strcmp(temp, "-check-user") == 0) {
+                            send(NewSockid, "OK", 3, 0);
+                            Check_User(NewSockid, client, client_List);                                           
+                        }
 
+                        else if (strcmp(temp, "-change-info") == 0) {
+                            send(NewSockid, "OK", 3, 0);
+                            Change_Info(NewSockid, client_List);
+                        }
+                    }
                 }
             }
         }
@@ -470,11 +515,103 @@ void Client_Thread(SOCKET NewSockid, std::vector<client_type>& client_List, std:
     thread.detach();
 }
 
-void Check_Users_Online(SOCKET NewSockid, std::vector<client_type>& User_List) {
+void Check_Users_Online(SOCKET NewSockid, std::vector<client_type> User_List) {
     std::string str = "";
     for (int i = 0; i < MAX_CLIENTS; i++) 
-        if (User_List[i].socket != INVALID_SOCKET && User_List[i].Username != "")
+        if (User_List[i].socket != INVALID_SOCKET && User_List[i].Username != "" && User_List[i].Online == true)
             str.append(User_List[i].Username + "\n");
         
     send(NewSockid, str.c_str(), strlen(str.c_str()), 0);
+}
+
+void Change_Password(SOCKET NewSockid, std::vector<client_type>& client_List) {
+    char temp[DEFAULT_MSG_LENGTH];
+    int iResult = recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
+
+    for (int i = 0; i < client_List.size(); i++) {
+        if (client_List[i].Username.compare(string(temp)) == 0) {
+            send(NewSockid, "OK", 3, 0);
+
+            memset(&temp, NULL, sizeof(temp));
+            iResult = recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
+
+            client_List[i].Password = string(temp);
+            send(NewSockid, "OK", 3, 0);
+
+            break;
+        }
+    }
+}
+
+void Check_User(SOCKET NewSockid, std::vector<client_type> client, std::vector<client_type> client_List) {
+    string user_info = "";
+    char temp[DEFAULT_MSG_LENGTH];
+    int iResult = recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
+
+    int i;
+    for (i = 0; i < client_List.size(); i++) {
+        if (client_List[i].Username.compare(string(temp)) == 0) {
+            user_info.append(client_List[i].Fullname + "\n").append(client_List[i].DOB + "\n").append(client_List[i].Email + "\n");
+            break;
+        }
+    }
+
+    if (i == client_List.size())
+        send(NewSockid, "NO", 3, 0);
+
+    else {
+        for (i = 0; i < MAX_CLIENTS; i++) {
+            if (client[i].socket != INVALID_SOCKET && client[i].Username.compare(string(temp)) == 0) {
+                if (client[i].Online == true)
+                    user_info.append("TRUE\n");
+                else
+                    user_info.append("FALSE\n");
+                break;
+            }
+        }
+
+        if (i == MAX_CLIENTS)
+            user_info.append("FALSE\n");
+
+        send(NewSockid, user_info.c_str(), strlen(user_info.c_str()), 0);
+    }
+}
+
+void Change_Info(SOCKET NewSockid, std::vector<client_type>& client_List) {
+    char temp[DEFAULT_MSG_LENGTH];
+    int iResult = recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
+
+    for (int i = 0; i < client_List.size(); i++) {
+        if (client_List[i].Username.compare(string(temp)) == 0) {
+            send(NewSockid, "OK", 3, 0);
+
+            memset(&temp, NULL, sizeof(temp));
+            iResult = recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
+
+            send(NewSockid, "OK", 3, 0);
+
+            if (strcmp(temp, "-change-fullname") == 0) {
+                memset(&temp, NULL, sizeof(temp));
+                iResult = recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
+
+                client_List[i].Fullname = string(temp);
+            }
+
+            else if (strcmp(temp, "-change-dob") == 0) {
+                memset(&temp, NULL, sizeof(temp));
+                iResult = recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
+
+                client_List[i].DOB = string(temp);
+            }
+
+            else if (strcmp(temp, "-change-email") == 0) {
+                memset(&temp, NULL, sizeof(temp));
+                iResult = recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
+
+                client_List[i].Email = string(temp);
+            }
+            break;
+        }
+    }
+    send(NewSockid, "OK", 3, 0);
 }

@@ -33,6 +33,7 @@ const int MAX_CLIENTS = 10;
 struct client_type
 {
     int id = -1;
+    bool Online = false;
     std::string IP, Username, Password, Fullname, DOB, Email, RoomID;
     SOCKET socket = INVALID_SOCKET;
 };
@@ -44,7 +45,10 @@ void Read_Account(std::vector<client_type>& User_List);
 void Write_Account(std::vector<client_type>& User_List);
 bool Register(SOCKET NewSockid, std::vector<client_type>& User_List);
 bool Login(SOCKET NewSockid, std::vector<client_type>& User_List, string& username);
-void Check_Users_Online(SOCKET NewSockid, std::vector<client_type>& User_List);
+void Check_Users_Online(SOCKET NewSockid, std::vector<client_type> User_List);
+void Change_Password(SOCKET NewSockid, std::vector<client_type>& client_List);
+void Change_Info(SOCKET NewSockid, std::vector<client_type>& client_List);
+void Check_User(SOCKET NewSockid, std::vector<client_type> client, std::vector<client_type> client_List);
 
 void Upload_File(client_type& client, std::string& fileName);
 void Download_File(client_type& client, std::string& fileName);

@@ -1,4 +1,3 @@
-1. show bi
 2. làm message box
 3. hiện thông báo ngăn client nhắn tin khi đang nhận / gửi file
 4. nút thoát chat

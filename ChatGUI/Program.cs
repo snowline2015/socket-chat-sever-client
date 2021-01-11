@@ -479,9 +479,80 @@ namespace ConvertedCode
             byte[] messageReceived = new byte[4096];
             int byteRecv = client.socket.Receive(messageReceived);
 
-            string temp = System.Text.Encoding.ASCII.GetString(messageReceived, 0, messageReceived.Length);
-            client_array = temp.Split('\n');
-            
+            string temp = Encoding.ASCII.GetString(messageReceived, 0, messageReceived.Length);
+            client_array = temp.Split('\n');  
+        }
+
+        public void Check_User_Info(client_type client, string username, ref string[] user_info)
+        {
+            Array.Clear(user_info, 0, user_info.Length);
+            byte[] messageSent = Encoding.ASCII.GetBytes("-check-user\0");
+            int byteSent = client.socket.Send(messageSent);
+
+            byte[] messageReceived = new byte[4096];
+            int byteRecv = client.socket.Receive(messageReceived);
+
+            messageSent = Encoding.ASCII.GetBytes(username);     
+            byteSent = client.socket.Send(messageSent);
+
+            Array.Clear(messageReceived, 0, messageReceived.Length);
+            byteRecv = client.socket.Receive(messageReceived);
+
+            if (Array.Equals(Encoding.ASCII.GetString(messageReceived, 0, byteRecv), "NO\0") == true)
+            {
+                // Lam gi do khi khong tim thay user
+            }
+
+            string temp = Encoding.ASCII.GetString(messageReceived, 0, messageReceived.Length);
+            user_info = temp.Split('\n');
+        }
+
+        public void Change_Password(client_type client, string username, string new_password)
+        {
+            byte[] messageSent = Encoding.ASCII.GetBytes("-change-password\0");
+            int byteSent = client.socket.Send(messageSent);
+
+            byte[] messageReceived = new byte[4096];
+            int byteRecv = client.socket.Receive(messageReceived);
+
+            messageSent = Encoding.ASCII.GetBytes(username);
+            byteSent = client.socket.Send(messageSent);
+
+            Array.Clear(messageReceived, 0, messageReceived.Length);
+            byteRecv = client.socket.Receive(messageReceived);
+
+            messageSent = Encoding.ASCII.GetBytes(new_password);
+            byteSent = client.socket.Send(messageSent);
+
+            Array.Clear(messageReceived, 0, messageReceived.Length);
+            byteRecv = client.socket.Receive(messageReceived);
+        }
+
+        public void Change_Info(client_type client, string username, string option, string new_info)
+        {
+            byte[] messageSent = Encoding.ASCII.GetBytes("-change-info\0");
+            int byteSent = client.socket.Send(messageSent);
+
+            byte[] messageReceived = new byte[4096];
+            int byteRecv = client.socket.Receive(messageReceived);
+
+            messageSent = Encoding.ASCII.GetBytes(username);
+            byteSent = client.socket.Send(messageSent);
+
+            Array.Clear(messageReceived, 0, messageReceived.Length);
+            byteRecv = client.socket.Receive(messageReceived);
+
+            messageSent = Encoding.ASCII.GetBytes(option);
+            byteSent = client.socket.Send(messageSent);
+
+            Array.Clear(messageReceived, 0, messageReceived.Length);
+            byteRecv = client.socket.Receive(messageReceived);
+
+            messageSent = Encoding.ASCII.GetBytes(new_info);
+            byteSent = client.socket.Send(messageSent);
+
+            Array.Clear(messageReceived, 0, messageReceived.Length);
+            byteRecv = client.socket.Receive(messageReceived);
         }
     }
 }

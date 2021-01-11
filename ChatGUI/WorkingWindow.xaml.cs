@@ -331,6 +331,12 @@ namespace ChatGUI
             System.Text.RegularExpressions.Regex regex = new System.Text.RegularExpressions.Regex("[^0-9]");
             e.Handled = regex.IsMatch(e.Text);
         }
+
+        private void MoveMainWindow(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+                DragMove();
+        }
     }
 
     public class CurrentTimeViewModel : INotifyPropertyChanged

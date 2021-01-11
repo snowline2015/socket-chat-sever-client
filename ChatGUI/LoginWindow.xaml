@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ChatGUI"
         mc:Ignorable="d"
-        Title="LoginWindow" Foreground="{x:Null}" WindowStartupLocation="CenterScreen" Background="{x:Null}" AllowsTransparency="True" WindowStyle="None" SizeToContent="WidthAndHeight" d:DesignHeight="700.4" Width="921.3">
+        Title="LoginWindow" Foreground="{x:Null}" WindowStartupLocation="CenterScreen" Background="{x:Null}" AllowsTransparency="True" WindowStyle="None" SizeToContent="WidthAndHeight" Width="562.5" Height="668">
     <Window.Resources>
 
         <SolidColorBrush x:Key="TextBox.Static.Border" Color="#FFABAdB3"/>
@@ -387,11 +387,11 @@
     </Window.Resources>
 
 
-    <StackPanel x:Name="Login_Panel" Height="667" Margin="184.5,19,0,0" Width="561.6" HorizontalAlignment="Left">
+    <StackPanel x:Name="Login_Panel" Margin="0" Width="561.6" HorizontalAlignment="Left" Height="667" VerticalAlignment="Top">
         <StackPanel.Background>
             <ImageBrush ImageSource="Assets/background4.png"/>
         </StackPanel.Background>
-        <Grid x:Name="LoginGrid" Height="667.6">
+        <Grid x:Name="LoginGrid" Height="667.6" Visibility="Visible">
             <TextBlock x:Name="txt_Welcome" HorizontalAlignment="Left" Height="40.8" Margin="56.4,95.6,0,0" TextWrapping="Wrap" Text="Welcome To Chat App" VerticalAlignment="Top" Width="453.6" FontSize="26" TextAlignment="Center" Foreground="Black"/>
             <TextBox x:Name="Username" HorizontalAlignment="Left" Height="43" Margin="56.4,252.501,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="453.6" Background="#FFBCD2ED" BorderBrush="{x:Null}" BorderThickness="1.5" SelectionBrush="#FF3DA0E5" SelectionTextBrush="{x:Null}" 
                 VerticalContentAlignment="Center" FontSize="18" Text="" GotFocus="RemoveText" Style="{DynamicResource UsrName_Login}" Padding="5,0,0,0" Visibility="Collapsed"/>
@@ -410,9 +410,9 @@
                 </Button.Background>
             </Button>
             <TextBlock x:Name="txt_SignIn" HorizontalAlignment="Left" Height="40.8" Margin="56.4,136.4,0,0" TextWrapping="Wrap" Text="Sign In" VerticalAlignment="Top" Width="453.6" FontSize="26" TextAlignment="Center" FontWeight="Bold" Foreground="Black"/>
-            <Button x:Name="reg" Content="SignUp Now" HorizontalAlignment="Left" Height="28.8" Margin="286.8,634.8,0,0" VerticalAlignment="Top" Width="115.2" FontWeight="Bold" FontSize="16" Background="{x:Null}" Foreground="#FFDA2121" BorderBrush="{x:Null}" Click="EnterRegister"/>
-            <Label x:Name="label" Content="Haven't got account?" HorizontalAlignment="Left" Height="28.8" Margin="140,634.8,0,0" VerticalAlignment="Top" Width="141.8" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="14" Foreground="Black" Background="{x:Null}"/>
-            <TextBlock x:Name="warning" HorizontalAlignment="Left" Height="40" Margin="56,477,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="454" Foreground="#FFF00F0F" FontSize="15" FontWeight="SemiBold" TextAlignment="Center"/>
+            <Button x:Name="reg" Content="SignUp Now" HorizontalAlignment="Left" Height="28.8" Margin="286.8,634.8,0,0" VerticalAlignment="Top" Width="115.2" FontWeight="Bold" FontSize="16" Background="{x:Null}" Foreground="#FFDA2121" BorderBrush="{x:Null}" Click="EnterRegister" Visibility="Collapsed"/>
+            <Label x:Name="some_label" Content="Haven't got account?" HorizontalAlignment="Left" Height="28.8" Margin="140,634.8,0,0" VerticalAlignment="Top" Width="141.8" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="14" Foreground="Black" Background="{x:Null}" Visibility="Collapsed"/>
+            <TextBlock x:Name="warning" HorizontalAlignment="Left" Height="40" Margin="56,507,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="454" Foreground="#FFF00F0F" FontSize="15" FontWeight="SemiBold" TextAlignment="Center"/>
             <TextBox x:Name="ServerIP" HorizontalAlignment="Left" Height="43" Margin="56.4,317.501,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="453.6" Background="#FFBCD2ED" BorderBrush="{x:Null}" BorderThickness="1.5" SelectionBrush="#FF3DA0E5" SelectionTextBrush="{x:Null}" 
                 VerticalContentAlignment="Center" FontSize="18" Text="" GotFocus="RemoveText" Style="{DynamicResource UsrName_Login}" Padding="5,0,0,0"/>
             <Button x:Name="ConnectServer" IsDefault="True" HorizontalAlignment="Left" Height="38.4" Margin="194.4,403.7,0,0" VerticalAlignment="Top" Width="177.6" FontSize="18" Style="{StaticResource MyNextButton}" Click="ConnectServer_Click" KeyDown="EnterOk">
@@ -425,19 +425,15 @@
             <Label x:Name="label_ip" Content="Server IP Address:" HorizontalAlignment="Left" Height="28.8" Margin="56.4,283.701,0,0" VerticalAlignment="Top" Width="147.8" VerticalContentAlignment="Center" FontSize="15" Foreground="Black" Background="{x:Null}" FontWeight="SemiBold"/>
         </Grid>
         <Grid x:Name="RegisterGrid" Height="667.9" Visibility="Collapsed">
-            <TextBox x:Name="Name" HorizontalAlignment="Left" Height="44.4" Margin="65.6,99.5,0,0" TextWrapping="Wrap" Text="Name" VerticalAlignment="Top" Width="416.4" BorderBrush="{x:Null}" SelectionBrush="{x:Null}" FontSize="16" Padding="0" VerticalContentAlignment="Center" Background="{x:Null}"
-                GotFocus="RemoveText" LostFocus="ReturnTextName_Regis"/>
-            <TextBox x:Name="UsrName_reg" HorizontalAlignment="Left" Height="44.4" Margin="65.6,200.3,0,0" TextWrapping="Wrap" Text="Username" VerticalAlignment="Top" Width="416.4" BorderBrush="{x:Null}" SelectionBrush="{x:Null}" VerticalContentAlignment="Center" FontSize="16" Background="{x:Null}"
-                GotFocus="RemoveText" LostFocus="ReturnTextUsr_Regis"/>
-            <TextBox x:Name="Pass_reg" HorizontalAlignment="Left" Height="44.4" Margin="65.6,304.1,0,0" TextWrapping="Wrap" Text="Password" VerticalAlignment="Top" Width="416.4" BorderBrush="{x:Null}" SelectionBrush="{x:Null}" SelectionTextBrush="{x:Null}" VerticalContentAlignment="Center" FontSize="16" Background="{x:Null}"
-                GotFocus="RemoveText" LostFocus="ReturnTextPass_Regis"/>
-            <TextBox x:Name="Mail_reg" HorizontalAlignment="Left" Height="44.4" Margin="65.6,406.1,0,0" TextWrapping="Wrap" Text="E-mail" VerticalAlignment="Top" Width="416.4" Background="{x:Null}" BorderBrush="{x:Null}" SelectionBrush="{x:Null}" SelectionTextBrush="{x:Null}" FontSize="16" VerticalContentAlignment="Center"
-                GotFocus="RemoveText" LostFocus="ReturnTextEmail_Regis"/>
+            <TextBox x:Name="Name" HorizontalAlignment="Left" Height="44.4" Margin="65.6,119.5,0,0" TextWrapping="Wrap" Text="Name" VerticalAlignment="Top" Width="416.4" BorderBrush="{x:Null}" SelectionBrush="{x:Null}" FontSize="16" Padding="0" VerticalContentAlignment="Center" Background="#FFBCD2ED"
+                LostFocus="ReturnTextName_Regis" Style="{DynamicResource UsrName_Login}" GotFocus="RemoveText_"/>
+            <TextBox x:Name="UsrName_reg" HorizontalAlignment="Left" Height="44.4" Margin="65.6,215.3,0,0" TextWrapping="Wrap" Text="Username" VerticalAlignment="Top" Width="416.4" BorderBrush="{x:Null}" SelectionBrush="{x:Null}" VerticalContentAlignment="Center" FontSize="16" Background="#FFBCD2ED"
+                GotFocus="RemoveText_" LostFocus="ReturnTextUsr_Regis" Style="{DynamicResource UsrName_Login}"/>
+            <TextBox x:Name="Pass_reg" HorizontalAlignment="Left" Height="44.4" Margin="65.6,312.1,0,0" TextWrapping="Wrap" Text="Password" VerticalAlignment="Top" Width="416.4" BorderBrush="{x:Null}" SelectionBrush="{x:Null}" SelectionTextBrush="{x:Null}" VerticalContentAlignment="Center" FontSize="16" Background="#FFBCD2ED"
+                GotFocus="RemoveText_" LostFocus="ReturnTextPass_Regis" Style="{DynamicResource UsrName_Login}"/>
+            <TextBox x:Name="Mail_reg" HorizontalAlignment="Left" Height="44.4" Margin="65.6,406.1,0,0" TextWrapping="Wrap" Text="E-mail" VerticalAlignment="Top" Width="416.4" Background="#FFBCD2ED" BorderBrush="{x:Null}" SelectionBrush="{x:Null}" SelectionTextBrush="{x:Null}" FontSize="16" VerticalContentAlignment="Center"
+                GotFocus="RemoveText_" LostFocus="ReturnTextEmail_Regis" Style="{DynamicResource UsrName_Login}"/>
             <DatePicker x:Name="Birthday" HorizontalAlignment="Left" Height="31.011" Margin="165,499.334,0,0" VerticalAlignment="Top" Width="299.501" RenderTransformOrigin="0.496,0.538" SelectedDateFormat="Short" Background="{x:Null}" BorderBrush="{x:Null}" FontSize="16" Style="{DynamicResource BirthdayTemplate}"/>
-            <Path Data="M65.6,143.9 L482,143.9" Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="1" Margin="65.6,143.9,0,0" Stretch="Fill" Stroke="Black" VerticalAlignment="Top" Width="417.4"/>
-            <Path Data="M65.6,244.7 L482,244.7" Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="1" Margin="65.6,244.7,0,0" Stretch="Fill" Stroke="Black" VerticalAlignment="Top" Width="417.4"/>
-            <Path Data="M65.6,348.5 L482,348.5" Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="1" Margin="65.6,348.5,0,0" Stretch="Fill" Stroke="Black" VerticalAlignment="Top" Width="417.4"/>
-            <Path Data="M65.6,450.5 L482,450.5" Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="1" Margin="65.6,450.5,0,0" Stretch="Fill" Stroke="Black" VerticalAlignment="Top" Width="417.4"/>
             <Button x:Name="ExitButton_regis" Style="{StaticResource MyButton}" HorizontalAlignment="Left" Height="30" Margin="507.8,10,0,0" VerticalAlignment="Top" Width="30" FontWeight="Bold" FontSize="16" Foreground="#FF121111" BorderBrush="{x:Null}" 
                 Click="CloseButton_Click">
                 <Button.Background>

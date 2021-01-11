@@ -106,6 +106,14 @@ namespace ChatGUI
             LoginGrid.Visibility = Visibility.Visible;
         }
 
+        private void RemoveText_(object sender, RoutedEventArgs e)
+        {
+            if((sender as TextBox).Text != "")
+            {
+                (sender as TextBox).Text = "";
+            }
+        }
+
         private void Register_Click(object sender, RoutedEventArgs e)
         {
             if (Name.Text.Length == 0 || UsrName_reg.Text.Length == 0 || Pass_reg.Text.Length == 0 || Mail_reg.Text.Length == 0)
@@ -160,6 +168,8 @@ namespace ChatGUI
                     LoginButton.Visibility = Visibility.Visible;
                     label_username.Visibility = Visibility.Visible;
                     label_pass.Visibility = Visibility.Visible;
+                    some_label.Visibility = Visibility.Visible;
+                    reg.Visibility = Visibility.Visible;
                 }
                 else
                     warning.Text = "Connection Error";

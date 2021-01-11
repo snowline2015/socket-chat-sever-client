@@ -662,56 +662,301 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <ControlTemplate x:Key="ButtonControlTemplate1" TargetType="{x:Type Button}">
+            <Grid>
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualStateGroup.Transitions>
+                            <VisualTransition GeneratedDuration="0"/>
+                            <VisualTransition GeneratedDuration="0:0:0.1" To="MouseOver"/>
+                            <VisualTransition GeneratedDuration="0:0:0.1" To="Pressed"/>
+                        </VisualStateGroup.Transitions>
+                        <VisualState x:Name="Normal"/>
+                        <VisualState x:Name="MouseOver"/>
+                        <VisualState x:Name="Pressed"/>
+                        <VisualState x:Name="Disabled"/>
+                    </VisualStateGroup>
+                </VisualStateManager.VisualStateGroups>
+                <Grid Background="#11FFFFFF" FlowDirection="LeftToRight" HorizontalAlignment="Center" Height="18" Margin="0" VerticalAlignment="Center" Width="19">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="20*"/>
+                        <ColumnDefinition Width="20*"/>
+                        <ColumnDefinition Width="20*"/>
+                        <ColumnDefinition Width="20*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="23*"/>
+                        <RowDefinition Height="19*"/>
+                        <RowDefinition Height="19*"/>
+                        <RowDefinition Height="19*"/>
+                    </Grid.RowDefinitions>
+                    <Rectangle Grid.ColumnSpan="4" HorizontalAlignment="Left" Height="18" Grid.RowSpan="4" StrokeThickness="0" VerticalAlignment="Top" Width="19">
+                        <Rectangle.Fill>
+                            <ImageBrush ImageSource="Assets/calendar-icon.png" Stretch="UniformToFill"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+                </Grid>
+            </Grid>
+        </ControlTemplate>
+        <Style x:Key="DatePickerTextBoxStyle1" TargetType="{x:Type DatePickerTextBox}">
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"/>
+            <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
+            <Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst"/>
+            <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type DatePickerTextBox}">
+                        <Grid>
+                            <Grid.Resources>
+                                <SolidColorBrush x:Key="WatermarkBrush" Color="#FFAAAAAA"/>
+                            </Grid.Resources>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualStateGroup.Transitions>
+                                        <VisualTransition GeneratedDuration="0"/>
+                                        <VisualTransition GeneratedDuration="0:0:0.1" To="MouseOver"/>
+                                    </VisualStateGroup.Transitions>
+                                    <VisualState x:Name="Normal"/>
+                                    <VisualState x:Name="MouseOver"/>
+                                </VisualStateGroup>
+                                <VisualStateGroup x:Name="WatermarkStates">
+                                    <VisualStateGroup.Transitions>
+                                        <VisualTransition GeneratedDuration="0"/>
+                                    </VisualStateGroup.Transitions>
+                                    <VisualState x:Name="Unwatermarked"/>
+                                    <VisualState x:Name="Watermarked">
+                                        <Storyboard>
+                                            <DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="ContentElement"/>
+                                            <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="PART_Watermark"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                                <VisualStateGroup x:Name="FocusStates">
+                                    <VisualStateGroup.Transitions>
+                                        <VisualTransition GeneratedDuration="0"/>
+                                    </VisualStateGroup.Transitions>
+                                    <VisualState x:Name="Unfocused"/>
+                                    <VisualState x:Name="Focused">
+                                        <Storyboard>
+                                            <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="FocusVisual"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Border x:Name="Border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" CornerRadius="1" Opacity="1" Padding="{TemplateBinding Padding}">
+                                <Grid x:Name="WatermarkContent" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                                    <Border x:Name="ContentElement" BorderBrush="{x:Null}" BorderThickness="1"/>
+                                    <Border x:Name="watermark_decorator" BorderBrush="{x:Null}" BorderThickness="1">
+                                        <ContentControl x:Name="PART_Watermark" Focusable="False" IsHitTestVisible="False" Opacity="0" Padding="2" Content="Birthday"/>
+                                    </Border>
+                                    <ScrollViewer x:Name="PART_ContentHost" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="0" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                    <Border x:Name="FocusVisual" BorderBrush="#FF45D6FA" CornerRadius="1" IsHitTestVisible="False" Opacity="0"/>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="BirthdayTemplate" TargetType="{x:Type DatePicker}">
+            <Setter Property="Foreground" Value="#FF333333"/>
+            <Setter Property="IsTodayHighlighted" Value="True"/>
+            <Setter Property="SelectedDateFormat" Value="Short"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Padding" Value="2"/>
+            <Setter Property="BorderBrush">
+                <Setter.Value>
+                    <LinearGradientBrush EndPoint=".5,0" StartPoint=".5,1">
+                        <GradientStop Color="#FFA3AEB9" Offset="0"/>
+                        <GradientStop Color="#FF8399A9" Offset="0.375"/>
+                        <GradientStop Color="#FF718597" Offset="0.375"/>
+                        <GradientStop Color="#FF617584" Offset="1"/>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type DatePicker}">
+                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal"/>
+                                    <VisualState x:Name="Disabled">
+                                        <Storyboard>
+                                            <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="PART_DisabledVisual"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Grid x:Name="PART_Root" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                                <Grid.Resources>
+                                    <SolidColorBrush x:Key="DisabledBrush" Color="#A5FFFFFF"/>
+                                    <ControlTemplate x:Key="DropDownButtonTemplate" TargetType="{x:Type Button}">
+                                        <Grid>
+                                            <VisualStateManager.VisualStateGroups>
+                                                <VisualStateGroup x:Name="CommonStates">
+                                                    <VisualStateGroup.Transitions>
+                                                        <VisualTransition GeneratedDuration="0"/>
+                                                        <VisualTransition GeneratedDuration="0:0:0.1" To="MouseOver"/>
+                                                        <VisualTransition GeneratedDuration="0:0:0.1" To="Pressed"/>
+                                                    </VisualStateGroup.Transitions>
+                                                    <VisualState x:Name="Normal"/>
+                                                    <VisualState x:Name="MouseOver">
+                                                        <Storyboard>
+                                                            <ColorAnimation Duration="0" To="#FF448DCA" Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)" Storyboard.TargetName="Background"/>
+                                                            <ColorAnimationUsingKeyFrames BeginTime="0" Duration="00:00:00.001" Storyboard.TargetProperty="(Border.Background).(GradientBrush.GradientStops)[3].(GradientStop.Color)" Storyboard.TargetName="BackgroundGradient">
+                                                                <SplineColorKeyFrame KeyTime="0" Value="#7FFFFFFF"/>
+                                                            </ColorAnimationUsingKeyFrames>
+                                                            <ColorAnimationUsingKeyFrames BeginTime="0" Duration="00:00:00.001" Storyboard.TargetProperty="(Border.Background).(GradientBrush.GradientStops)[2].(GradientStop.Color)" Storyboard.TargetName="BackgroundGradient">
+                                                                <SplineColorKeyFrame KeyTime="0" Value="#CCFFFFFF"/>
+                                                            </ColorAnimationUsingKeyFrames>
+                                                            <ColorAnimationUsingKeyFrames BeginTime="0" Duration="00:00:00.001" Storyboard.TargetProperty="(Border.Background).(GradientBrush.GradientStops)[1].(GradientStop.Color)" Storyboard.TargetName="BackgroundGradient">
+                                                                <SplineColorKeyFrame KeyTime="0" Value="#F2FFFFFF"/>
+                                                            </ColorAnimationUsingKeyFrames>
+                                                        </Storyboard>
+                                                    </VisualState>
+                                                    <VisualState x:Name="Pressed">
+                                                        <Storyboard>
+                                                            <ColorAnimationUsingKeyFrames BeginTime="0" Duration="00:00:00.001" Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)" Storyboard.TargetName="Background">
+                                                                <SplineColorKeyFrame KeyTime="0" Value="#FF448DCA"/>
+                                                            </ColorAnimationUsingKeyFrames>
+                                                            <DoubleAnimationUsingKeyFrames BeginTime="0" Duration="00:00:00.001" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="Highlight">
+                                                                <SplineDoubleKeyFrame KeyTime="0" Value="1"/>
+                                                            </DoubleAnimationUsingKeyFrames>
+                                                            <ColorAnimationUsingKeyFrames BeginTime="0" Duration="00:00:00.001" Storyboard.TargetProperty="(Border.Background).(GradientBrush.GradientStops)[1].(GradientStop.Color)" Storyboard.TargetName="BackgroundGradient">
+                                                                <SplineColorKeyFrame KeyTime="0" Value="#EAFFFFFF"/>
+                                                            </ColorAnimationUsingKeyFrames>
+                                                            <ColorAnimationUsingKeyFrames BeginTime="0" Duration="00:00:00.001" Storyboard.TargetProperty="(Border.Background).(GradientBrush.GradientStops)[2].(GradientStop.Color)" Storyboard.TargetName="BackgroundGradient">
+                                                                <SplineColorKeyFrame KeyTime="0" Value="#C6FFFFFF"/>
+                                                            </ColorAnimationUsingKeyFrames>
+                                                            <ColorAnimationUsingKeyFrames BeginTime="0" Duration="00:00:00.001" Storyboard.TargetProperty="(Border.Background).(GradientBrush.GradientStops)[3].(GradientStop.Color)" Storyboard.TargetName="BackgroundGradient">
+                                                                <SplineColorKeyFrame KeyTime="0" Value="#6BFFFFFF"/>
+                                                            </ColorAnimationUsingKeyFrames>
+                                                            <ColorAnimationUsingKeyFrames BeginTime="0" Duration="00:00:00.001" Storyboard.TargetProperty="(Border.Background).(GradientBrush.GradientStops)[0].(GradientStop.Color)" Storyboard.TargetName="BackgroundGradient">
+                                                                <SplineColorKeyFrame KeyTime="0" Value="#F4FFFFFF"/>
+                                                            </ColorAnimationUsingKeyFrames>
+                                                        </Storyboard>
+                                                    </VisualState>
+                                                    <VisualState x:Name="Disabled"/>
+                                                </VisualStateGroup>
+                                            </VisualStateManager.VisualStateGroups>
+                                            <Grid Background="#11FFFFFF" FlowDirection="LeftToRight" HorizontalAlignment="Center" Height="18" Margin="0" VerticalAlignment="Center" Width="19">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="20*"/>
+                                                    <ColumnDefinition Width="20*"/>
+                                                    <ColumnDefinition Width="20*"/>
+                                                    <ColumnDefinition Width="20*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="23*"/>
+                                                    <RowDefinition Height="19*"/>
+                                                    <RowDefinition Height="19*"/>
+                                                    <RowDefinition Height="19*"/>
+                                                </Grid.RowDefinitions>
+                                                <Border x:Name="Highlight" BorderBrush="#FF45D6FA" BorderThickness="1" Grid.ColumnSpan="4" CornerRadius="0,0,1,1" Margin="-1" Opacity="0" Grid.Row="0" Grid.RowSpan="4"/>
+                                                <Border x:Name="Background" BorderBrush="#FFFFFFFF" BorderThickness="1" Background="#FF1F3B53" Grid.ColumnSpan="4" CornerRadius=".5" Margin="0,-1,0,0" Opacity="1" Grid.Row="1" Grid.RowSpan="3"/>
+                                                <Border x:Name="BackgroundGradient" BorderBrush="#BF000000" BorderThickness="1" Grid.ColumnSpan="4" CornerRadius=".5" Margin="0,-1,0,0" Opacity="1" Grid.Row="1" Grid.RowSpan="3">
+                                                    <Border.Background>
+                                                        <LinearGradientBrush EndPoint=".7,1" StartPoint=".7,0">
+                                                            <GradientStop Color="#FFFFFFFF" Offset="0"/>
+                                                            <GradientStop Color="#F9FFFFFF" Offset="0.375"/>
+                                                            <GradientStop Color="#E5FFFFFF" Offset="0.625"/>
+                                                            <GradientStop Color="#C6FFFFFF" Offset="1"/>
+                                                        </LinearGradientBrush>
+                                                    </Border.Background>
+                                                </Border>
+                                                <Rectangle Grid.ColumnSpan="4" Grid.RowSpan="1" StrokeThickness="1">
+                                                    <Rectangle.Fill>
+                                                        <LinearGradientBrush EndPoint="0.3,-1.1" StartPoint="0.46,1.6">
+                                                            <GradientStop Color="#FF4084BD"/>
+                                                            <GradientStop Color="#FFAFCFEA" Offset="1"/>
+                                                        </LinearGradientBrush>
+                                                    </Rectangle.Fill>
+                                                    <Rectangle.Stroke>
+                                                        <LinearGradientBrush EndPoint="0.48,-1" StartPoint="0.48,1.25">
+                                                            <GradientStop Color="#FF494949"/>
+                                                            <GradientStop Color="#FF9F9F9F" Offset="1"/>
+                                                        </LinearGradientBrush>
+                                                    </Rectangle.Stroke>
+                                                </Rectangle>
+                                                <Path Grid.ColumnSpan="4" Grid.Column="0" Data="M11.426758,8.4305077 L11.749023,8.4305077 L11.749023,16.331387 L10.674805,16.331387 L10.674805,10.299648 L9.0742188,11.298672 L9.0742188,10.294277 C9.4788408,10.090176 9.9094238,9.8090878 10.365967,9.4510155 C10.82251,9.0929432 11.176106,8.7527733 11.426758,8.4305077 z M14.65086,8.4305077 L18.566387,8.4305077 L18.566387,9.3435936 L15.671368,9.3435936 L15.671368,11.255703 C15.936341,11.058764 16.27293,10.960293 16.681133,10.960293 C17.411602,10.960293 17.969301,11.178717 18.354229,11.615566 C18.739157,12.052416 18.931622,12.673672 18.931622,13.479336 C18.931622,15.452317 18.052553,16.438808 16.294415,16.438808 C15.560365,16.438808 14.951641,16.234707 14.468243,15.826504 L14.881817,14.929531 C15.368796,15.326992 15.837872,15.525723 16.289043,15.525723 C17.298809,15.525723 17.803692,14.895514 17.803692,13.635098 C17.803692,12.460618 17.305971,11.873379 16.310528,11.873379 C15.83071,11.873379 15.399232,12.079271 15.016094,12.491055 L14.65086,12.238613 z" Fill="#FF2F2F2F" HorizontalAlignment="Center" Margin="4,3,4,3" Grid.Row="1" Grid.RowSpan="3" RenderTransformOrigin="0.5,0.5" Stretch="Fill" VerticalAlignment="Center"/>
+                                                <Ellipse Grid.ColumnSpan="4" Fill="#FFFFFFFF" HorizontalAlignment="Center" Height="3" StrokeThickness="0" VerticalAlignment="Center" Width="3"/>
+                                                <Border x:Name="DisabledVisual" BorderBrush="#B2FFFFFF" BorderThickness="1" Grid.ColumnSpan="4" CornerRadius="0,0,.5,.5" Opacity="0" Grid.Row="0" Grid.RowSpan="4"/>
+                                            </Grid>
+                                        </Grid>
+                                    </ControlTemplate>
+                                </Grid.Resources>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Button x:Name="PART_Button" Grid.Column="1" Foreground="{TemplateBinding Foreground}" Focusable="False" HorizontalAlignment="Left" Margin="3,0,3,0" Grid.Row="0" Template="{DynamicResource ButtonControlTemplate1}" VerticalAlignment="Top" Width="20" UseLayoutRounding="False" Padding="1" Height="25"/>
+                                <DatePickerTextBox x:Name="PART_TextBox" Grid.Column="0" Focusable="{TemplateBinding Focusable}" HorizontalContentAlignment="Stretch" Grid.Row="0" VerticalContentAlignment="Stretch" Background="{x:Null}" SelectionBrush="{x:Null}" SelectionTextBrush="{x:Null}" Style="{DynamicResource DatePickerTextBoxStyle1}"/>
+                                <Grid x:Name="PART_DisabledVisual" Grid.ColumnSpan="2" Grid.Column="0" IsHitTestVisible="False" Opacity="0" Grid.Row="0" Margin="0,0,3,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="Auto" MinWidth="25.501"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Rectangle Grid.Column="0" Fill="#A5FFFFFF" RadiusY="1" Grid.Row="0" RadiusX="1"/>
+                                    <Rectangle Grid.Column="1" Fill="#A5FFFFFF" Height="Auto" Margin="3,3.505,3,3.506" RadiusY="1" Grid.Row="0" RadiusX="1" Width="Auto"/>
+                                    <Popup x:Name="PART_Popup" AllowsTransparency="True" Placement="Bottom" PlacementTarget="{Binding ElementName=PART_TextBox}" StaysOpen="False"/>
+                                </Grid>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <DataTrigger Binding="{Binding Source={x:Static SystemParameters.HighContrast}}" Value="false">
+                                <Setter Property="Foreground" TargetName="PART_TextBox" Value="{Binding Foreground, RelativeSource={RelativeSource TemplatedParent}}"/>
+                            </DataTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
-    <StackPanel x:Name="MainWorkingPanel" HorizontalAlignment="Left" Height="720" VerticalAlignment="Top" Width="930" Margin="0,0,-130,-270" Opacity="2">
+    <StackPanel x:Name="MainWorkingPanel" HorizontalAlignment="Left" Height="720" VerticalAlignment="Top" Width="930" Margin="0,0,-130,-270" Opacity="2" MouseDown="MoveMainWindow">
         <StackPanel.Background>
             <ImageBrush ImageSource="Assets/background4.png" Stretch="UniformToFill"/>
         </StackPanel.Background>
-        <Grid x:Name="WorkingGrid" Height="78.4">
-            <Button x:Name="ExitButton2" Style="{StaticResource MyButton}" HorizontalAlignment="Left" Height="30" Margin="863.798,22,0,0" VerticalAlignment="Top" Width="30" FontWeight="Bold" FontSize="16" Foreground="#FF121111" BorderBrush="{x:Null}" 
-                Click="CloseButton_Click">
-                <Button.Background>
-                    <ImageBrush ImageSource="Assets/close2.png" Stretch="Uniform"/>
-                </Button.Background>
-            </Button>
-            <Label x:Name="Login_time" Content="{Binding CurrentTime}" HorizontalAlignment="Left" Height="25" Margin="46.4,43,0,0" VerticalAlignment="Top" Width="284" Background="{x:Null}" Padding="0,0,5,5" FontSize="14" FontWeight="Normal" Foreground="Black"/>
-            <Button x:Name="LogoutBtn" Content="Button" HorizontalAlignment="Left" Height="30" Margin="803.037,22,0,0" VerticalAlignment="Top" Width="41.226" BorderBrush="#FFF9F7F7" Style="{StaticResource MainButton}" Click="LogoutButton_Click">
+        <Grid x:Name="WorkingGrid" Height="49.6">
+            <Button x:Name="LogoutBtn" Content="Button" HorizontalAlignment="Left" Height="39.6" Margin="872.241,10,0,0" VerticalAlignment="Top" Width="34.559" BorderBrush="#FFF9F7F7" Style="{StaticResource MainButton}" Click="LogoutButton_Click">
                 <Button.Background>
                     <ImageBrush ImageSource="Assets/sign-out.png" Stretch="Uniform"/>
                 </Button.Background>
             </Button>
-            <Label x:Name="UsrName" Content="{Binding CurrentName}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="46,17,0,0" Height="26" Width="284" FontWeight="SemiBold" FontSize="15" Foreground="Black" VerticalContentAlignment="Center" Padding="1,1,0,0"/>
         </Grid>
-        <Path x:Name="LineSeperator" Data="M10,75.3 L930,75.3" Fill="#FF0F0FA8" HorizontalAlignment="Left" Height="1" Margin="10,0,-1,0" Stretch="Fill" Stroke="#FF0F0FA8" Width="900"/>
-        <StackPanel x:Name="PreChatPanel" HorizontalAlignment="Left" Height="642.1" VerticalAlignment="Top" Width="930">
-            <Grid x:Name="PreChatGrid" Height="642.1">
-                <Button x:Name="PrivateChatBtn" Content="Button" HorizontalAlignment="Left" Height="62.142" Margin="342.5,178.762,0,0" VerticalAlignment="Top" Width="223.534" BorderBrush="#FF050505" Style="{StaticResource MainButton}"
+        <StackPanel x:Name="PreChatPanel" HorizontalAlignment="Left" Height="678.1" VerticalAlignment="Top" Width="930" Visibility="Collapsed">
+            <Grid x:Name="PreChatGrid" Height="676.9">
+                <Button x:Name="PrivateChatBtn" Content="Button" HorizontalAlignment="Left" Height="62.142" Margin="345.5,238.762,0,0" VerticalAlignment="Top" Width="223.534" BorderBrush="#FF050505" Style="{StaticResource MainButton}"
                         Click="EnterPrivateChat">
                     <Button.Background>
                         <ImageBrush ImageSource="Assets/image2.png" Stretch="Uniform"/>
                     </Button.Background>
                 </Button>
 
-                <Button x:Name="GroupChatBtn" Content="Button" HorizontalAlignment="Left" Height="55.671" Margin="342.5,284.362,0,0" VerticalAlignment="Top" Width="223.534" BorderBrush="#FF737373" Style="{StaticResource MainButton}"
+                <Button x:Name="GroupChatBtn" Content="Button" HorizontalAlignment="Left" Height="55.671" Margin="345.5,344.362,0,0" VerticalAlignment="Top" Width="223.534" BorderBrush="#FF737373" Style="{StaticResource MainButton}"
                         Click="EnterGroupChat">
                     <Button.Background>
                         <ImageBrush ImageSource="Assets/grchat-img.png" Stretch="Uniform"/>
                     </Button.Background>
                 </Button>
 
-                <Button x:Name="OptionsBtn" Content="Button" HorizontalAlignment="Left" Height="56.749" Margin="342.5,393.562,0,0" VerticalAlignment="Top" Width="223.534" BorderBrush="#FFB7B7B7" Style="{StaticResource MainButton}"
+                <Button x:Name="OptionsBtn" Content="Button" HorizontalAlignment="Left" Height="56.749" Margin="345.5,453.562,0,0" VerticalAlignment="Top" Width="223.534" BorderBrush="#FFB7B7B7" Style="{StaticResource MainButton}"
                         Click="EnterMoreOpts">
                     <Button.Background>
                         <ImageBrush ImageSource="Assets/opt-img.png" Stretch="Uniform"/>
                     </Button.Background>
                 </Button>
 
-                <Label x:Name="label1" Content="Welcome !" HorizontalAlignment="Left" Height="44.7" Margin="353.2,48.962,0,0" VerticalAlignment="Top" Width="188.5" Background="{x:Null}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="24" FontWeight="Bold"/>
-                <Label x:Name="label2" Content="Please choose an option" HorizontalAlignment="Left" Height="44.7" Margin="271.6,93.662,0,0" VerticalAlignment="Top" Width="351.7" Background="{x:Null}" HorizontalContentAlignment="Center" FontSize="20"/>
+                <Label x:Name="label1" Content="Welcome " HorizontalAlignment="Left" Height="44.7" Margin="320.2,83.462,0,0" VerticalAlignment="Top" Width="116.5" Background="{x:Null}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="24" FontWeight="SemiBold"/>
+                <Label x:Name="label2" Content="Please choose an option" HorizontalAlignment="Left" Height="44.7" Margin="273.1,138.662,0,0" VerticalAlignment="Top" Width="351.7" Background="{x:Null}" HorizontalContentAlignment="Center" FontSize="20"/>
+                <Label x:Name="UsrName" Content="{Binding CurrentName}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="436.7,86.462,0,0" Height="38.336" Width="236" FontWeight="Bold" FontSize="24" Foreground="Black" VerticalContentAlignment="Center" Padding="1,1,0,0"/>
+                <Label x:Name="Login_time" Content="{Binding CurrentTime}" HorizontalAlignment="Left" Height="25" Margin="10,641.9,0,0" VerticalAlignment="Top" Width="284" Background="{x:Null}" Padding="0,0,5,5" FontWeight="Normal" Foreground="Black"/>
             </Grid>
         </StackPanel>
-        <StackPanel x:Name="PrivateChatPanel" HorizontalAlignment="Left" Height="642.1" Width="930" Visibility="Collapsed">
-            <Grid x:Name="PrivateChatInfoGrid" Height="642.1" Visibility="Collapsed">
+        <StackPanel x:Name="PrivateChatPanel" HorizontalAlignment="Left" Height="669.7" Width="930" Visibility="Collapsed">
+            <Grid x:Name="PrivateChatInfoGrid" Height="668.5">
                 <TextBlock HorizontalAlignment="Left" Margin="212.4,276.5,0,349.64" TextWrapping="Wrap" Text="Friend's Username:" Width="119.4" FontWeight="Bold" VerticalAlignment="Center" Foreground="Black"/>
                 <Button x:Name="ConnectChat_pr" HorizontalAlignment="Left" Height="35.2" Margin="414.734,350.6,0,0" VerticalAlignment="Top" Width="148.134" BorderBrush="{x:Null}" FontWeight="SemiBold" FontSize="14" 
                     Style="{StaticResource MyButton}" Click="ConnectPrivateChat">
@@ -728,28 +973,28 @@
                 <TextBlock x:Name="pr_warning" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="342.71,418.8,-646.4,0" Height="27.96" Width="303.69" FontSize="16" Foreground="Red" FontWeight="Bold" TextAlignment="Center"/>
                 <ComboBox x:Name="list_friend_pr" HorizontalAlignment="Left" Height="24" Margin="336.8,273.5,0,0" VerticalAlignment="Top" Width="309.6" BorderBrush="Black" Background="Black" Style="{DynamicResource list_template}" SelectedIndex="-1"/>
             </Grid>
-            <Grid x:Name="PrivateChatMain" Height="641.1" Visibility="Collapsed">
-                <Grid x:Name="MainGrid_pr" HorizontalAlignment="Left" Height="631.1" VerticalAlignment="Top" Width="930" Margin="0,10,0,0">
+            <Grid x:Name="PrivateChatMain" Height="668.7" Visibility="Collapsed">
+                <Grid x:Name="MainGrid_pr" HorizontalAlignment="Left" Height="658.7" VerticalAlignment="Top" Width="930" Margin="0,10,0,0">
                     <Path Data="M290.9,10 L290.9,621.1" Fill="#FF218CBC" HorizontalAlignment="Left" Height="592.9" Margin="290.9,14.5,0,0" Stretch="Fill" Stroke="#FF218CBC" VerticalAlignment="Top" Width="1"/>
-                    <TextBox x:Name="ChatBox_pr" HorizontalAlignment="Left" Height="36.3" Margin="299.4,571.1,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="545.17" Style="{DynamicResource ChatBoxTemplate}" BorderBrush="#FF1C3D9A" Background="{x:Null}" VerticalContentAlignment="Center" FontSize="14"/>
-                    <Button x:Name="AttachFile" Content="Button" HorizontalAlignment="Left" Height="27" Margin="849.57,575.136,0,0" VerticalAlignment="Top" Width="27" Style="{StaticResource MyButton}" Click="OnOpenDialog">
+                    <TextBox x:Name="ChatBox_pr" HorizontalAlignment="Left" Height="36.3" Margin="299.4,616.1,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="545.17" Style="{DynamicResource ChatBoxTemplate}" BorderBrush="#FF1C3D9A" Background="{x:Null}" VerticalContentAlignment="Center" FontSize="14"/>
+                    <Button x:Name="AttachFile" Content="Button" HorizontalAlignment="Left" Height="27" Margin="849.57,620.136,0,0" VerticalAlignment="Top" Width="27" Style="{StaticResource MyButton}" Click="OnOpenDialog">
                         <Button.Background>
                             <ImageBrush ImageSource="Assets/attach-icon.png" Stretch="Uniform"/>
                         </Button.Background>
 
                     </Button>
-                    <Button x:Name="Send" Content="Button" IsDefault="True" HorizontalAlignment="Left" Height="24" Margin="885.236,578.133,0,0" VerticalAlignment="Top" Width="24" Style="{StaticResource MyButton}" Click="Send_Click" KeyDown="Send_Enter">
+                    <Button x:Name="Send" Content="Button" IsDefault="True" HorizontalAlignment="Left" Height="24" Margin="885.236,623.133,0,0" VerticalAlignment="Top" Width="24" Style="{StaticResource MyButton}" Click="Send_Click" KeyDown="Send_Enter">
                         <Button.Background>
                             <ImageBrush ImageSource="Assets/send-icon.png" Stretch="Uniform"/>
                         </Button.Background>
                     </Button>
-                    <ListBox x:Name="PrivateChat" HorizontalAlignment="Left" Height="551.6" Margin="299.4,14.5,0,0" VerticalAlignment="Top" Width="620.6" Background="{x:Null}" BorderBrush="{x:Null}" FontSize="14"/>
+                    <ListBox x:Name="PrivateChat" HorizontalAlignment="Left" Height="592.9" Margin="299.4,14.5,0,0" VerticalAlignment="Top" Width="620.6" Background="{x:Null}" BorderBrush="{x:Null}" FontSize="14"/>
                 </Grid>
             </Grid>
         </StackPanel>
-        <StackPanel x:Name="GroupChatPanel" HorizontalAlignment="Left" Height="642.1" Width="930" Visibility="Collapsed">
-            <Grid x:Name="GroupChatInfoGrid" Height="642.1" Visibility="Collapsed">
-                <TextBox x:Name="IPAddress_server_gr" HorizontalAlignment="Left" Height="32" Margin="336.8,244.1,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="309.6" FontSize="16" VerticalContentAlignment="Center" BorderBrush="{x:Null}" Background="#FFBCC8D6" SelectionBrush="{x:Null}" SelectionTextBrush="{x:Null}" Style="{DynamicResource IPAddTemplate}"
+        <StackPanel x:Name="GroupChatPanel" HorizontalAlignment="Left" Height="668.5" Width="930" Visibility="Collapsed">
+            <Grid x:Name="GroupChatInfoGrid" Height="668.5">
+                <TextBox x:Name="IPAddress_server_gr" HorizontalAlignment="Left" Height="32" Margin="336.8,259.1,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="309.6" FontSize="16" VerticalContentAlignment="Center" BorderBrush="{x:Null}" Background="#FFBCC8D6" SelectionBrush="{x:Null}" SelectionTextBrush="{x:Null}" Style="{DynamicResource IPAddTemplate}"
                          PreviewTextInput="OnlyNumber" MaxLength="4"/>
                 <TextBlock HorizontalAlignment="Left" Margin="226.8,253.1,0,373.04" TextWrapping="Wrap" Text="Room ID:" Width="105" FontWeight="Bold" VerticalAlignment="Center" Foreground="Black" TextAlignment="Center" FontSize="16"/>
                 <Button x:Name="returnPage_gr" HorizontalAlignment="Left" Height="35.2" Margin="10,10,0,0" VerticalAlignment="Top" Width="74.934" BorderBrush="{x:Null}" FontWeight="SemiBold" FontSize="14" 
@@ -759,34 +1004,34 @@
                     </Button.Background>
                 </Button>
                 <Button x:Name="CreateRoom" Content="Create Room Chat" HorizontalAlignment="Left" Height="38.4" Margin="290.51,335.2,0,0" VerticalAlignment="Top" Width="159.6" Background="{x:Null}" BorderBrush="Black" FontSize="16" FontWeight="SemiBold" Click="CreateRoomClick"/>
-                <TextBlock x:Name="gr_warning" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="342.71,418.8,0,0" Height="27.96" Width="303.69" FontSize="16" Foreground="Red" FontWeight="Bold" TextAlignment="Center"/>
-                <Button x:Name="JoinRoom" Content="Join Room" HorizontalAlignment="Left" Height="38.4" Margin="506.4,335.2,0,0" VerticalAlignment="Top" Width="159.6" Background="{x:Null}" BorderBrush="Black" FontSize="16" FontWeight="SemiBold" Click="JoinRoomClick"/>
+                <TextBlock x:Name="gr_warning" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="342.71,463.8,0,0" Height="27.96" Width="303.69" FontSize="16" Foreground="Red" FontWeight="Bold" TextAlignment="Center"/>
+                <Button x:Name="JoinRoom" Content="Join Room" HorizontalAlignment="Left" Height="38.4" Margin="521.4,335.2,0,0" VerticalAlignment="Top" Width="159.6" Background="{x:Null}" BorderBrush="Black" FontSize="16" FontWeight="SemiBold" Click="JoinRoomClick"/>
             </Grid>
-            <Grid x:Name="GroupChatMain" HorizontalAlignment="Left" Height="642.1" VerticalAlignment="Top" Width="930" Visibility="Collapsed">
-                <Grid x:Name="MainGrid_gr" HorizontalAlignment="Left" Height="631.1" VerticalAlignment="Top" Width="930" Margin="0,10,0,0">
+            <Grid x:Name="GroupChatMain" HorizontalAlignment="Left" Height="668.5" VerticalAlignment="Top" Width="930" Visibility="Collapsed">
+                <Grid x:Name="MainGrid_gr" HorizontalAlignment="Left" Height="658.5" VerticalAlignment="Top" Width="930" Margin="0,10,0,0">
                     <Path Data="M290.9,10 L290.9,621.1" Fill="#FF218CBC" HorizontalAlignment="Left" Height="592.9" Margin="290.9,14.5,0,0" Stretch="Fill" Stroke="#FF218CBC" VerticalAlignment="Top" Width="1"/>
-                    <TextBox x:Name="ChatBox_gr" HorizontalAlignment="Left" Height="36.3" Margin="299.4,571.1,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="545.17" Style="{DynamicResource ChatBoxTemplate}" BorderBrush="#FF1C3D9A" Background="{x:Null}" VerticalContentAlignment="Center" FontSize="14"/>
-                    <Button x:Name="AttachFile1" Content="Button" HorizontalAlignment="Left" Height="27" Margin="849.57,575.136,0,0" VerticalAlignment="Top" Width="27" Style="{StaticResource MyButton}">
+                    <TextBox x:Name="ChatBox_gr" HorizontalAlignment="Left" Height="36.3" Margin="299.4,616.1,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="545.17" Style="{DynamicResource ChatBoxTemplate}" BorderBrush="#FF1C3D9A" Background="{x:Null}" VerticalContentAlignment="Center" FontSize="14"/>
+                    <Button x:Name="AttachFile1" Content="Button" HorizontalAlignment="Left" Height="27" Margin="849.57,620.136,0,0" VerticalAlignment="Top" Width="27" Style="{StaticResource MyButton}">
                         <Button.Background>
                             <ImageBrush ImageSource="Assets/attach-icon.png" Stretch="Uniform"/>
                         </Button.Background>
 
                     </Button>
-                    <Button x:Name="Send1" Content="Button" HorizontalAlignment="Left" Height="24" Margin="885.236,578.133,0,0" VerticalAlignment="Top" Width="24" Style="{StaticResource MyButton}" Click="Send_Click_Group" KeyDown="Send_Enter_" IsDefault="True">
+                    <Button x:Name="Send1" Content="Button" HorizontalAlignment="Left" Height="24" Margin="885.236,623.133,0,0" VerticalAlignment="Top" Width="24" Style="{StaticResource MyButton}" Click="Send_Click_Group" KeyDown="Send_Enter_" IsDefault="True">
                         <Button.Background>
                             <ImageBrush ImageSource="Assets/send-icon.png" Stretch="Uniform"/>
                         </Button.Background>
                     </Button>
-                    <ListBox x:Name="GroupChat" HorizontalAlignment="Left" Height="551.6" Margin="299.4,14.5,0,0" VerticalAlignment="Top" Width="620.6" Background="{x:Null}" BorderBrush="{x:Null}" FontSize="14"/>
+                    <ListBox x:Name="GroupChat" HorizontalAlignment="Left" Height="592.9" Margin="299.4,14.5,0,0" VerticalAlignment="Top" Width="620.6" Background="{x:Null}" BorderBrush="{x:Null}" FontSize="14"/>
                 </Grid>
             </Grid>
         </StackPanel>
-        <StackPanel x:Name="MoreOptPanel" HorizontalAlignment="Left" Height="642.1" Width="930" Visibility="Collapsed">
-            <Grid x:Name="MoreOptGrid" Height="640.1">
-                <Button x:Name="Change_Pass" Content="Change Password" HorizontalAlignment="Left" Height="50.4" Margin="361.4,159.7,0,0" VerticalAlignment="Top" Width="241.2" Style="{DynamicResource MoreOpt_Button_Template}" Background="{x:Null}" BorderBrush="Black" FontSize="16"/>
+        <StackPanel x:Name="MoreOptPanel" HorizontalAlignment="Left" Height="669.7" Width="930">
+            <Grid x:Name="MoreOptGrid" Height="668.9" Visibility="Collapsed">
+                <Button x:Name="Change_Pass" Content="Change Password" HorizontalAlignment="Left" Height="50.4" Margin="341.9,159.7,0,0" VerticalAlignment="Top" Width="241.2" Style="{DynamicResource MoreOpt_Button_Template}" Background="{x:Null}" BorderBrush="Black" FontSize="16"/>
                 <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Height="42" Margin="361.4,43.3,0,0" TextWrapping="Wrap" Text="More Options" VerticalAlignment="Top" Width="241.2" FontWeight="Bold" FontSize="24" TextAlignment="Center"/>
-                <Button x:Name="CheckUsr" Content="Check User Status" HorizontalAlignment="Left" Height="50.4" Margin="361.4,267.7,0,0" VerticalAlignment="Top" Width="241.2" Style="{DynamicResource MoreOpt_Button_Template}" Background="{x:Null}" BorderBrush="Black" FontSize="16"/>
-                <Button x:Name="Change_Info" Content="Change Information" HorizontalAlignment="Left" Height="50.4" Margin="361.4,372.1,0,0" VerticalAlignment="Top" Width="241.2" Style="{DynamicResource MoreOpt_Button_Template}" Background="{x:Null}" BorderBrush="Black" FontSize="16"/>
+                <Button x:Name="CheckUsr" Content="Check User Status" HorizontalAlignment="Left" Height="50.4" Margin="341.9,268.9,0,0" VerticalAlignment="Top" Width="241.2" Style="{DynamicResource MoreOpt_Button_Template}" Background="{x:Null}" BorderBrush="Black" FontSize="16"/>
+                <Button x:Name="Change_Info" Content="Change Information" HorizontalAlignment="Left" Height="50.4" Margin="341.9,372.4,0,0" VerticalAlignment="Top" Width="241.2" Style="{DynamicResource MoreOpt_Button_Template}" Background="{x:Null}" BorderBrush="Black" FontSize="16"/>
                 <Button x:Name="returnPage_MoreOpt" Content="Connect To Chat" HorizontalAlignment="Left" Height="35.2" Margin="10,10,0,0" VerticalAlignment="Top" Width="58.134" BorderBrush="{x:Null}" FontWeight="SemiBold" FontSize="14" 
                     Style="{StaticResource MyButton}" Panel.ZIndex="2" Click="ReturnMainOptions">
                     <Button.Background>
@@ -794,12 +1039,51 @@
                     </Button.Background>
                 </Button>
             </Grid>
-            <Grid x:Name="ChangePassGrid" Height="642.1" Visibility="Collapsed">
-                <PasswordBox x:Name="CurrPass" HorizontalAlignment="Left" Height="52.8" Margin="347.9,128.8,0,0" VerticalAlignment="Top" Width="315.6" Background="{x:Null}" BorderBrush="#FF1F43AD" SelectionBrush="{x:Null}" SelectionTextBrush="{x:Null}" VerticalContentAlignment="Center" FontSize="16"/>
-                <PasswordBox x:Name="NewPass" HorizontalAlignment="Left" Height="52.8" Margin="347.9,276.4,0,0" VerticalAlignment="Top" Width="315.6" Background="{x:Null}" SelectionBrush="{x:Null}" SelectionTextBrush="{x:Null}" BorderBrush="#FF1F43AD" VerticalContentAlignment="Center" FontSize="16"/>
-                <Label Content="Current Password:" HorizontalAlignment="Left" Height="38.4" Margin="199.1,138.7,0,0" VerticalAlignment="Top" Width="139.2" FontSize="14" VerticalContentAlignment="Center" FontWeight="SemiBold" HorizontalContentAlignment="Center"/>
-                <Label Content="New Password:" HorizontalAlignment="Left" Height="38.4" Margin="199.1,286.3,0,0" VerticalAlignment="Top" Width="139.2" FontSize="14" FontWeight="SemiBold" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
-                <Button Content="Finish" HorizontalAlignment="Left" Height="45.6" Margin="392.9,430.9,0,0" VerticalAlignment="Top" Width="231.6" Background="{x:Null}" BorderBrush="#FF1A56E4" FontSize="16" FontWeight="Bold"/>
+            <Grid x:Name="ChangePassGrid" Height="669.7" Visibility="Collapsed">
+                <PasswordBox x:Name="NewPass" HorizontalAlignment="Left" Height="42.9" Margin="347.9,243.7,0,0" VerticalAlignment="Top" Width="315.6" Background="{x:Null}" BorderBrush="#FF1F43AD" SelectionBrush="{x:Null}" SelectionTextBrush="{x:Null}" VerticalContentAlignment="Center" FontSize="16"/>
+                <PasswordBox x:Name="NewPass_again" HorizontalAlignment="Left" Height="38.4" Margin="347.9,346.3,0,0" VerticalAlignment="Top" Width="315.6" Background="{x:Null}" SelectionBrush="{x:Null}" SelectionTextBrush="{x:Null}" BorderBrush="#FF1F43AD" VerticalContentAlignment="Center" FontSize="16"/>
+                <Label Content="New Password:" HorizontalAlignment="Left" Height="38.4" Margin="199.1,243.7,0,0" VerticalAlignment="Top" Width="139.2" FontSize="14" VerticalContentAlignment="Center" FontWeight="SemiBold" HorizontalContentAlignment="Center"/>
+                <Label Content="Enter Again:" HorizontalAlignment="Left" Height="38.4" Margin="199.1,346.3,0,0" VerticalAlignment="Top" Width="139.2" FontSize="14" FontWeight="SemiBold" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                <Button Content="Finish" HorizontalAlignment="Left" Height="32.4" Margin="533.3,457,0,0" VerticalAlignment="Top" Width="208.8" Background="{x:Null}" BorderBrush="#FF1A56E4" FontSize="16" FontWeight="Bold"/>
+                <PasswordBox x:Name="CurrPass" HorizontalAlignment="Left" Height="42.9" Margin="347.9,147.7,0,0" VerticalAlignment="Top" Width="315.6" Background="{x:Null}" BorderBrush="#FF1F43AD" SelectionBrush="{x:Null}" SelectionTextBrush="{x:Null}" VerticalContentAlignment="Center" FontSize="16"/>
+                <Label Content="Current Password:" HorizontalAlignment="Left" Height="38.4" Margin="199.1,152.2,0,0" VerticalAlignment="Top" Width="139.2" FontSize="14" VerticalContentAlignment="Center" FontWeight="SemiBold" HorizontalContentAlignment="Center"/>
+                <Label Content="Change Your Password" HorizontalAlignment="Left" Height="55.2" Margin="333.6,42.8,0,0" VerticalAlignment="Top" Width="320.9" FontSize="24" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontWeight="Bold"/>
+                <Button Content="Cancel" HorizontalAlignment="Left" Height="32.4" Margin="256.7,457,0,0" VerticalAlignment="Top" Width="208.8" Background="{x:Null}" BorderBrush="#FF1A56E4" FontSize="16" FontWeight="Bold"/>
+                <Label x:Name="ChangePass_warning" Content="" HorizontalAlignment="Left" Height="34.8" Margin="302.4,593.3,0,0" VerticalAlignment="Top" Width="376.1" Background="{x:Null}" Foreground="Red" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18" FontWeight="SemiBold"/>
+            </Grid>
+            <Grid x:Name="CheckUsrGrid" Height="669.733" Visibility="Collapsed">
+                <TextBox x:Name="check_usr" HorizontalAlignment="Left" Height="43.2" Margin="288.5,108.3,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="364" Background="{x:Null}" BorderBrush="{x:Null}" SelectionTextBrush="#FF2AD3D6" SelectionBrush="{x:Null}" VerticalContentAlignment="Center" FontSize="14" Text="Enter user name"/>
+                <Button x:Name="search_usr" Content="Button" HorizontalAlignment="Left" Height="28.133" Margin="674.067,115.5,0,0" VerticalAlignment="Top" Width="28.933" Style="{DynamicResource MyButton}">
+                    <Button.Background>
+                        <ImageBrush ImageSource="Assets/search-icon.png" Stretch="Uniform"/>
+                    </Button.Background>
+                </Button>
+                <Rectangle x:Name="check_usr_border" HorizontalAlignment="Left" Height="43.2" Margin="273.3,108.3,0,0" Stroke="#FF002EEE" VerticalAlignment="Top" Width="394.267" RadiusY="13" RadiusX="13"/>
+                <Grid x:Name="Search_result" HorizontalAlignment="Left" Height="493.333" VerticalAlignment="Top" Width="930" Margin="0,176.4,0,0" Visibility="Collapsed">
+                    <TextBlock x:Name="Fullname_search" HorizontalAlignment="Left" Height="44.4" Margin="521.7,174.8,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="330" Foreground="Black" FontSize="16" FontWeight="SemiBold" Padding="0,11,0,0"/>
+                    <TextBlock x:Name="Email_search" HorizontalAlignment="Left" Height="44.4" Margin="521.7,263,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="330" Foreground="Black" FontSize="16" FontWeight="SemiBold" Padding="0,11,0,0"/>
+                    <TextBlock x:Name="Birthday_search" HorizontalAlignment="Left" Height="44.4" Margin="521.7,351.5,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="330" Foreground="Black" FontSize="16" FontWeight="SemiBold" Padding="0,11,0,0"/>
+                    <TextBlock x:Name="status_search1" HorizontalAlignment="Left" Height="44.4" Margin="521.7,88.4,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="244.8" FontSize="16" Foreground="Black" FontWeight="SemiBold" Padding="0,11,0,0"/>
+                    <Label x:Name="status_search" Content="Status:" HorizontalAlignment="Left" Height="31.5" Margin="392.7,95.9,0,0" VerticalAlignment="Top" Width="109" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="16"/>
+                    <Label x:Name="fullname_search" Content="Fullname:" HorizontalAlignment="Left" Height="31.5" Margin="392.7,181.4,0,0" VerticalAlignment="Top" Width="109" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="16"/>
+                    <Label x:Name="email_search" Content="E-mail:" HorizontalAlignment="Left" Height="31.5" Margin="392.7,269.9,0,0" VerticalAlignment="Top" Width="109" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="16"/>
+                    <Label x:Name="birthday_search" Content="Birthday:" HorizontalAlignment="Left" Height="31.5" Margin="392.7,358.4,0,0" VerticalAlignment="Top" Width="109" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="16"/>
+                    <Ellipse HorizontalAlignment="Left" Height="123.3" Margin="130.5,95.9,0,0" VerticalAlignment="Top" Width="128.4">
+                        <Ellipse.Fill>
+                            <ImageBrush ImageSource="5.jpg" Stretch="UniformToFill"/>
+                        </Ellipse.Fill>
+                    </Ellipse>
+                    <TextBlock x:Name="User_search" HorizontalAlignment="Left" Height="38.4" Margin="39.3,263,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="314" Foreground="Black" FontSize="18" TextAlignment="Center" FontWeight="Bold"/>
+                </Grid>
+                <Label Content="Search User Information" HorizontalAlignment="Left" Height="44.4" Margin="323.3,30.8,0,0" VerticalAlignment="Top" Width="298" Background="{x:Null}" FontSize="22" FontWeight="Bold" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                <Button x:Name="Return_CheckUsr" Content="" HorizontalAlignment="Left" Height="35.037" Margin="10,10,0,0" VerticalAlignment="Top" Width="86.4" BorderBrush="{x:Null}" Style="{DynamicResource MyButton}">
+                    <Button.Background>
+                        <ImageBrush ImageSource="Assets/next-reverse.png" Stretch="Uniform"/>
+                    </Button.Background>
+                </Button>
+            </Grid>
+            <Grid x:Name="ChangeInfoGrid" Height="670">
+                <DatePicker x:Name="Birthday" HorizontalAlignment="Left" Height="31.011" Margin="377,492.134,0,0" VerticalAlignment="Top" Width="299.501" RenderTransformOrigin="0.496,0.538" SelectedDateFormat="Short" Background="{x:Null}" BorderBrush="#FF1E4CEA" FontSize="16" Style="{DynamicResource BirthdayTemplate}"/>
             </Grid>
         </StackPanel>
     </StackPanel>

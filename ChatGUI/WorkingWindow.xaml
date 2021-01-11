@@ -1055,7 +1055,7 @@
                     </Button>
                     <ListBox x:Name="PrivateChat" Height="551.533" Margin="61.6,54.3,61.6,0" VerticalAlignment="Top" Background="{x:Null}" BorderBrush="{x:Null}" FontSize="14"/>
                     <TextBlock x:Name="friend_name" HorizontalAlignment="Left" Height="49.3" Margin="61.6,0,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="806.8" Foreground="Black" FontSize="20" FontWeight="Bold" Padding="13,9,0,0"/>
-                    <Button x:Name="exit_pr_chat" Content="Button" HorizontalAlignment="Left" Height="30.733" Margin="752.503,7.401,0,0" VerticalAlignment="Top" Width="32.333" Style="{StaticResource MyButton}">
+                    <Button x:Name="exit_pr_chat" Content="Button" HorizontalAlignment="Left" Height="30.733" Margin="752.503,7.401,0,0" VerticalAlignment="Top" Width="32.333" Style="{StaticResource MyButton}" Click="EndChat_Click">
                         <Button.Background>
                             <ImageBrush ImageSource="Assets/next-reverse.png" Stretch="Uniform"/>
                         </Button.Background>
@@ -1100,7 +1100,7 @@
                     </Button>
                     <ListBox x:Name="GroupChat" Height="551.533" Margin="61.6,54.3,0,0" VerticalAlignment="Top" Background="{x:Null}" BorderBrush="{x:Null}" FontSize="14" HorizontalAlignment="Left" Width="806.8"/>
                     <TextBlock x:Name="group_name" HorizontalAlignment="Left" Height="49.3" Margin="61.6,0,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="806.8" Foreground="Black" Padding="13,9,0,0" FontSize="20" FontWeight="Bold"/>
-                    <Button x:Name="exit_gr_chat" Content="Button" HorizontalAlignment="Left" Height="30.733" Margin="752.503,7.401,0,0" VerticalAlignment="Top" Width="32.333" Style="{StaticResource MyButton}">
+                    <Button x:Name="exit_gr_chat" Content="Button" HorizontalAlignment="Left" Height="30.733" Margin="752.503,7.401,0,0" VerticalAlignment="Top" Width="32.333" Style="{StaticResource MyButton}" Click="EndGroupChat_Click">
                         <Button.Background>
                             <ImageBrush ImageSource="Assets/next-reverse.png" Stretch="Uniform"/>
                         </Button.Background>

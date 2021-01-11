@@ -34,10 +34,11 @@ struct client_type
 {
     int id = -1;
     bool Online = false;
-    std::string IP, Username, Password, Fullname, DOB, Email, RoomID;
+    std::string IP, Username, Password, Fullname, DOB, Email, Bio, RoomID;
     SOCKET socket = INVALID_SOCKET;
 };
 
+void CloseSocket(SOCKET Sockid);
 void Client_Thread(SOCKET NewSockid, std::vector<client_type>& client_List, std::vector<client_type>& client, std::thread my_thread[], int temp_id, std::thread& thread);
 void Client_Multiple_Chatting(client_type& new_client, std::vector<client_type>& client_array, std::thread& thread);
 void Client_Single_Chatting(client_type& first_client, std::vector<client_type>& client_array, std::string second_username, std::thread& thread);

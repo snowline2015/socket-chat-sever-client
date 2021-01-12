@@ -1116,10 +1116,10 @@
         </StackPanel>
         <StackPanel x:Name="MoreOptPanel" HorizontalAlignment="Left" Height="669.7" Width="930" Visibility="Collapsed">
             <Grid x:Name="MoreOptGrid" Height="668.9">
-                <Button x:Name="Change_Pass" Content="Change Password" HorizontalAlignment="Left" Height="50.4" Margin="341.9,159.7,0,0" VerticalAlignment="Top" Width="241.2" Style="{DynamicResource MoreOpt_Button_Template}" Background="{x:Null}" BorderBrush="#FF1A56E4" FontSize="16"/>
+                <Button x:Name="Change_Pass" Content="Change Password" HorizontalAlignment="Left" Height="50.4" Margin="341.9,159.7,0,0" VerticalAlignment="Top" Width="241.2" Style="{DynamicResource MoreOpt_Button_Template}" Background="{x:Null}" BorderBrush="#FF1A56E4" FontSize="16" Click="EnterChangePass"/>
                 <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Height="42" Margin="361.4,43.3,0,0" TextWrapping="Wrap" Text="More Options" VerticalAlignment="Top" Width="241.2" FontWeight="Bold" FontSize="24" TextAlignment="Center"/>
-                <Button x:Name="CheckUsr" Content="Check User Status" HorizontalAlignment="Left" Height="50.4" Margin="341.9,268.9,0,0" VerticalAlignment="Top" Width="241.2" Style="{DynamicResource MoreOpt_Button_Template}" Background="{x:Null}" BorderBrush="#FF1A56E4" FontSize="16"/>
-                <Button x:Name="Change_Info" Content="Change Information" HorizontalAlignment="Left" Height="50.4" Margin="341.9,372.4,0,0" VerticalAlignment="Top" Width="241.2" Style="{DynamicResource MoreOpt_Button_Template}" Background="{x:Null}" BorderBrush="#FF1A56E4" FontSize="16"/>
+                <Button x:Name="CheckUsr" Content="Check User Status" HorizontalAlignment="Left" Height="50.4" Margin="341.9,268.9,0,0" VerticalAlignment="Top" Width="241.2" Style="{DynamicResource MoreOpt_Button_Template}" Background="{x:Null}" BorderBrush="#FF1A56E4" FontSize="16" Click="EnterCheckUser"/>
+                <Button x:Name="Change_Info" Content="Change Information" HorizontalAlignment="Left" Height="50.4" Margin="341.9,372.4,0,0" VerticalAlignment="Top" Width="241.2" Style="{DynamicResource MoreOpt_Button_Template}" Background="{x:Null}" BorderBrush="#FF1A56E4" FontSize="16" Click="EnterChangeInfo"/>
                 <Button x:Name="returnPage_MoreOpt" Content="Connect To Chat" HorizontalAlignment="Left" Height="35.2" Margin="10,10,0,0" VerticalAlignment="Top" Width="58.134" BorderBrush="{x:Null}" FontWeight="SemiBold" FontSize="14" 
                     Style="{StaticResource MyButton}" Panel.ZIndex="2" Click="ReturnMainOptions">
                     <Button.Background>

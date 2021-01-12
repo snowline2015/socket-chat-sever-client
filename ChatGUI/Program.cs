@@ -488,7 +488,7 @@ namespace ConvertedCode
             client_array = temp.Split('\n');  
         }
 
-        public void Check_User_Info(client_type client, string username, ref string[] user_info)
+        public bool Check_User_Info(client_type client, string username, ref string[] user_info)
         {
             Array.Clear(user_info, 0, user_info.Length);
             byte[] messageSent = Encoding.ASCII.GetBytes("-check-user\0");
@@ -497,7 +497,7 @@ namespace ConvertedCode
             byte[] messageReceived = new byte[4096];
             int byteRecv = client.socket.Receive(messageReceived);
 
-            messageSent = Encoding.ASCII.GetBytes(username);     
+            messageSent = Encoding.ASCII.GetBytes(username);
             byteSent = client.socket.Send(messageSent);
 
             Array.Clear(messageReceived, 0, messageReceived.Length);
@@ -505,11 +505,13 @@ namespace ConvertedCode
 
             if (Array.Equals(Encoding.ASCII.GetString(messageReceived, 0, byteRecv), "NO\0") == true)
             {
-                // Lam gi do khi khong tim thay user
+                return false;
             }
 
             string temp = Encoding.ASCII.GetString(messageReceived, 0, messageReceived.Length);
+            Array.Clear(user_info, 0, user_info.Length);
             user_info = temp.Split('\n');                   // user_info[last_index] = online / offline
+            return true;
         }
 
         public void Change_Password(client_type client, string username, string new_password)

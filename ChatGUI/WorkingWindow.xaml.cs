@@ -379,6 +379,61 @@ namespace ChatGUI
             if (e.ChangedButton == MouseButton.Left)
                 DragMove();
         }
+
+        private void EnterChangePass(object sender, RoutedEventArgs e)
+        {
+            if (MoreOptGrid.Visibility == Visibility.Visible)
+                MoreOptGrid.Visibility = Visibility.Collapsed;
+            ChangePassGrid.Visibility = Visibility.Visible;
+        }
+
+        private void EnterCheckUser(object sender, RoutedEventArgs e)
+        {
+            if (MoreOptGrid.Visibility == Visibility.Visible)
+                MoreOptGrid.Visibility = Visibility.Collapsed;
+            CheckUsrGrid.Visibility = Visibility.Visible;
+        }
+
+        private void EnterChangeInfo(object sender, RoutedEventArgs e)
+        {
+            if (MoreOptGrid.Visibility == Visibility.Visible)
+                MoreOptGrid.Visibility = Visibility.Collapsed;
+            ChangeInfoGrid.Visibility = Visibility.Visible;
+        }
+
+        private void ChangePass_Click(object sender, RoutedEventArgs e)
+        {
+            if (NewPass_again.Password != NewPass.Password)
+                ChangePass_warning.Text = "New password do not match with current password";
+            LoginWindow.CPP.Change_Password(LoginWindow.client, LoginWindow._friend, NewPass.Password);
+        }
+
+        private void CheckUer_Click(object sender, RoutedEventArgs e)
+        {
+            if (check_usr.Text == "")
+                CheckUsr_warning.Text = "Please input a username";
+
+            string[] usr_info = { "" };
+            bool chk = LoginWindow.CPP.Check_User_Info(LoginWindow.client, check_usr.Text, ref usr_info);
+            if(chk == false)
+                CheckUsr_warning.Text = "Cannot find input user";
+            else //fullname, birthday, mail, bio, online
+            {
+                CheckUsr_warning.Text = "";
+                Search_result.Visibility = Visibility.Visible;
+
+
+            }
+        }
+
+        private void CheckUser_Enter(object sender, KeyEventArgs k)
+        {
+            if(Keyboard.Modifiers == ModifierKeys.Control && k.Key == Key.Enter)
+            {
+                search_usr.Focus();
+                search_usr.RaiseEvent(new RoutedEventArgs(Button.ClickEvent, search_usr));
+            }
+        }
     }
 
     public class CurrentTimeViewModel : INotifyPropertyChanged

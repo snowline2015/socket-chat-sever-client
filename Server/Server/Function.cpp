@@ -8,13 +8,15 @@ void Read_Account(std::vector<client_type>& User_List) {
     if (!f.is_open())
         return;
     while (!f.eof()) {
+        string temp;
         client_type user;
         getline(f, user.Username, ',');
         getline(f, user.Password, ',');
         getline(f, user.Fullname, ',');
         getline(f, user.DOB, ',');
         getline(f, user.Email, ',');
-        getline(f, user.Bio, '\n');
+        getline(f, user.Bio, ';');
+        getline(f, temp, '\n');
         if (user.Username.size() != 0)
             User_List.push_back(user);
     }
@@ -31,7 +33,7 @@ void Write_Account(vector<client_type>& users) {
         o << users[i].Fullname << ',';
         o << users[i].DOB << ',';
         o << users[i].Email << ',';
-        o << users[i].Bio << std::endl;
+        o << users[i].Bio << ';' << std::endl;
     }
     o.close();
 }
@@ -388,6 +390,7 @@ void Client_Thread(SOCKET NewSockid, std::vector<client_type>& client_List, std:
             CloseSocket(client[temp_id].socket);
             CloseSocket(NewSockid);
             std::cout << client[temp_id].Username << " has disconnected" << std::endl;
+            client[temp_id].Username = "";
             break;
         }
 
@@ -416,7 +419,6 @@ void Client_Thread(SOCKET NewSockid, std::vector<client_type>& client_List, std:
                         CloseSocket(client[temp_id].socket);
                         CloseSocket(NewSockid);
                         client[temp_id].id = -1;
-                        client[temp_id].Username = "";
                         client[temp_id].Online = false;
                         break;
                     }

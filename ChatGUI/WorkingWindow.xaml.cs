@@ -207,7 +207,8 @@ namespace ChatGUI
             PrivateChatMain.Visibility = Visibility.Visible;
             LoginWindow.CPP.Start_Client_Private_Chat(LoginWindow.client);
 
-            my_thread = new Thread(new ThreadStart(AddListboxItems));
+            //my_thread = new Thread(new ThreadStart(AddListboxItems));
+            my_thread = new Thread(() => AddListboxItems(my_thread));
             my_thread.Start();
         }
 
@@ -280,7 +281,7 @@ namespace ChatGUI
             PreChatPanel.Visibility = Visibility.Visible;
         }
 
-        public void AddListboxItems()
+        public void AddListboxItems(Thread my_thread)
         {
             string[] item_array;
             char[] sep = { ':' };
@@ -297,19 +298,19 @@ namespace ChatGUI
                             PrivateChat.Items.Add("User disconnected\nEnding private chat.....");
                             Thread.Sleep(2000);
 
-                            //PrivateChatMain.Visibility = Visibility.Collapsed;
-                            //logout_flag = true;
+                            PrivateChatMain.Visibility = Visibility.Collapsed;
+                            logout_flag = true;
                             start_flag = false;
-                            //LoginWindow.CPP.End_Client_Private_Chat(LoginWindow.client);
-                            //my_thread.Join();
-                            //byte[] messageSent = Encoding.ASCII.GetBytes("-back\0");
-                            //int byteSent = LoginWindow.client.socket.Send(messageSent);
+                            LoginWindow.CPP.End_Client_Private_Chat(LoginWindow.client);
+                           
+                            byte[] messageSent = Encoding.ASCII.GetBytes("-back\0");
+                            int byteSent = LoginWindow.client.socket.Send(messageSent);
 
-                            //PrivateChatPanel.Visibility = Visibility.Collapsed;
-                            //PreChatPanel.Visibility = Visibility.Visible;
+                            PrivateChatPanel.Visibility = Visibility.Collapsed;
+                            PreChatPanel.Visibility = Visibility.Visible;
 
-                            exit_pr_chat.Focus();
-                            exit_pr_chat.RaiseEvent(new RoutedEventArgs(Button.ClickEvent, exit_pr_chat));
+                            //exit_pr_chat.Focus();
+                            //exit_pr_chat.RaiseEvent(new RoutedEventArgs(Button.ClickEvent, exit_pr_chat));
                         }
                         else
                         {
@@ -320,6 +321,7 @@ namespace ChatGUI
                     }));
                 }
             }
+            my_thread.Abort();
         }
 
         private void Send_Click_Group(object sender, RoutedEventArgs e)

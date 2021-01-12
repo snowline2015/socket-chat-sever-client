@@ -509,7 +509,6 @@ namespace ConvertedCode
             }
 
             string temp = Encoding.ASCII.GetString(messageReceived, 0, messageReceived.Length);
-            Array.Clear(user_info, 0, user_info.Length);
             user_info = temp.Split('\n');                   // user_info[last_index] = online / offline
             return true;
         }

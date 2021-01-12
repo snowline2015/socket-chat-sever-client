@@ -51,7 +51,7 @@ void Change_Password(SOCKET NewSockid, std::vector<client_type>& client_List);
 void Change_Info(SOCKET NewSockid, std::vector<client_type>& client_List);
 void Check_User(SOCKET NewSockid, std::vector<client_type> client, std::vector<client_type> client_List);
 
-void Upload_File(client_type& client, std::string& fileName);
-void Download_File(client_type& client, std::string& fileName);
+bool Upload_File(client_type& client, std::string& fileName);
+bool Download_File(client_type& client, std::string& fileName);
 
 #endif

@@ -229,7 +229,7 @@ namespace ConvertedCode
             return true;
         }
 
-            public bool Upload_File(client_type client, string str)
+        public bool Upload_File(client_type client, string str)
         {
 
             string fName = "";

@@ -7,7 +7,6 @@ void Read_Account(std::vector<client_type>& User_List) {
     std::ifstream f("Data\\Account.csv");
     if (!f.is_open())
         return;
-    string temp;
     while (!f.eof()) {
         client_type user;
         getline(f, user.Username, ',');
@@ -73,17 +72,10 @@ bool Register(SOCKET NewSockid, std::vector<client_type>& User_List) {
                     memset(&temp, NULL, sizeof(temp));
                     iResult = recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
                     if (iResult != SOCKET_ERROR) {
-                        send(NewSockid, "OK", 3, 0);
                         new_user.Email = std::string(temp);
-                        memset(&temp, NULL, sizeof(temp));
-                        iResult = recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
-                        if (iResult != SOCKET_ERROR) {
-                            new_user.Bio = std::string(temp);
-                            User_List.push_back(new_user);
-                            send(NewSockid, "OK", 3, 0);
-                            return true;
-                        }
-                        return false;
+                        User_List.push_back(new_user);
+                        send(NewSockid, "OK", 3, 0);
+                        return true;
                     }
                     return false;
                 }
@@ -137,8 +129,6 @@ void Client_Multiple_Chatting(client_type& new_client, std::vector<client_type>&
 
                 if (strcmp(tempmsg, "-back") == 0) {
                     msg = new_client.Username + " has left the chat.";
-                    /*CloseSocket(new_client.socket);
-                    CloseSocket(client_array[new_client.id].socket);*/
                     for (int i = 0; i < MAX_CLIENTS; i++) {
                         if (client_array[i].socket != INVALID_SOCKET) {
                             iResult = send(client_array[i].socket, msg.c_str(), strlen(msg.c_str()), 0);
@@ -151,7 +141,6 @@ void Client_Multiple_Chatting(client_type& new_client, std::vector<client_type>&
                 }
 
                 msg = new_client.Username + ":" + (tempmsg);
-                //snowline2017: asdasdasdasd:sdfdsf:sdfdsfsf
 
                 for (int i = 0; i < MAX_CLIENTS; i++) {
                     if (client_array[i].socket != INVALID_SOCKET)
@@ -165,8 +154,6 @@ void Client_Multiple_Chatting(client_type& new_client, std::vector<client_type>&
             }
             else {
                 msg = new_client.Username + " has disconnected.";
-                /*CloseSocket(new_client.socket);
-                CloseSocket(client_array[new_client.id].socket);*/
                 for (int i = 0; i < MAX_CLIENTS; i++) {
                     if (client_array[i].socket != INVALID_SOCKET) {
                         iResult = send(client_array[i].socket, msg.c_str(), strlen(msg.c_str()), 0);
@@ -179,7 +166,6 @@ void Client_Multiple_Chatting(client_type& new_client, std::vector<client_type>&
             }
         }
     }
-    thread.detach();
     stop_client_thread_flag.store(false);
 }
 
@@ -215,9 +201,6 @@ void Client_Single_Chatting(client_type& first_client, std::vector<client_type>&
                         }
 
                         else if (strcmp(tempmsg, "-back") == 0) {
-                            /*CloseSocket(first_client.socket);
-                            CloseSocket(client_array[first_client.id].socket);*/
-
                             iResult = send(client_array[i].socket, "-disconnect", 12, 0);
                             while (iResult == SOCKET_ERROR)
                                 iResult = send(client_array[i].socket, "-disconnect", 12, 0);
@@ -235,10 +218,7 @@ void Client_Single_Chatting(client_type& first_client, std::vector<client_type>&
                     }
                 }       
             }
-            else {
-                /*CloseSocket(first_client.socket);
-                CloseSocket(client_array[first_client.id].socket);*/
-
+            else { 
                 for (int i = 0; i < MAX_CLIENTS; i++) {
                     if (client_array[i].socket == INVALID_SOCKET) continue;
                     else if (first_client.id != i && client_array[i].Username.compare(second_username) == 0) {
@@ -255,7 +235,6 @@ void Client_Single_Chatting(client_type& first_client, std::vector<client_type>&
     }
 
     blahblah:
-    thread.detach();
     stop_client_thread_flag.store(false);
 }
 
@@ -411,6 +390,9 @@ void Client_Thread(SOCKET NewSockid, std::vector<client_type>& client_List, std:
             CloseSocket(NewSockid);
             client[temp_id].Online = false;
             client[temp_id].id = -1;
+
+            std::cout << client[temp_id].Username << " has disconnected" << std::endl;
+
             break;
         }
 
@@ -427,6 +409,8 @@ void Client_Thread(SOCKET NewSockid, std::vector<client_type>& client_List, std:
                 client[temp_id].Username = username;
                 client[temp_id].Online = true;
                 
+                std::cout << client[temp_id].Username << " has connected" << std::endl;
+
                 while (true) {
 
                     if (stop_client_thread_flag.load() == true) continue;
@@ -434,11 +418,10 @@ void Client_Thread(SOCKET NewSockid, std::vector<client_type>& client_List, std:
                     memset(&temp, NULL, sizeof(temp));
                     iResult = recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
 
-                    if (strcmp(temp, "-logout") == 0) {
-                        my_thread[temp_id].detach();
-                        closesocket(client[temp_id].socket);
-                        closesocket(NewSockid);
-                        client[temp_id].socket = INVALID_SOCKET;
+                    if (iResult == SOCKET_ERROR || strcmp(temp, "-logout") == 0) {
+                        CloseSocket(client[temp_id].socket);
+                        CloseSocket(NewSockid);
+                        client[temp_id].id = -1;
                         client[temp_id].Online = false;
                         break;
                     }
@@ -568,7 +551,9 @@ void Check_Users_Online(SOCKET NewSockid, std::vector<client_type> User_List) {
         if (User_List[i].socket != INVALID_SOCKET && User_List[i].Username != "" && User_List[i].Online == true)
             str.append(User_List[i].Username + "\n");
         
-    send(NewSockid, str.c_str(), strlen(str.c_str()), 0);
+    int iResult = send(NewSockid, str.c_str(), strlen(str.c_str()), 0);
+    while (iResult == SOCKET_ERROR)
+        iResult = send(NewSockid, str.c_str(), strlen(str.c_str()), 0);
 }
 
 void Change_Password(SOCKET NewSockid, std::vector<client_type>& client_List) {

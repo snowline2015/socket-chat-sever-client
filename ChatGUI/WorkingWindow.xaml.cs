@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Windows.Input;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace ChatGUI
 {
@@ -186,6 +187,9 @@ namespace ChatGUI
 
         private void EnterMoreOpts(object sender, RoutedEventArgs e)
         {
+            byte[] messageSent = Encoding.ASCII.GetBytes("-other-option\0");
+            int byteSent = LoginWindow.client.socket.Send(messageSent);
+
             if (PreChatPanel.Visibility == Visibility.Visible)
                 PreChatPanel.Visibility = Visibility.Collapsed;
             MoreOptPanel.Visibility = Visibility.Visible;
@@ -378,6 +382,139 @@ namespace ChatGUI
         {
             if (e.ChangedButton == MouseButton.Left)
                 DragMove();
+        }
+
+        private void EnterChangePass(object sender, RoutedEventArgs e)
+        {
+            if (MoreOptGrid.Visibility == Visibility.Visible)
+                MoreOptGrid.Visibility = Visibility.Collapsed;
+            ChangePassGrid.Visibility = Visibility.Visible;
+        }
+
+        private void EnterCheckUser(object sender, RoutedEventArgs e)
+        {
+            if (MoreOptGrid.Visibility == Visibility.Visible)
+                MoreOptGrid.Visibility = Visibility.Collapsed;
+            CheckUsrGrid.Visibility = Visibility.Visible;
+        }
+
+        private void EnterChangeInfo(object sender, RoutedEventArgs e)
+        {
+            if (MoreOptGrid.Visibility == Visibility.Visible)
+                MoreOptGrid.Visibility = Visibility.Collapsed;
+            ChangeInfoGrid.Visibility = Visibility.Visible;
+
+            string[] usr_info = new string[5];
+            bool chk = LoginWindow.CPP.Check_User_Info(LoginWindow.client, LoginWindow._friend + "\0", ref usr_info);
+            fullname_info.Text = usr_info[0];
+            birthday_info.Text = usr_info[1];
+            email_info.Text = usr_info[2];
+            bio_info.Text = usr_info[3];
+        }
+
+        private void ChangePass_Click(object sender, RoutedEventArgs e)
+        {
+            ChangePass_warning.Foreground = new SolidColorBrush(Colors.Red);
+            if (NewPass_again.Password != NewPass.Password)
+                ChangePass_warning.Text = "New password do not match with current password";
+            else
+            {
+                LoginWindow.CPP.Change_Password(LoginWindow.client, LoginWindow._friend + "\0", NewPass.Password + "\0");
+                ChangePass_warning.Foreground = new SolidColorBrush(Colors.Green);
+                ChangePass_warning.Text = "Password update successfully";
+            }
+        }
+
+        private void CheckUer_Click(object sender, RoutedEventArgs e)
+        {
+            if (check_usr.Text == "")
+                CheckUsr_warning.Text = "Please input a username";
+
+            string[] usr_info = new string[5];
+            bool chk = LoginWindow.CPP.Check_User_Info(LoginWindow.client, check_usr.Text + "\0", ref usr_info);
+            if(chk == false)
+                CheckUsr_warning.Text = "Cannot find input user";
+            else
+            {
+                CheckUsr_warning.Text = "";
+
+                User_search.Text = check_usr.Text;
+                Fullname_search.Text = usr_info[0];
+                Birthday_search.Text = usr_info[1];
+                Email_search.Text = usr_info[2];
+                Bio_search.Text = usr_info[3];
+                if(usr_info[4] == "Online")
+                    status_search1.Foreground = new SolidColorBrush(Colors.Green);
+                else
+                    status_search1.Foreground = new SolidColorBrush(Colors.Red);
+                status_search1.Text = usr_info[4];
+
+                Search_result.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void CheckUser_Enter(object sender, KeyEventArgs k)
+        {
+            if(Keyboard.Modifiers == ModifierKeys.Control && k.Key == Key.Enter)
+            {
+                search_usr.Focus();
+                search_usr.RaiseEvent(new RoutedEventArgs(Button.ClickEvent, search_usr));
+            }
+        }
+
+        private void ChangeInfo(object sender, RoutedEventArgs e)
+        {
+            ChangeInfo_warning.Foreground = new SolidColorBrush(Colors.Red);
+            if (fullname_info.Text == "" || birthday_info.Text == "" || email_info.Text == "")
+                ChangeInfo_warning.Text = "Pleare fill all information";
+            else
+            {
+                LoginWindow.CPP.Change_Info(LoginWindow.client, LoginWindow._friend + "\0", fullname_info.Text + "\0",
+                    birthday_info.Text + "\0", email_info.Text + "\0", bio_info.Text + "\0");
+                ChangeInfo_warning.Foreground = new SolidColorBrush(Colors.Green);
+                ChangeInfo_warning.Text = "Information update successfully";
+            }
+        }
+
+        private void CancelChangeInfo(object sender, RoutedEventArgs e)
+        {
+            byte[] messageSent = Encoding.ASCII.GetBytes("-cancel\0");
+            int byteSent = LoginWindow.client.socket.Send(messageSent);
+
+            ChangeInfoGrid.Visibility = Visibility.Collapsed;
+            MoreOptGrid.Visibility = Visibility.Visible;
+        }
+
+        private void CancelChangePassword(object sender, RoutedEventArgs e)
+        {
+            byte[] messageSent = Encoding.ASCII.GetBytes("-cancel\0");
+            int byteSent = LoginWindow.client.socket.Send(messageSent);
+
+            ChangePassGrid.Visibility = Visibility.Collapsed;
+            MoreOptGrid.Visibility = Visibility.Visible;
+        }
+
+        private void CancelCheckUser(object sender, RoutedEventArgs e)
+        {
+            byte[] messageSent = Encoding.ASCII.GetBytes("-cancel\0");
+            int byteSent = LoginWindow.client.socket.Send(messageSent);
+
+            check_usr.Text = "";
+            User_search.Text = "";
+            Fullname_search.Text = "";
+            Birthday_search.Text = "";
+            Email_search.Text = "";
+            Bio_search.Text = "";
+            status_search1.Text = "";
+            Search_result.Visibility = Visibility.Collapsed;
+            CheckUsrGrid.Visibility = Visibility.Collapsed;
+            MoreOptGrid.Visibility = Visibility.Visible;
+        }
+
+        public void NoSpecialChar(object sender, TextCompositionEventArgs e)
+        {
+            System.Text.RegularExpressions.Regex regex = new System.Text.RegularExpressions.Regex("[^0-9a-zA-Z]");
+            e.Handled = regex.IsMatch(e.Text);
         }
     }
 

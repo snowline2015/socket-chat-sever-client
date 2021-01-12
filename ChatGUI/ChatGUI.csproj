@@ -156,6 +156,7 @@
     <Resource Include="5.jpg" />
     <Resource Include="Assets\encrypted.png" />
     <Resource Include="Assets\search-icon.png" />
+    <Resource Include="Assets\2B.jpg" />
     <Content Include="Database1.mdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

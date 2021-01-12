@@ -384,15 +384,10 @@ void Client_Thread(SOCKET NewSockid, std::vector<client_type>& client_List, std:
     char temp[DEFAULT_MSG_LENGTH];
     while (true) {   
         int iResult = recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
-
         if (iResult == SOCKET_ERROR || strcmp(temp, "-logout") == 0) {
             CloseSocket(client[temp_id].socket);
             CloseSocket(NewSockid);
-            client[temp_id].Online = false;
-            client[temp_id].id = -1;
-
             std::cout << client[temp_id].Username << " has disconnected" << std::endl;
-
             break;
         }
 
@@ -412,7 +407,6 @@ void Client_Thread(SOCKET NewSockid, std::vector<client_type>& client_List, std:
                 std::cout << client[temp_id].Username << " has connected" << std::endl;
 
                 while (true) {
-
                     if (stop_client_thread_flag.load() == true) continue;
 
                     memset(&temp, NULL, sizeof(temp));
@@ -422,6 +416,7 @@ void Client_Thread(SOCKET NewSockid, std::vector<client_type>& client_List, std:
                         CloseSocket(client[temp_id].socket);
                         CloseSocket(NewSockid);
                         client[temp_id].id = -1;
+                        client[temp_id].Username = "";
                         client[temp_id].Online = false;
                         break;
                     }
@@ -606,7 +601,9 @@ void Check_User(SOCKET NewSockid, std::vector<client_type> client, std::vector<c
         if (i == MAX_CLIENTS)
             user_info.append("FALSE\n");
 
-        send(NewSockid, user_info.c_str(), strlen(user_info.c_str()), 0);
+        iResult = send(NewSockid, user_info.c_str(), strlen(user_info.c_str()), 0);
+        while (iResult == SOCKET_ERROR) 
+            iResult = send(NewSockid, user_info.c_str(), strlen(user_info.c_str()), 0);
     }
 }
 

@@ -509,7 +509,7 @@ namespace ConvertedCode
             }
 
             string temp = Encoding.ASCII.GetString(messageReceived, 0, messageReceived.Length);
-            user_info = temp.Split('\n');
+            user_info = temp.Split('\n');                   // user_info[last_index] = online / offline
         }
 
         public void Change_Password(client_type client, string username, string new_password)
@@ -533,7 +533,7 @@ namespace ConvertedCode
             byteRecv = client.socket.Receive(messageReceived);
         }
 
-        public void Change_Info(client_type client, string username, string option, string new_info)
+        public void Change_Info(client_type client, string username, string fullname, string dob, string email, string bio)
         {
             byte[] messageSent = Encoding.ASCII.GetBytes("-change-info\0");
             int byteSent = client.socket.Send(messageSent);
@@ -547,13 +547,25 @@ namespace ConvertedCode
             Array.Clear(messageReceived, 0, messageReceived.Length);
             byteRecv = client.socket.Receive(messageReceived);
 
-            messageSent = Encoding.ASCII.GetBytes(option);
+            messageSent = Encoding.ASCII.GetBytes(fullname);
             byteSent = client.socket.Send(messageSent);
 
             Array.Clear(messageReceived, 0, messageReceived.Length);
             byteRecv = client.socket.Receive(messageReceived);
 
-            messageSent = Encoding.ASCII.GetBytes(new_info);
+            messageSent = Encoding.ASCII.GetBytes(dob);
+            byteSent = client.socket.Send(messageSent);
+
+            Array.Clear(messageReceived, 0, messageReceived.Length);
+            byteRecv = client.socket.Receive(messageReceived);
+
+            messageSent = Encoding.ASCII.GetBytes(email);
+            byteSent = client.socket.Send(messageSent);
+
+            Array.Clear(messageReceived, 0, messageReceived.Length);
+            byteRecv = client.socket.Receive(messageReceived);
+
+            messageSent = Encoding.ASCII.GetBytes(bio);
             byteSent = client.socket.Send(messageSent);
 
             Array.Clear(messageReceived, 0, messageReceived.Length);

@@ -176,11 +176,14 @@ namespace ChatGUI
             byte[] messageSent = Encoding.ASCII.GetBytes(cmd);
             int byteSent = LoginWindow.client.socket.Send(messageSent);
 
+            byte[] messageReceived = new byte[4096];
+            int byteRecv = LoginWindow.client.socket.Receive(messageReceived);
+
             messageSent = Encoding.ASCII.GetBytes(IPAddress_server_gr.Text);
             byteSent = LoginWindow.client.socket.Send(messageSent);
 
-            byte[] messageReceived = new byte[4096];
-            int byteRecv = LoginWindow.client.socket.Receive(messageReceived);
+            Array.Clear(messageReceived, 0, messageReceived.Length);
+            byteRecv = LoginWindow.client.socket.Receive(messageReceived);
 
             str = Encoding.ASCII.GetString(messageReceived, 0, byteRecv);
         }

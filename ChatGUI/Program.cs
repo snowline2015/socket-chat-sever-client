@@ -22,6 +22,7 @@ namespace ConvertedCode
     {
         Thread my_thread;
         public volatile bool upload_flag = false;
+        public volatile bool stop_flag = false;
 
         public void ShutDownAndClose(client_type client)
         {
@@ -52,42 +53,36 @@ namespace ConvertedCode
 
         public void Client_Group_Thread(client_type client)
         {
-            try
+            while (!stop_flag)
             {
-                while (true)
+                if (client.socket != null)
                 {
-                    if (client.socket != null)
-                    {
-                        byte[] messageReceived = new byte[4096];
-                        int byteRecv = client.socket.Receive(messageReceived);
+                    byte[] messageReceived = new byte[4096];
+                    int byteRecv = client.socket.Receive(messageReceived);
 
-                        string str = Encoding.ASCII.GetString(messageReceived, 0, byteRecv);
-                        WorkingWindow.item = str;
-                        WorkingWindow.start_flag = true;     //  Add listbox items
-                    }
+                    string str = Encoding.ASCII.GetString(messageReceived, 0, byteRecv);
+                    WorkingWindow.item = str;
+                    WorkingWindow.start_flag = true;     
                 }
-            }
-            catch
-            {
-                ShutDownAndClose(client);
             }
         }
 
         public void Start_Client_Group_Chat(client_type client)
         {
-            WorkingWindow.logout_flag = false;
             my_thread = new Thread(() => Client_Group_Thread(client));
             my_thread.Start();
         }
 
         public void End_Client_Group_Chat(client_type client)
         {
-            my_thread.Abort();
+            stop_flag = true;
+            my_thread.Join();
+            stop_flag = false;
         }
 
         public void Client_Private_Thread(client_type client)
         {
-            while (true)
+            while (!stop_flag)
             {
                 if (client.socket != null && upload_flag == false)
                 {
@@ -125,14 +120,15 @@ namespace ConvertedCode
 
         public void Start_Client_Private_Chat(client_type client)
         {
-            WorkingWindow.logout_flag = false;
             my_thread = new Thread(() => Client_Private_Thread(client));
             my_thread.Start();
         }
 
         public void End_Client_Private_Chat(client_type client)
         {
-            my_thread.Abort();
+            stop_flag = true;
+            my_thread.Join();
+            stop_flag = false;
         }
 
         public bool Login(client_type client, string id, string password)

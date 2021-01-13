@@ -151,7 +151,7 @@ namespace ChatGUI
                 GroupChatMain.Visibility = Visibility.Visible;
 
                 LoginWindow.CPP.Start_Client_Group_Chat(LoginWindow.client);
-
+                logout_flag = false;
                 my_thread = new Thread(new ThreadStart(AddListboxItemsGroup));
                 my_thread.Start();
             }
@@ -216,8 +216,7 @@ namespace ChatGUI
 
             PrivateChatMain.Visibility = Visibility.Visible;
             LoginWindow.CPP.Start_Client_Private_Chat(LoginWindow.client);
-
-            //my_thread = new Thread(new ThreadStart(AddListboxItems));
+            logout_flag = false;
             my_thread = new Thread(() => AddListboxItems(my_thread));
             my_thread.Start();
         }
@@ -282,10 +281,13 @@ namespace ChatGUI
         {
             PrivateChatMain.Visibility = Visibility.Collapsed;
             logout_flag = true;
-            LoginWindow.CPP.End_Client_Private_Chat(LoginWindow.client);
-            my_thread.Join();
+
             byte[] messageSent = Encoding.ASCII.GetBytes("-back\0");
             int byteSent = LoginWindow.client.socket.Send(messageSent);
+
+            LoginWindow.CPP.End_Client_Private_Chat(LoginWindow.client);
+            my_thread.Abort();
+            start_flag = false;
 
             PrivateChatPanel.Visibility = Visibility.Collapsed;
             PreChatPanel.Visibility = Visibility.Visible;
@@ -371,10 +373,13 @@ namespace ChatGUI
         {
             GroupChatMain.Visibility = Visibility.Collapsed;
             logout_flag = true;
-            LoginWindow.CPP.End_Client_Group_Chat(LoginWindow.client);
-            my_thread.Join();
+
             byte[] messageSent = Encoding.ASCII.GetBytes("-back\0");
             int byteSent = LoginWindow.client.socket.Send(messageSent);
+
+            LoginWindow.CPP.End_Client_Group_Chat(LoginWindow.client);
+            my_thread.Join();
+            start_flag = false;
 
             GroupChatPanel.Visibility = Visibility.Collapsed;
             PreChatPanel.Visibility = Visibility.Visible;

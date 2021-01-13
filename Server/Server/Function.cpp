@@ -125,7 +125,7 @@ void Client_Multiple_Chatting(client_type& new_client, std::vector<client_type>&
 
     while (true) {
         memset(&tempmsg, NULL, sizeof(tempmsg));
-        if (new_client.socket != 0) {
+        if (new_client.socket != INVALID_SOCKET) {
             int iResult = recv(new_client.socket, tempmsg, DEFAULT_MSG_LENGTH, 0);
             if (iResult > 0) {
                 if (strcmp(tempmsg, "-back") == 0) {
@@ -140,7 +140,6 @@ void Client_Multiple_Chatting(client_type& new_client, std::vector<client_type>&
                             }
                         }
                     }
-                    new_client.RoomID = "";
                     break;
                 }
 
@@ -171,10 +170,10 @@ void Client_Multiple_Chatting(client_type& new_client, std::vector<client_type>&
                         }
                     }
                 }
-                new_client.RoomID = "";
                 break;
             }
         }
+        else break;
     }
     stop_client_thread_flag.store(false);
 }
@@ -216,6 +215,7 @@ void Client_Single_Chatting(client_type& first_client, std::vector<client_type>&
                         }
 
                         else if (strcmp(tempmsg, "-back") == 0) {
+                            send(first_client.socket, "OK", 3, 0);
                             iResult = send(client_array[i].socket, "-disconnect", 12, 0);
                             while (iResult <= 0) {
                                 sleep_for(milliseconds(5));
@@ -561,6 +561,7 @@ void Client_Thread(SOCKET NewSockid, std::vector<client_type>& client_List, std:
                                     send(NewSockid, "OK", 3, 0);
                                     my_thread[temp_id] = std::thread(Client_Multiple_Chatting, std::ref(client[temp_id]), std::ref(client), std::ref(my_thread[temp_id]));
                                     my_thread[temp_id].join();
+                                    client[temp_id].RoomID = "";
                                     break;
                                 }
                             }
@@ -589,6 +590,7 @@ void Client_Thread(SOCKET NewSockid, std::vector<client_type>& client_List, std:
                                 else {
                                     my_thread[temp_id] = std::thread(Client_Multiple_Chatting, std::ref(client[temp_id]), std::ref(client), std::ref(my_thread[temp_id]));
                                     my_thread[temp_id].join();
+                                    client[temp_id].RoomID = "";
                                     break;
                                 }
                             }
@@ -596,25 +598,32 @@ void Client_Thread(SOCKET NewSockid, std::vector<client_type>& client_List, std:
                     }
 
                     else if (strcmp(temp, "-other-option") == 0) {
+                        bool check_back = true;
                         while (true) {
                             memset(&temp, NULL, sizeof(temp));
                             iResult = recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
-                            if (iResult <= 0 || strcmp(temp, "-back") == 0)
-                                break;
+                            if (iResult <= 0 || strcmp(temp, "-back") == 0) {
+                                if (check_back == false)
+                                    check_back = true;
+                                else break;
+                            }
 
                             else if (strcmp(temp, "-change-password") == 0) {
                                 send(NewSockid, "OK", 3, 0);
                                 Change_Password(NewSockid, client_List);
+                                check_back = false;
                             }
 
                             else if (strcmp(temp, "-check-user") == 0) {
                                 send(NewSockid, "OK", 3, 0);
                                 Check_User(NewSockid, client, client_List);
+                                check_back = false;
                             }
 
                             else if (strcmp(temp, "-change-info") == 0) {
                                 send(NewSockid, "OK", 3, 0);
                                 Change_Info(NewSockid, client_List);
+                                check_back = false;
                             }
                         }
                     }

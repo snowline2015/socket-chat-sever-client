@@ -126,10 +126,20 @@ namespace ChatGUI
         private void CreateRoomClick(object sender, RoutedEventArgs e)
         {
             gr_warning.Text = "";
-            string temp = "";
-            this.EnterPublicChatCommand(ref temp, "-create-room\0");
+            //this.EnterPublicChatCommand(ref temp, "-create-room\0");
+            byte[] messageSent = Encoding.ASCII.GetBytes("-create-room\0");
+            int byteSent = LoginWindow.client.socket.Send(messageSent);
 
-            if (temp.Equals("NO\0"))    //Them vai thu
+            byte[] messageReceived = new byte[4096];
+            int byteRecv = LoginWindow.client.socket.Receive(messageReceived);
+
+            messageSent = Encoding.ASCII.GetBytes(IPAddress_server_gr.Text);
+            byteSent = LoginWindow.client.socket.Send(messageSent);
+
+            Array.Clear(messageReceived, 0, messageReceived.Length);
+            byteRecv = LoginWindow.client.socket.Receive(messageReceived);
+
+            if (Encoding.ASCII.GetString(messageReceived, 0, byteRecv).Equals("NO\0"))    //Them vai thu
             {
                 gr_warning.Text = "Room already existed";
             }
@@ -150,10 +160,20 @@ namespace ChatGUI
         private void JoinRoomClick(object sender, RoutedEventArgs e)
         {
             gr_warning.Text = "";
-            string temp = "";
-            this.EnterPublicChatCommand(ref temp, "-join-room\0");
 
-            if (temp.Equals("NO\0"))    //Them vai thu
+            byte[] messageSent = Encoding.ASCII.GetBytes("-join-room\0");
+            int byteSent = LoginWindow.client.socket.Send(messageSent);
+
+            byte[] messageReceived = new byte[4096];
+            int byteRecv = LoginWindow.client.socket.Receive(messageReceived);
+
+            messageSent = Encoding.ASCII.GetBytes(IPAddress_server_gr.Text);
+            byteSent = LoginWindow.client.socket.Send(messageSent);
+
+            Array.Clear(messageReceived, 0, messageReceived.Length);
+            byteRecv = LoginWindow.client.socket.Receive(messageReceived);
+
+            if (Encoding.ASCII.GetString(messageReceived, 0, byteRecv).Equals("NO\0"))    //Them vai thu
             {
                 gr_warning.Text = "Room does not exist";
             }
@@ -169,23 +189,6 @@ namespace ChatGUI
                 my_thread = new Thread(new ThreadStart(AddListboxItemsGroup));
                 my_thread.Start();
             }
-        }
-
-        private void EnterPublicChatCommand(ref string str, string cmd)
-        {
-            byte[] messageSent = Encoding.ASCII.GetBytes(cmd);
-            int byteSent = LoginWindow.client.socket.Send(messageSent);
-
-            byte[] messageReceived = new byte[4096];
-            int byteRecv = LoginWindow.client.socket.Receive(messageReceived);
-
-            messageSent = Encoding.ASCII.GetBytes(IPAddress_server_gr.Text);
-            byteSent = LoginWindow.client.socket.Send(messageSent);
-
-            Array.Clear(messageReceived, 0, messageReceived.Length);
-            byteRecv = LoginWindow.client.socket.Receive(messageReceived);
-
-            str = Encoding.ASCII.GetString(messageReceived, 0, byteRecv);
         }
 
         private void EnterMoreOpts(object sender, RoutedEventArgs e)
@@ -370,6 +373,8 @@ namespace ChatGUI
             logout_flag = true;
             LoginWindow.CPP.End_Client_Group_Chat(LoginWindow.client);
             my_thread.Join();
+            byte[] messageSent = Encoding.ASCII.GetBytes("-back\0");
+            int byteSent = LoginWindow.client.socket.Send(messageSent);
 
             GroupChatPanel.Visibility = Visibility.Collapsed;
             PreChatPanel.Visibility = Visibility.Visible;

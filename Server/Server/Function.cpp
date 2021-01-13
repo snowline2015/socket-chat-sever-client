@@ -127,14 +127,17 @@ void Client_Multiple_Chatting(client_type& new_client, std::vector<client_type>&
         memset(&tempmsg, NULL, sizeof(tempmsg));
         if (new_client.socket != 0) {
             int iResult = recv(new_client.socket, tempmsg, DEFAULT_MSG_LENGTH, 0);
-            if (iResult != SOCKET_ERROR) {
+            if (iResult > 0) {
                 if (strcmp(tempmsg, "-back") == 0) {
-                    msg = new_client.Username + " has left the chat.";
+                    msg = "Server:" + new_client.Username + " has left the chat";
                     for (int i = 0; i < MAX_CLIENTS; i++) {
                         if (client_array[i].socket != INVALID_SOCKET) {
                             iResult = send(client_array[i].socket, msg.c_str(), strlen(msg.c_str()), 0);
-                            while (iResult == 0)
+                            while (iResult <= 0) {
+                                sleep_for(milliseconds(5));
                                 iResult = send(client_array[i].socket, msg.c_str(), strlen(msg.c_str()), 0);
+                                if (iResult <= 0) break;
+                            }
                         }
                     }
                     new_client.RoomID = "";
@@ -148,18 +151,24 @@ void Client_Multiple_Chatting(client_type& new_client, std::vector<client_type>&
                         continue;
                     if (new_client.id != i && new_client.RoomID.compare(client_array[i].RoomID) == 0) {
                         iResult = send(client_array[i].socket, msg.c_str(), strlen(msg.c_str()), 0);
-                        while (iResult == 0)
+                        while (iResult <= 0) {
+                            sleep_for(milliseconds(5));
                             iResult = send(client_array[i].socket, msg.c_str(), strlen(msg.c_str()), 0);
+                            if (iResult <= 0) break;
+                        }
                     }
                 }
             }
             else {
-                msg = new_client.Username + " has disconnected.";
+                msg = "Server:" + new_client.Username + " has disconnected";
                 for (int i = 0; i < MAX_CLIENTS; i++) {
                     if (client_array[i].socket != INVALID_SOCKET) {
                         iResult = send(client_array[i].socket, msg.c_str(), strlen(msg.c_str()), 0);
-                        while (iResult == 0)
+                        while (iResult <= 0) {
+                            sleep_for(milliseconds(5));
                             iResult = send(client_array[i].socket, msg.c_str(), strlen(msg.c_str()), 0);
+                            if (iResult <= 0) break;
+                        }
                     }
                 }
                 new_client.RoomID = "";
@@ -185,38 +194,48 @@ void Client_Single_Chatting(client_type& first_client, std::vector<client_type>&
 
                         if (strcmp(tempmsg, "-upload-file") == 0) {
                             string fileName;
-                            Upload_File(first_client, fileName);
+                            if (Upload_File(first_client, fileName) == true) {
 
-                            stop_receiving_for_downloading_flag.store(true);
+                                stop_receiving_for_downloading_flag.store(true);
 
-                            iResult = send(client_array[i].socket, "-download-file", 15, 0);
-                            while (iResult == 0) 
                                 iResult = send(client_array[i].socket, "-download-file", 15, 0);
-                            memset(&tempmsg, NULL, sizeof(tempmsg));
-                            recv(client_array[i].socket, tempmsg, DEFAULT_MSG_LENGTH, 0);
-                            Download_File(client_array[i], fileName);
+                                while (iResult <= 0) {
+                                    sleep_for(milliseconds(5));
+                                    iResult = send(client_array[i].socket, "-download-file", 15, 0);
+                                    if (iResult <= 0) break;
+                                }
+                                memset(&tempmsg, NULL, sizeof(tempmsg));
+                                recv(client_array[i].socket, tempmsg, DEFAULT_MSG_LENGTH, 0);
+                                Download_File(client_array[i], fileName);
 
-                            send(first_client.socket, "OK", 3, 0);        // Response to first client for another upload
+                                send(first_client.socket, "OK", 3, 0);        // Response to first client for another upload
 
-                            stop_receiving_for_downloading_flag.store(false);
+                                stop_receiving_for_downloading_flag.store(false);
+                                break;
+                            }
                         }
 
                         else if (strcmp(tempmsg, "-back") == 0) {
                             iResult = send(client_array[i].socket, "-disconnect", 12, 0);
-                            while (iResult == 0)
+                            while (iResult <= 0) {
+                                sleep_for(milliseconds(5));
                                 iResult = send(client_array[i].socket, "-disconnect", 12, 0);
-
+                                if (iResult <= 0) break;
+                            }
                             goto blahblah;
                         }
 
                         else if (stop_receiving_for_downloading_flag.load() == false) {
                             msg = first_client.Username + ":" + (tempmsg);
                             iResult = send(client_array[i].socket, msg.c_str(), strlen(msg.c_str()), 0);
-                            while (iResult == 0)
+                            while (iResult <= 0) {
+                                sleep_for(milliseconds(5));
                                 iResult = send(client_array[i].socket, msg.c_str(), strlen(msg.c_str()), 0);
+                                if (iResult <= 0) break;
+                            }
                             break;
                         }
-                    }
+                    }    
                 }       
             }
             else { 
@@ -224,12 +243,14 @@ void Client_Single_Chatting(client_type& first_client, std::vector<client_type>&
                     if (client_array[i].socket == INVALID_SOCKET) continue;
                     else if (first_client.id != i && client_array[i].Username.compare(second_username) == 0) {
                         iResult = send(client_array[i].socket, "-disconnect", 12, 0);
-                        while (iResult == 0)
+                        while (iResult <= 0) {
+                            sleep_for(milliseconds(5));
                             iResult = send(client_array[i].socket, "-disconnect", 12, 0);
+                            if (iResult <= 0) break;
+                        }
                         break;
                     }
                 }
-
                 break;
             }
         }
@@ -273,8 +294,12 @@ bool Upload_File(client_type& first_client, std::string& fileName) {
         char* buffer = new char[DEFAULT_TRANSFER_BUFFER_SIZE];
 
         iResult = recv(first_client.socket, tempmsg, DEFAULT_MSG_LENGTH, 0);
-        if (iResult <= 0)
+        if (iResult <= 0) {
+            fs.close();
+            delete[] buffer;
+            remove(("Temp\\" + fName).c_str());
             return false;
+        }
 
         if (strcmp(tempmsg, "-end") == 0) {
             fs.close();
@@ -287,8 +312,11 @@ bool Upload_File(client_type& first_client, std::string& fileName) {
         send(first_client.socket, "OK", 3, 0);
 
         iResult = recv(first_client.socket, buffer, DEFAULT_TRANSFER_BUFFER_SIZE, 0);
-        if (iResult <= 0)
+        if (iResult <= 0) {
+            fs.close();
+            delete[] buffer;
             return false;
+        }
 
         else if (iResult != buffersize) 
             send(first_client.socket, "NO", 3, 0);
@@ -326,15 +354,21 @@ bool Download_File(client_type& client, std::string& fileName) {
     fp.seekg(0, ios::beg);
 
     int iResult = send(client.socket, fileName.c_str(), strlen(fileName.c_str()), 0);
-    while (iResult == 0)
+    while (iResult <= 0) {
+        sleep_for(milliseconds(5));
         iResult = send(client.socket, fileName.c_str(), strlen(fileName.c_str()), 0);
+        if (iResult <= 0) break;
+    }
     iResult = recv(client.socket, tempmsg, DEFAULT_MSG_LENGTH, 0);
     if (iResult <= 0)
         return false;
 
     iResult = send(client.socket, std::to_string(size).c_str(), strlen(std::to_string(size).c_str()), 0);
-    while (iResult == 0)
+    while (iResult <= 0) {
+        sleep_for(milliseconds(5));
         iResult = send(client.socket, std::to_string(size).c_str(), strlen(std::to_string(size).c_str()), 0);
+        if (iResult <= 0) break;
+    }
     memset(&tempmsg, NULL, sizeof(tempmsg));
     iResult = recv(client.socket, tempmsg, DEFAULT_MSG_LENGTH, 0);
     if (iResult <= 0)
@@ -351,18 +385,24 @@ bool Download_File(client_type& client, std::string& fileName) {
             do {
                 memset(&tempmsg, NULL, sizeof(tempmsg));
                 iResult = send(client.socket, std::to_string(sizetemp).c_str(), strlen(std::to_string(sizetemp).c_str()), 0);
-                while (iResult == 0) {
+                while (iResult <= 0) {
                     sleep_for(milliseconds(5));
                     iResult = send(client.socket, std::to_string(sizetemp).c_str(), strlen(std::to_string(sizetemp).c_str()), 0);
+                    if (iResult <= 0) break;
                 }
                 iResult = recv(client.socket, tempmsg, DEFAULT_MSG_LENGTH, 0);              ///////////
+                if (iResult <= 0)
+                    return false;
                 memset(&tempmsg, NULL, sizeof(tempmsg));
                 iResult = send(client.socket, buffer, sizetemp, 0);
-                while (iResult == 0) {
+                while (iResult <= 0) {
                     sleep_for(milliseconds(5));
                     iResult = send(client.socket, buffer, sizetemp, 0);
+                    if (iResult <= 0) break;
                 }
                 iResult = recv(client.socket, tempmsg, DEFAULT_MSG_LENGTH, 0);              ///////////
+                if (iResult <= 0)
+                    return false;
             } while (strcmp(tempmsg, "NO") == 0);
             delete[] buffer;
             sizetemp = 0;
@@ -373,18 +413,24 @@ bool Download_File(client_type& client, std::string& fileName) {
             do {
                 memset(&tempmsg, NULL, sizeof(tempmsg));
                 iResult = send(client.socket, std::to_string(DEFAULT_TRANSFER_BUFFER_SIZE).c_str(), strlen(std::to_string(DEFAULT_TRANSFER_BUFFER_SIZE).c_str()), 0);
-                while (iResult == 0) {
+                while (iResult <= 0) {
                     sleep_for(milliseconds(5));
                     iResult = send(client.socket, std::to_string(DEFAULT_TRANSFER_BUFFER_SIZE).c_str(), strlen(std::to_string(DEFAULT_TRANSFER_BUFFER_SIZE).c_str()), 0);
+                    if (iResult <= 0) break;
                 }
                 iResult = recv(client.socket, tempmsg, DEFAULT_MSG_LENGTH, 0);                  //////////
+                if (iResult <= 0)
+                    return false;
                 memset(&tempmsg, NULL, sizeof(tempmsg));
                 iResult = send(client.socket, buffer, DEFAULT_TRANSFER_BUFFER_SIZE, 0);
-                while (iResult == 0) {
+                while (iResult <= 0) {
                     sleep_for(milliseconds(5));
                     iResult = send(client.socket, buffer, DEFAULT_TRANSFER_BUFFER_SIZE, 0);
+                    if (iResult <= 0) break;
                 }
                 iResult = recv(client.socket, tempmsg, DEFAULT_MSG_LENGTH, 0);                  /////////
+                if (iResult <= 0)
+                    return false;
             } while (strcmp(tempmsg, "NO") == 0);
             delete[] buffer;
             sizetemp -= DEFAULT_TRANSFER_BUFFER_SIZE;
@@ -394,9 +440,13 @@ bool Download_File(client_type& client, std::string& fileName) {
     remove(("Temp\\" + fileName).c_str());
 
     iResult = send(client.socket, "-end", 5, 0);
-    while (iResult == 0) 
+    while (iResult <= 0) {
+        sleep_for(milliseconds(5));
         iResult = send(client.socket, "-end", 5, 0);
+        if (iResult <= 0) break;
+    }
     recv(client.socket, tempmsg, DEFAULT_MSG_LENGTH, 0);
+    return true;
 }
 
 void Client_Thread(SOCKET NewSockid, std::vector<client_type>& client_List, std::vector<client_type>& client, std::thread my_thread[], int temp_id, std::thread& thread) {
@@ -408,6 +458,8 @@ void Client_Thread(SOCKET NewSockid, std::vector<client_type>& client_List, std:
             CloseSocket(NewSockid);
             std::cout << client[temp_id].Username << " has disconnected" << std::endl;
             client[temp_id].Username = "";
+            client[temp_id].id = -1;
+            client[temp_id].Online = false;
             break;
         }
 
@@ -428,10 +480,9 @@ void Client_Thread(SOCKET NewSockid, std::vector<client_type>& client_List, std:
 
                 while (true) {
                     if (stop_client_thread_flag.load() == true) continue;
-
+                    
                     memset(&temp, NULL, sizeof(temp));
                     iResult = recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
-
                     if (iResult <= 0 || strcmp(temp, "-logout") == 0) {
                         CloseSocket(client[temp_id].socket);
                         CloseSocket(NewSockid);
@@ -446,8 +497,7 @@ void Client_Thread(SOCKET NewSockid, std::vector<client_type>& client_List, std:
                         // Receive check user command
                         memset(&temp, NULL, sizeof(temp));
                         iResult = recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
-
-                        if (strcmp(temp, "-back") == 0) {
+                        if (iResult <= 0 || strcmp(temp, "-back") == 0) {
                             stop_client_thread_flag.store(false);
                         }
                         
@@ -458,14 +508,18 @@ void Client_Thread(SOCKET NewSockid, std::vector<client_type>& client_List, std:
                                 // receive online-user username
                                 memset(&temp, NULL, sizeof(temp));
                                 iResult = recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
+                                if (iResult <= 0)
+                                    break;
 
                                 if (strcmp(temp, "-check-users") != 0) break;
                             }
 
+                            if (iResult <= 0 || strcmp(temp, "-back") == 0)
+                                continue;
+
                             string tempo = std::string(temp);
 
                             my_thread[temp_id] = std::thread(Client_Single_Chatting, std::ref(client[temp_id]), std::ref(client), tempo, std::ref(my_thread[temp_id]));
-
                             my_thread[temp_id].join();
                         }
                     }
@@ -478,15 +532,20 @@ void Client_Thread(SOCKET NewSockid, std::vector<client_type>& client_List, std:
                             memset(&temp, NULL, sizeof(temp));
                             iResult = recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
 
-                            if (strcmp(temp, "-back") == 0) {
+                            if (iResult <= 0 || strcmp(temp, "-back") == 0) {
                                 stop_client_thread_flag.store(false);
                                 break;
                             }
 
                             else if (strcmp(temp, "-create-room") == 0) {
                                 //Receive room id
+                                send(NewSockid, "OK", 3, 0);
                                 memset(&temp, NULL, sizeof(temp));
                                 iResult = recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
+                                if (iResult <= 0) {
+                                    stop_client_thread_flag.store(false);
+                                    break;
+                                }
 
                                 client[temp_id].RoomID = string(temp);
 
@@ -500,15 +559,21 @@ void Client_Thread(SOCKET NewSockid, std::vector<client_type>& client_List, std:
 
                                 if (i == client.size()) {
                                     send(NewSockid, "OK", 3, 0);
+                                    my_thread[temp_id] = std::thread(Client_Multiple_Chatting, std::ref(client[temp_id]), std::ref(client), std::ref(my_thread[temp_id]));
+                                    my_thread[temp_id].join();
                                     break;
                                 }
                             }
 
-                            // join room command
-                            else {
+                            else if (strcmp(temp, "-join-room") == 0) {
                                 //Receive room id
+                                send(NewSockid, "OK", 3, 0);
                                 memset(&temp, NULL, sizeof(temp));
                                 iResult = recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
+                                if (iResult <= 0) {
+                                    stop_client_thread_flag.store(false);
+                                    break;
+                                }
 
                                 int i;
                                 for (i = 0; i < client.size(); i++) {
@@ -521,13 +586,12 @@ void Client_Thread(SOCKET NewSockid, std::vector<client_type>& client_List, std:
 
                                 if (i == client.size())
                                     send(NewSockid, "NO", 3, 0);
-                                else break;
+                                else {
+                                    my_thread[temp_id] = std::thread(Client_Multiple_Chatting, std::ref(client[temp_id]), std::ref(client), std::ref(my_thread[temp_id]));
+                                    my_thread[temp_id].join();
+                                    break;
+                                }
                             }
-                        }
-
-                        if (strcmp(temp, "-back") != 0) {
-                            my_thread[temp_id] = std::thread(Client_Multiple_Chatting, std::ref(client[temp_id]), std::ref(client), std::ref(my_thread[temp_id]));
-                            my_thread[temp_id].join();
                         }
                     }
 
@@ -558,7 +622,6 @@ void Client_Thread(SOCKET NewSockid, std::vector<client_type>& client_List, std:
             }
         }
     }
-
     thread.detach();
 }
 
@@ -569,8 +632,11 @@ void Check_Users_Online(SOCKET NewSockid, std::vector<client_type> User_List) {
             str.append(User_List[i].Username + "\n");
         
     int iResult = send(NewSockid, str.c_str(), strlen(str.c_str()), 0);
-    while (iResult <= 0)
+    while (iResult <= 0) {
+        sleep_for(milliseconds(5));
         iResult = send(NewSockid, str.c_str(), strlen(str.c_str()), 0);
+        if (iResult <= 0) break;
+    }
 }
 
 void Change_Password(SOCKET NewSockid, std::vector<client_type>& client_List) {
@@ -633,8 +699,11 @@ void Check_User(SOCKET NewSockid, std::vector<client_type> client, std::vector<c
             user_info.append("Offline\n");
 
         iResult = send(NewSockid, user_info.c_str(), strlen(user_info.c_str()), 0);
-        while (iResult <= 0) 
+        while (iResult <= 0) {
+            sleep_for(milliseconds(5));
             iResult = send(NewSockid, user_info.c_str(), strlen(user_info.c_str()), 0);
+            if (iResult <= 0) break;
+        }
     }
 }
 

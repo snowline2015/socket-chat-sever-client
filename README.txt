@@ -11,3 +11,6 @@
 9. Thêm thông báo client login logout bên server
 10. chỉnh code change info tuần tự fullname, dob, email, bên chatgui
 >>>>>>> Stashed changes
+
+11. Lỗi private chat 2 người không thể tìm kiếm cùng lúc
+12. Lỗi public chat out chat bỗng nhiên out luôn

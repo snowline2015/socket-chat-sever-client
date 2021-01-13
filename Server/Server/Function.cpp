@@ -598,32 +598,25 @@ void Client_Thread(SOCKET NewSockid, std::vector<client_type>& client_List, std:
                     }
 
                     else if (strcmp(temp, "-other-option") == 0) {
-                        bool check_back = true;
                         while (true) {
                             memset(&temp, NULL, sizeof(temp));
                             iResult = recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
-                            if (iResult <= 0 || strcmp(temp, "-back") == 0) {
-                                if (check_back == false)
-                                    check_back = true;
-                                else break;
-                            }
+                            if (iResult <= 0 || strcmp(temp, "-cancel") == 0)
+                                break;
 
                             else if (strcmp(temp, "-change-password") == 0) {
                                 send(NewSockid, "OK", 3, 0);
                                 Change_Password(NewSockid, client_List);
-                                check_back = false;
                             }
 
                             else if (strcmp(temp, "-check-user") == 0) {
                                 send(NewSockid, "OK", 3, 0);
                                 Check_User(NewSockid, client, client_List);
-                                check_back = false;
                             }
 
                             else if (strcmp(temp, "-change-info") == 0) {
                                 send(NewSockid, "OK", 3, 0);
                                 Change_Info(NewSockid, client_List);
-                                check_back = false;
                             }
                         }
                     }

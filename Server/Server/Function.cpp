@@ -130,7 +130,7 @@ void Client_Multiple_Chatting(client_type& new_client, std::vector<client_type>&
                 if (strcmp(tempmsg, "-back") == 0) {
                     msg = "Server:" + new_client.Username + " has left the chat";
                     for (int i = 0; i < MAX_CLIENTS; i++) {
-                        if (client_array[i].socket != INVALID_SOCKET) {
+                        if (client_array[i].socket != INVALID_SOCKET && new_client.RoomID.compare(client_array[i].RoomID) == 0) {
                             iResult = send(client_array[i].socket, msg.c_str(), strlen(msg.c_str()), 0);
                             while (iResult <= 0) {
                                 sleep_for(milliseconds(10));
@@ -160,7 +160,7 @@ void Client_Multiple_Chatting(client_type& new_client, std::vector<client_type>&
             else {
                 msg = "Server:" + new_client.Username + " has disconnected";
                 for (int i = 0; i < MAX_CLIENTS; i++) {
-                    if (client_array[i].socket != INVALID_SOCKET) {
+                    if (client_array[i].socket != INVALID_SOCKET && new_client.RoomID.compare(client_array[i].RoomID) == 0) {
                         iResult = send(client_array[i].socket, msg.c_str(), strlen(msg.c_str()), 0);
                         while (iResult <= 0) {
                             sleep_for(milliseconds(10));

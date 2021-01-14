@@ -10,6 +10,7 @@ using System.Threading;
 using System.Windows.Input;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Security.Cryptography;
 
 namespace ChatGUI
 {
@@ -32,7 +33,9 @@ namespace ChatGUI
 
         private Thread my_thread;
 
-        private void TakeUserList()
+        Aes myAes = Aes.Create();
+
+        private void TakeUserList(object sender, RoutedEventArgs e)
         {
             Array.Clear(user_list, 0, user_list.Length);
             LoginWindow.CPP.Check_Users_Online(LoginWindow.client, ref user_list);
@@ -45,22 +48,33 @@ namespace ChatGUI
 
         private void SelectUser()
         {
-            while (true)
+            //while (!stop_check_user_flag)
+            //{
+            //    if (list_friend_pr.SelectedIndex != -1)
+            //    {
+            //        string _Friend = "";
+            //        object selected = this.list_friend_pr.SelectedItem;
+
+            //        _Friend = selected.ToString();
+            //        byte[] messageSent = Encoding.ASCII.GetBytes(_Friend);
+            //        int byteSent = LoginWindow.client.socket.Send(messageSent);
+            //        break;
+            //    }
+
+            //    Thread.Sleep(2000);
+            //    TakeUserList();
+            //}
+            //stop_check_user_flag = false;
+
+            if (list_friend_pr.SelectedIndex != -1)
             {
-                if (list_friend_pr.SelectedIndex != -1)
-                {
-                    string _Friend = "";
-                    object selected = this.list_friend_pr.SelectedItem;
+                string _Friend = "";
+                object selected = this.list_friend_pr.SelectedItem;
 
-                    _Friend = selected.ToString();
-                    byte[] messageSent = Encoding.ASCII.GetBytes(_Friend);
-                    int byteSent = LoginWindow.client.socket.Send(messageSent);
-                    break;
-                }
-
-                Thread.Sleep(2000);
-                TakeUserList();
-            }  
+                _Friend = selected.ToString();
+                byte[] messageSent = Encoding.ASCII.GetBytes(_Friend);
+                int byteSent = LoginWindow.client.socket.Send(messageSent);
+            }
         }
 
         public void OnOpenDialog(object sender, RoutedEventArgs e)
@@ -108,8 +122,6 @@ namespace ChatGUI
                 PreChatPanel.Visibility = Visibility.Collapsed;
             PrivateChatPanel.Visibility = Visibility.Visible;
             PrivateChatInfoGrid.Visibility = Visibility.Visible;
-
-            this.TakeUserList();
         }
 
         private void EnterGroupChat(object sender, RoutedEventArgs e)
@@ -268,12 +280,22 @@ namespace ChatGUI
 
         private void Send_Click(object sender, RoutedEventArgs e)
         {
+            string mess;
             if (ChatBox_pr.Text.Length != 0)
             {
                 PrivateChat.Items.Add("Me at " + DateTime.Now.ToString("HH:mm") +" :\n" + ChatBox_pr.Text + "\n");
                 PrivateChat.SelectedIndex = PrivateChat.Items.Count - 1;
 
-                byte[] messageSent = Encoding.ASCII.GetBytes(ChatBox_pr.Text);
+                if (encrypt_pr.IsChecked == true)
+                {
+                    mess = "-encrypt:" + AESEncr.Encrypt_Aes(ChatBox_pr.Text, myAes.Key, myAes.IV);
+                }
+                else
+                {
+                    mess = "-noencrypt:" + ChatBox_pr.Text;
+                }
+
+                byte[] messageSent = Encoding.ASCII.GetBytes(mess);
                 int byteSent = LoginWindow.client.socket.Send(messageSent);
 
                 ChatBox_pr.Text = "";
@@ -307,7 +329,7 @@ namespace ChatGUI
                 {
                     this.Dispatcher.Invoke((Action)(() =>
                     {
-                        item_array = item.Split(sep, 2);
+                        item_array = item.Split(sep, 3);
 
                         if (item_array[0] == "-disconnect")
                         {
@@ -328,9 +350,17 @@ namespace ChatGUI
                             //exit_pr_chat.Focus();
                             //exit_pr_chat.RaiseEvent(new RoutedEventArgs(Button.ClickEvent, exit_pr_chat));
                         }
+                        else if (item_array[1] == "-encrypt")
+                        {
+                            byte[] b = Encoding.ASCII.GetBytes(item_array[2]);
+                            string mess = AESEncr.Decrypt_Aes(b, myAes.Key, myAes.IV);
+                            PrivateChat.Items.Add(item_array[0] + " at " + DateTime.Now.ToString("HH:mm") + " :\n" + mess + "\n");
+                            PrivateChat.SelectedIndex = PrivateChat.Items.Count - 1;
+                            start_flag = false;
+                        }
                         else
                         {
-                            PrivateChat.Items.Add(item_array[0] + " at " + DateTime.Now.ToString("HH:mm") + " :\n" + item_array[1] + "\n");
+                            PrivateChat.Items.Add(item_array[0] + " at " + DateTime.Now.ToString("HH:mm") + " :\n" + item_array[2] + "\n");
                             PrivateChat.SelectedIndex = PrivateChat.Items.Count - 1;
                             start_flag = false;
                         }
@@ -342,12 +372,18 @@ namespace ChatGUI
 
         private void Send_Click_Group(object sender, RoutedEventArgs e)
         {
+            string mess;
             if (ChatBox_gr.Text.Length != 0)
             {
                 GroupChat.Items.Add("Me at " + DateTime.Now.ToString("HH:mm") + " :\n" + ChatBox_gr.Text + "\n");
                 GroupChat.SelectedIndex = GroupChat.Items.Count - 1;
 
-                byte[] messageSent = Encoding.ASCII.GetBytes(ChatBox_gr.Text);
+                if (encrypt_gr.IsChecked == true)
+                    mess = "-encrypt:" + AESEncr.Encrypt_Aes(ChatBox_gr.Text, myAes.Key, myAes.IV);
+                else
+                    mess = "-noencrypt:" + ChatBox_gr.Text;
+
+                byte[] messageSent = Encoding.ASCII.GetBytes(mess);
                 int byteSent = LoginWindow.client.socket.Send(messageSent);
 
                 ChatBox_gr.Text = "";
@@ -364,10 +400,22 @@ namespace ChatGUI
                 {
                     this.Dispatcher.Invoke((Action)(() =>
                     {
-                        item_array = item.Split(sep, 2);
-                        GroupChat.Items.Add(item_array[0] + " at " + DateTime.Now.ToString("HH:mm") + " :\n" + item_array[1] + "\n");
-                        GroupChat.SelectedIndex = GroupChat.Items.Count - 1;
-                        start_flag = false;
+                        item_array = item.Split(sep, 3);
+
+                        if (item_array[1] == "-encrypt")
+                        {
+                            byte[] b = Encoding.ASCII.GetBytes(item_array[2]);
+                            string mess = AESEncr.Decrypt_Aes(b, myAes.Key, myAes.IV);
+                            GroupChat.Items.Add(item_array[0] + " at " + DateTime.Now.ToString("HH:mm") + " :\n" + mess + "\n");
+                            GroupChat.SelectedIndex = GroupChat.Items.Count - 1;
+                            start_flag = false;
+                        }
+                        else
+                        {
+                            GroupChat.Items.Add(item_array[0] + " at " + DateTime.Now.ToString("HH:mm") + " :\n" + item_array[2] + "\n");
+                            GroupChat.SelectedIndex = GroupChat.Items.Count - 1;
+                            start_flag = false;
+                        }
                     }));
                 }
             }

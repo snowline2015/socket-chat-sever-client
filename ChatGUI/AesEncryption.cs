@@ -7,7 +7,7 @@ namespace AESEncryption
 {
     class AESEncr
     {
-        static byte[] Encrypt_Aes(string plainText, byte[] Key, byte[] IV)
+        public static string Encrypt_Aes(string plainText, byte[] Key, byte[] IV)
         {
             if (plainText == null || plainText.Length <= 0)
                 throw new ArgumentNullException("plainText");
@@ -38,10 +38,10 @@ namespace AESEncryption
                 }
             }
 
-            return encrypted;
+            return encrypted.ToString();
         }
 
-        static string Decrypt_Aes(byte[] cipherText, byte[] Key, byte[] IV)
+        public static string Decrypt_Aes(byte[] cipherText, byte[] Key, byte[] IV)
         {
             if (cipherText == null || cipherText.Length <= 0)
                 throw new ArgumentNullException("cipherText");

@@ -6,7 +6,6 @@ int main()
     SOCKET sockid = INVALID_SOCKET;
     std::string msg = "", username, tempo;
     std::vector<client_type> client(MAX_CLIENTS), client_List;
-    int num_clients = 0;
     int temp_id = -1;
     std::thread my_thread[MAX_CLIENTS], temp_thread[MAX_CLIENTS];
 

@@ -133,7 +133,7 @@ void Client_Multiple_Chatting(client_type& new_client, std::vector<client_type>&
                         if (client_array[i].socket != INVALID_SOCKET) {
                             iResult = send(client_array[i].socket, msg.c_str(), strlen(msg.c_str()), 0);
                             while (iResult <= 0) {
-                                sleep_for(milliseconds(5));
+                                sleep_for(milliseconds(10));
                                 iResult = send(client_array[i].socket, msg.c_str(), strlen(msg.c_str()), 0);
                                 if (iResult <= 0) break;
                             }
@@ -149,7 +149,7 @@ void Client_Multiple_Chatting(client_type& new_client, std::vector<client_type>&
                         if (new_client.id != i && new_client.RoomID.compare(client_array[i].RoomID) == 0) {
                             iResult = send(client_array[i].socket, msg.c_str(), strlen(msg.c_str()), 0);
                             while (iResult <= 0) {
-                                sleep_for(milliseconds(5));
+                                sleep_for(milliseconds(10));
                                 iResult = send(client_array[i].socket, msg.c_str(), strlen(msg.c_str()), 0);
                                 if (iResult <= 0) break;
                             }
@@ -163,7 +163,7 @@ void Client_Multiple_Chatting(client_type& new_client, std::vector<client_type>&
                     if (client_array[i].socket != INVALID_SOCKET) {
                         iResult = send(client_array[i].socket, msg.c_str(), strlen(msg.c_str()), 0);
                         while (iResult <= 0) {
-                            sleep_for(milliseconds(5));
+                            sleep_for(milliseconds(10));
                             iResult = send(client_array[i].socket, msg.c_str(), strlen(msg.c_str()), 0);
                             if (iResult <= 0) break;
                         }
@@ -174,7 +174,6 @@ void Client_Multiple_Chatting(client_type& new_client, std::vector<client_type>&
         }
         else break;
     }
-    thread.detach();
 }
 
 void Client_Single_Chatting(client_type& first_client, std::vector<client_type>& client_array, std::string second_username, std::thread& thread) {
@@ -197,7 +196,7 @@ void Client_Single_Chatting(client_type& first_client, std::vector<client_type>&
 
                                 iResult = send(client_array[i].socket, "-download-file", 15, 0);
                                 while (iResult <= 0) {
-                                    sleep_for(milliseconds(5));
+                                    sleep_for(milliseconds(10));
                                     iResult = send(client_array[i].socket, "-download-file", 15, 0);
                                     if (iResult <= 0) break;
                                 }
@@ -216,7 +215,7 @@ void Client_Single_Chatting(client_type& first_client, std::vector<client_type>&
                             send(first_client.socket, "OK", 3, 0);
                             iResult = send(client_array[i].socket, "-disconnect", 12, 0);
                             while (iResult <= 0) {
-                                sleep_for(milliseconds(5));
+                                sleep_for(milliseconds(10));
                                 iResult = send(client_array[i].socket, "-disconnect", 12, 0);
                                 if (iResult <= 0) break;
                             }
@@ -227,7 +226,7 @@ void Client_Single_Chatting(client_type& first_client, std::vector<client_type>&
                             msg = first_client.Username + ":" + (tempmsg);
                             iResult = send(client_array[i].socket, msg.c_str(), strlen(msg.c_str()), 0);
                             while (iResult <= 0) {
-                                sleep_for(milliseconds(5));
+                                sleep_for(milliseconds(10));
                                 iResult = send(client_array[i].socket, msg.c_str(), strlen(msg.c_str()), 0);
                                 if (iResult <= 0) break;
                             }
@@ -242,7 +241,7 @@ void Client_Single_Chatting(client_type& first_client, std::vector<client_type>&
                     else if (first_client.id != i && client_array[i].Username.compare(second_username) == 0) {
                         iResult = send(client_array[i].socket, "-disconnect", 12, 0);
                         while (iResult <= 0) {
-                            sleep_for(milliseconds(5));
+                            sleep_for(milliseconds(10));
                             iResult = send(client_array[i].socket, "-disconnect", 12, 0);
                             if (iResult <= 0) break;
                         }
@@ -253,9 +252,7 @@ void Client_Single_Chatting(client_type& first_client, std::vector<client_type>&
             }
         }
     }
-
-    blahblah:
-    thread.detach();
+    blahblah: {}   
 }
 
 bool Upload_File(client_type& first_client, std::string& fileName) {
@@ -353,7 +350,7 @@ bool Download_File(client_type& client, std::string& fileName) {
 
     int iResult = send(client.socket, fileName.c_str(), strlen(fileName.c_str()), 0);
     while (iResult <= 0) {
-        sleep_for(milliseconds(5));
+        sleep_for(milliseconds(10));
         iResult = send(client.socket, fileName.c_str(), strlen(fileName.c_str()), 0);
         if (iResult <= 0) break;
     }
@@ -363,7 +360,7 @@ bool Download_File(client_type& client, std::string& fileName) {
 
     iResult = send(client.socket, std::to_string(size).c_str(), strlen(std::to_string(size).c_str()), 0);
     while (iResult <= 0) {
-        sleep_for(milliseconds(5));
+        sleep_for(milliseconds(10));
         iResult = send(client.socket, std::to_string(size).c_str(), strlen(std::to_string(size).c_str()), 0);
         if (iResult <= 0) break;
     }
@@ -384,7 +381,7 @@ bool Download_File(client_type& client, std::string& fileName) {
                 memset(&tempmsg, NULL, sizeof(tempmsg));
                 iResult = send(client.socket, std::to_string(sizetemp).c_str(), strlen(std::to_string(sizetemp).c_str()), 0);
                 while (iResult <= 0) {
-                    sleep_for(milliseconds(5));
+                    sleep_for(milliseconds(10));
                     iResult = send(client.socket, std::to_string(sizetemp).c_str(), strlen(std::to_string(sizetemp).c_str()), 0);
                     if (iResult <= 0) break;
                 }
@@ -394,7 +391,7 @@ bool Download_File(client_type& client, std::string& fileName) {
                 memset(&tempmsg, NULL, sizeof(tempmsg));
                 iResult = send(client.socket, buffer, sizetemp, 0);
                 while (iResult <= 0) {
-                    sleep_for(milliseconds(5));
+                    sleep_for(milliseconds(10));
                     iResult = send(client.socket, buffer, sizetemp, 0);
                     if (iResult <= 0) break;
                 }
@@ -412,7 +409,7 @@ bool Download_File(client_type& client, std::string& fileName) {
                 memset(&tempmsg, NULL, sizeof(tempmsg));
                 iResult = send(client.socket, std::to_string(DEFAULT_TRANSFER_BUFFER_SIZE).c_str(), strlen(std::to_string(DEFAULT_TRANSFER_BUFFER_SIZE).c_str()), 0);
                 while (iResult <= 0) {
-                    sleep_for(milliseconds(5));
+                    sleep_for(milliseconds(10));
                     iResult = send(client.socket, std::to_string(DEFAULT_TRANSFER_BUFFER_SIZE).c_str(), strlen(std::to_string(DEFAULT_TRANSFER_BUFFER_SIZE).c_str()), 0);
                     if (iResult <= 0) break;
                 }
@@ -422,7 +419,7 @@ bool Download_File(client_type& client, std::string& fileName) {
                 memset(&tempmsg, NULL, sizeof(tempmsg));
                 iResult = send(client.socket, buffer, DEFAULT_TRANSFER_BUFFER_SIZE, 0);
                 while (iResult <= 0) {
-                    sleep_for(milliseconds(5));
+                    sleep_for(milliseconds(10));
                     iResult = send(client.socket, buffer, DEFAULT_TRANSFER_BUFFER_SIZE, 0);
                     if (iResult <= 0) break;
                 }
@@ -439,7 +436,7 @@ bool Download_File(client_type& client, std::string& fileName) {
 
     iResult = send(client.socket, "-end", 5, 0);
     while (iResult <= 0) {
-        sleep_for(milliseconds(5));
+        sleep_for(milliseconds(10));
         iResult = send(client.socket, "-end", 5, 0);
         if (iResult <= 0) break;
     }
@@ -623,7 +620,7 @@ void Check_Users_Online(SOCKET NewSockid, std::vector<client_type> User_List) {
         
     int iResult = send(NewSockid, str.c_str(), strlen(str.c_str()), 0);
     while (iResult <= 0) {
-        sleep_for(milliseconds(5));
+        sleep_for(milliseconds(10));
         iResult = send(NewSockid, str.c_str(), strlen(str.c_str()), 0);
         if (iResult <= 0) break;
     }
@@ -690,7 +687,7 @@ void Check_User(SOCKET NewSockid, std::vector<client_type> client, std::vector<c
 
         iResult = send(NewSockid, user_info.c_str(), strlen(user_info.c_str()), 0);
         while (iResult <= 0) {
-            sleep_for(milliseconds(5));
+            sleep_for(milliseconds(10));
             iResult = send(NewSockid, user_info.c_str(), strlen(user_info.c_str()), 0);
             if (iResult <= 0) break;
         }

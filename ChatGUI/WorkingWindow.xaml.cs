@@ -37,11 +37,13 @@ namespace ChatGUI
 
         private void TakeUserList(object sender, RoutedEventArgs e)
         {
+            list_friend_pr.Items.Clear();
+            list_friend_pr.SelectedIndex = -1;
             Array.Clear(user_list, 0, user_list.Length);
             LoginWindow.CPP.Check_Users_Online(LoginWindow.client, ref user_list);
             foreach (string str in user_list)
             {
-                if (str.Equals(LoginWindow._friend) == false)
+                if (str.Equals(LoginWindow._friend) == false && str[0] != '\0')
                     list_friend_pr.Items.Add(str);
             }
         }
@@ -235,6 +237,9 @@ namespace ChatGUI
 
         private void ReturnOptions(object sender, RoutedEventArgs e)
         {
+            byte[] messageSent = Encoding.ASCII.GetBytes("-back\0");
+            int byteSent = LoginWindow.client.socket.Send(messageSent);
+
             if (PrivateChatInfoGrid.Visibility == Visibility.Visible)
                 PrivateChatInfoGrid.Visibility = Visibility.Collapsed;
             PrivateChatPanel.Visibility = Visibility.Collapsed;
@@ -243,6 +248,9 @@ namespace ChatGUI
 
         private void _ReturnOptions(object sender, RoutedEventArgs e)
         {
+            byte[] messageSent = Encoding.ASCII.GetBytes("-back\0");
+            int byteSent = LoginWindow.client.socket.Send(messageSent);
+
             if (GroupChatInfoGrid.Visibility == Visibility.Visible)
                 GroupChatInfoGrid.Visibility = Visibility.Collapsed;
             GroupChatPanel.Visibility = Visibility.Collapsed;

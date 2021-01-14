@@ -75,7 +75,6 @@ namespace ConvertedCode
 
         public void End_Client_Group_Chat(client_type client)
         {
-            stop_flag = true;
             my_thread.Join();
             stop_flag = false;
         }
@@ -126,7 +125,6 @@ namespace ConvertedCode
 
         public void End_Client_Private_Chat(client_type client)
         {
-            stop_flag = true;
             my_thread.Join();
             stop_flag = false;
         }

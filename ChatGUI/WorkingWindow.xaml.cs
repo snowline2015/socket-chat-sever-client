@@ -282,6 +282,7 @@ namespace ChatGUI
             PrivateChatMain.Visibility = Visibility.Collapsed;
             logout_flag = true;
 
+            LoginWindow.CPP.stop_flag = true;
             byte[] messageSent = Encoding.ASCII.GetBytes("-back\0");
             int byteSent = LoginWindow.client.socket.Send(messageSent);
 
@@ -374,6 +375,7 @@ namespace ChatGUI
             GroupChatMain.Visibility = Visibility.Collapsed;
             logout_flag = true;
 
+            LoginWindow.CPP.stop_flag = true;
             byte[] messageSent = Encoding.ASCII.GetBytes("-back\0");
             int byteSent = LoginWindow.client.socket.Send(messageSent);
 

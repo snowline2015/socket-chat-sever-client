@@ -128,7 +128,7 @@ void Client_Multiple_Chatting(client_type& new_client, std::vector<client_type>&
             int iResult = recv(new_client.socket, tempmsg, DEFAULT_MSG_LENGTH, 0);
             if (iResult > 0) {
                 if (strcmp(tempmsg, "-back") == 0) {
-                    msg = "Server:" + new_client.Username + " has left the chat";
+                    msg = "Server:-noencrypt:" + new_client.Username + " has left the chat";
                     for (int i = 0; i < MAX_CLIENTS; i++) {
                         if (client_array[i].socket != INVALID_SOCKET && new_client.RoomID.compare(client_array[i].RoomID) == 0) {
                             sleep_for(milliseconds(10));
@@ -160,7 +160,7 @@ void Client_Multiple_Chatting(client_type& new_client, std::vector<client_type>&
                 }
             }
             else {
-                msg = "Server:" + new_client.Username + " has disconnected";
+                msg = "Server:-noencrypt:" + new_client.Username + " has disconnected";
                 for (int i = 0; i < MAX_CLIENTS; i++) {
                     if (client_array[i].socket != INVALID_SOCKET && new_client.RoomID.compare(client_array[i].RoomID) == 0) {
                         sleep_for(milliseconds(10));

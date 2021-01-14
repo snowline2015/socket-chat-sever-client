@@ -517,8 +517,12 @@ namespace ChatGUI
 
             string[] usr_info = new string[5];
             bool chk = LoginWindow.CPP.Check_User_Info(LoginWindow.client, check_usr.Text + "\0", ref usr_info);
-            if(chk == false)
+            if (chk == false)
+            {
+                if (Search_result.Visibility == Visibility.Visible)
+                    Search_result.Visibility = Visibility.Collapsed;
                 CheckUsr_warning.Text = "Cannot find input user";
+            }
             else
             {
                 CheckUsr_warning.Text = "";
@@ -528,7 +532,7 @@ namespace ChatGUI
                 Birthday_search.Text = usr_info[1];
                 Email_search.Text = usr_info[2];
                 Bio_search.Text = usr_info[3];
-                if(usr_info[4] == "Online")
+                if (usr_info[4] == "Online")
                     status_search1.Foreground = new SolidColorBrush(Colors.Green);
                 else
                     status_search1.Foreground = new SolidColorBrush(Colors.Red);

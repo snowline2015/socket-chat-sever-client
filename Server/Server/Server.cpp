@@ -35,7 +35,18 @@ int main()
         SOCKET NewSockid = INVALID_SOCKET;
         NewSockid = accept(sockid, NULL, NULL);
 
-        if (NewSockid == INVALID_SOCKET) continue;
+        if (NewSockid == INVALID_SOCKET) {
+            int i;
+            for (i = 0; i < MAX_CLIENTS; i++)
+            {
+                if (client[i].socket != INVALID_SOCKET)
+                {
+                    break;
+                }
+            }
+            if (i == MAX_CLIENTS) break;
+            else continue;
+        }
 
         //Create a temporary id for the next client
         temp_id = -1;

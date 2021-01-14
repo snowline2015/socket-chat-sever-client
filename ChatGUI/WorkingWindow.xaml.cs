@@ -239,6 +239,9 @@ namespace ChatGUI
 
         private void ReturnMainOptions(object sender, RoutedEventArgs e)
         {
+            byte[] messageSent = Encoding.ASCII.GetBytes("-back\0");
+            int byteSent = LoginWindow.client.socket.Send(messageSent);
+
             if (MoreOptPanel.Visibility == Visibility.Visible)
                 MoreOptPanel.Visibility = Visibility.Collapsed;
             PreChatPanel.Visibility = Visibility.Visible;

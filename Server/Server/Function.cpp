@@ -131,6 +131,7 @@ void Client_Multiple_Chatting(client_type& new_client, std::vector<client_type>&
                     msg = "Server:" + new_client.Username + " has left the chat";
                     for (int i = 0; i < MAX_CLIENTS; i++) {
                         if (client_array[i].socket != INVALID_SOCKET && new_client.RoomID.compare(client_array[i].RoomID) == 0) {
+                            sleep_for(milliseconds(10));
                             iResult = send(client_array[i].socket, msg.c_str(), strlen(msg.c_str()), 0);
                             while (iResult <= 0) {
                                 sleep_for(milliseconds(10));
@@ -147,6 +148,7 @@ void Client_Multiple_Chatting(client_type& new_client, std::vector<client_type>&
                 for (int i = 0; i < MAX_CLIENTS; i++) {
                     if (client_array[i].socket != INVALID_SOCKET) {
                         if (new_client.id != i && new_client.RoomID.compare(client_array[i].RoomID) == 0) {
+                            sleep_for(milliseconds(10));
                             iResult = send(client_array[i].socket, msg.c_str(), strlen(msg.c_str()), 0);
                             while (iResult <= 0) {
                                 sleep_for(milliseconds(10));
@@ -161,6 +163,7 @@ void Client_Multiple_Chatting(client_type& new_client, std::vector<client_type>&
                 msg = "Server:" + new_client.Username + " has disconnected";
                 for (int i = 0; i < MAX_CLIENTS; i++) {
                     if (client_array[i].socket != INVALID_SOCKET && new_client.RoomID.compare(client_array[i].RoomID) == 0) {
+                        sleep_for(milliseconds(10));
                         iResult = send(client_array[i].socket, msg.c_str(), strlen(msg.c_str()), 0);
                         while (iResult <= 0) {
                             sleep_for(milliseconds(10));
@@ -187,7 +190,7 @@ void Client_Single_Chatting(client_type& first_client, std::vector<client_type>&
             if (iResult != SOCKET_ERROR) {
                 for (int i = 0; i < MAX_CLIENTS; i++) {
                     if (client_array[i].socket == INVALID_SOCKET) continue;
-                    else if (first_client.id != i && client_array[i].Username.compare(second_username) == 0) {
+                    else if (first_client.id != i && client_array[i].Username.compare(second_username) == 0 && client_array[i].RoomID == "") {
                         if (strcmp(tempmsg, "-upload-file") == 0) {
                             string fileName;
                             if (Upload_File(first_client, fileName) == true) {
@@ -213,6 +216,7 @@ void Client_Single_Chatting(client_type& first_client, std::vector<client_type>&
 
                         else if (strcmp(tempmsg, "-back") == 0) {
                             send(first_client.socket, "OK", 3, 0);
+                            sleep_for(milliseconds(10));
                             iResult = send(client_array[i].socket, "-disconnect", 12, 0);
                             while (iResult <= 0) {
                                 sleep_for(milliseconds(10));
@@ -221,6 +225,9 @@ void Client_Single_Chatting(client_type& first_client, std::vector<client_type>&
                             }
                             goto blahblah;
                         }
+
+                        else if (strcmp(tempmsg, "-back2") == 0) 
+                            goto blahblah;
 
                         else if (stop_receiving_for_downloading_flag.load() == false) {
                             msg = first_client.Username + ":" + (tempmsg);
@@ -238,7 +245,7 @@ void Client_Single_Chatting(client_type& first_client, std::vector<client_type>&
             else { 
                 for (int i = 0; i < MAX_CLIENTS; i++) {
                     if (client_array[i].socket == INVALID_SOCKET) continue;
-                    else if (first_client.id != i && client_array[i].Username.compare(second_username) == 0) {
+                    else if (first_client.id != i && client_array[i].Username.compare(second_username) == 0 && client_array[i].RoomID == "") {
                         iResult = send(client_array[i].socket, "-disconnect", 12, 0);
                         while (iResult <= 0) {
                             sleep_for(milliseconds(10));
@@ -497,6 +504,7 @@ void Client_Thread(SOCKET NewSockid, std::vector<client_type>& client_List, std:
                                 Check_Users_Online(NewSockid, client);
 
                                 // receive online-user username
+                                blahblah:
                                 memset(&temp, NULL, sizeof(temp));
                                 iResult = recv(NewSockid, temp, DEFAULT_MSG_LENGTH, 0);
                                 if (iResult <= 0)
@@ -508,10 +516,22 @@ void Client_Thread(SOCKET NewSockid, std::vector<client_type>& client_List, std:
                             if (iResult <= 0 || strcmp(temp, "-back") == 0)
                                 continue;
 
-                            string tempo = std::string(temp);
+                            if (strcmp(temp, "") == 0)
+                                goto blahblah;
 
-                            my_thread[temp_id] = std::thread(Client_Single_Chatting, std::ref(client[temp_id]), std::ref(client), tempo, std::ref(my_thread[temp_id]));
-                            my_thread[temp_id].join();
+                            string tempo = std::string(temp);
+                            int i;
+                            for (i = 0; i < MAX_CLIENTS; i++) {
+                                if (client[i].Username.compare(tempo) == 0 && client[i].RoomID != "") {
+                                    send(NewSockid, "NO", 3, 0);
+                                    goto blahblah;
+                                }
+                            } 
+                            if (i == MAX_CLIENTS) {
+                                send(NewSockid, "OK", 3, 0);
+                                my_thread[temp_id] = std::thread(Client_Single_Chatting, std::ref(client[temp_id]), std::ref(client), tempo, std::ref(my_thread[temp_id]));
+                                my_thread[temp_id].join();
+                            }
                         }
                     }
 

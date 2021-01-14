@@ -6,7 +6,6 @@ int main()
     SOCKET sockid = INVALID_SOCKET;
     std::string msg = "", username, tempo;
     std::vector<client_type> client(MAX_CLIENTS), client_List;
-    int num_clients = 0;
     int temp_id = -1;
     std::thread my_thread[MAX_CLIENTS], temp_thread[MAX_CLIENTS];
 
@@ -38,9 +37,6 @@ int main()
 
         if (NewSockid == INVALID_SOCKET) continue;
 
-        //Reset the number of clients
-        num_clients = -1;
-
         //Create a temporary id for the next client
         temp_id = -1;
         for (int i = 0; i < MAX_CLIENTS; i++)
@@ -50,15 +46,7 @@ int main()
                 client[i].socket = NewSockid;
                 client[i].id = i;
                 temp_id = i;
-                char clientIP[16];
-                int client_len = sizeof(addrport);
-                getpeername(NewSockid, (struct sockaddr*)&addrport, &client_len);
-                client[i].IP = inet_ntop(AF_INET, &addrport.sin_addr, clientIP, sizeof(clientIP));
-                memset(&clientIP, NULL, sizeof(clientIP));
             }
-
-            if (client[i].socket != INVALID_SOCKET)
-                num_clients++;
         }
 
         if (temp_id != -1)
@@ -67,12 +55,11 @@ int main()
         }
         else
         {
-            msg = "Server is full";
+            msg = "-server-full";
             send(NewSockid, msg.c_str(), strlen(msg.c_str()), 0);
+            CloseSocket(sockid);
         }
     }
-
-    closesocket(sockid);
 
     for (int i = 0; i < MAX_CLIENTS; i++)
     {

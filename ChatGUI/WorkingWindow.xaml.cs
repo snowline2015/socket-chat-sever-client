@@ -30,7 +30,7 @@ namespace ChatGUI
         public static volatile bool logout_flag = false;
         public static string item;
 
-        public static Thread my_thread;
+        private Thread my_thread;
 
         private void TakeUserList()
         {
@@ -58,7 +58,7 @@ namespace ChatGUI
                     break;
                 }
 
-                Thread.Sleep(1500);
+                Thread.Sleep(2000);
                 TakeUserList();
             }  
         }
@@ -185,7 +185,7 @@ namespace ChatGUI
                 GroupChatMain.Visibility = Visibility.Visible;
 
                 LoginWindow.CPP.Start_Client_Group_Chat(LoginWindow.client);
-
+                logout_flag = false;
                 my_thread = new Thread(new ThreadStart(AddListboxItemsGroup));
                 my_thread.Start();
             }

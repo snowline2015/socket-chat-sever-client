@@ -34,8 +34,7 @@ struct client_type
 {
     int id = -1;
     volatile bool Online = false;
-    //bool Online = false;
-    std::string IP, Username, Password, Fullname, DOB, Email, Bio, RoomID;
+    std::string Username, Password, Fullname, DOB, Email, Bio, RoomID;
     SOCKET socket = INVALID_SOCKET;
 };
 

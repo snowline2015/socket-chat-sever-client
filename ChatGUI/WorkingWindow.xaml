@@ -1145,7 +1145,7 @@
                 <TextBlock x:Name="ChangePass_warning" HorizontalAlignment="Left" Height="34.8" Margin="302.4,638.3,0,0" VerticalAlignment="Top" Width="376.1" Background="{x:Null}" Foreground="Red" FontSize="18" FontWeight="SemiBold"/>
             </Grid>
             <Grid x:Name="CheckUsrGrid" Height="718.933" Visibility="Collapsed">
-                <TextBox x:Name="check_usr" HorizontalAlignment="Left" Height="43.2" Margin="288.5,108.3,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="364" Background="{x:Null}" BorderBrush="{x:Null}" SelectionTextBrush="#FF2AD3D6" SelectionBrush="{x:Null}" VerticalContentAlignment="Center" FontSize="14"/>
+                <TextBox x:Name="check_usr" HorizontalAlignment="Left" Height="43.2" Margin="288.5,153.3,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="364" Background="{x:Null}" BorderBrush="{x:Null}" SelectionTextBrush="#FF2AD3D6" SelectionBrush="{x:Null}" VerticalContentAlignment="Center" FontSize="14"/>
                 <Button x:Name="search_usr" Content="Button" HorizontalAlignment="Left" Height="28.133" Margin="674.067,160.5,0,0" VerticalAlignment="Top" Width="28.933" Style="{DynamicResource MyButton}" IsDefault="True" KeyDown="CheckUser_Enter" Click="CheckUer_Click">
                     <Button.Background>
                         <ImageBrush ImageSource="Assets/search-icon.png" Stretch="Uniform"/>

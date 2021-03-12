@@ -1,4 +1,5 @@
 Đây là đồ án ứng dụng socket chưa hoàn chỉnh, nhưng hiếm khi bị lỗi
+Server chạy console C++, ChatGUI(Client) chạy C#
 
 1. .Net Framwork 4.8
 2. Download / Upload phải chờ, không đc chat 
